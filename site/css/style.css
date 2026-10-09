@@ -497,3 +497,142 @@ tbody tr:nth-child(odd) .club {
     margin-top: calc(var(--label-block) + 0.25rem);
   }
 }
+
+/* Methods page: one column of prose, with each wide equation and table in
+   a horizontal scroller of its own. Its tables are this site's own, so they
+   use the charcoal text that meets AA on both row colours, not TrackMan's
+   white. */
+
+.doc {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+  padding-bottom: 1rem;
+  overflow-wrap: break-word;
+}
+
+.doc h1,
+.doc h2,
+.doc h3 {
+  font-family: var(--title);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.doc h1 {
+  margin: 0.5rem 0 1rem;
+  font-size: clamp(1.75rem, 1.25rem + 2.5vw, 3rem);
+  text-transform: uppercase;
+}
+
+.doc h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.75rem;
+}
+
+.doc h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.doc :is(p, ul, ol) {
+  max-width: 44rem;
+}
+
+.doc li + li {
+  margin-top: 0.375rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.mark {
+  font-weight: 700;
+}
+
+/* Fraction boxes can round a pixel past the padding; that must not add a
+   vertical scrollbar. */
+.eq {
+  max-width: 44rem;
+  padding: 0.25rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.eq math {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .eq math {
+    font-size: 1.125rem;
+  }
+}
+
+.doc .scroller {
+  margin: 0.5rem 0 1rem;
+}
+
+.doc table {
+  width: auto;
+  color: var(--ink);
+}
+
+.doc th,
+.doc td {
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.doc thead th {
+  font-size: 1rem;
+  vertical-align: bottom;
+}
+
+.doc .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Wrapping text columns, wide enough to read; phones scroll the table. */
+#validation-table {
+  min-width: 64rem;
+}
+
+#validation-table td {
+  white-space: normal;
+}
+
+#validation-table td:nth-child(3),
+#validation-table td:nth-child(4),
+#validation-table td:nth-child(5) {
+  min-width: 12rem;
+}
+
+#validation-table td:nth-child(6),
+#validation-table td:nth-child(7) {
+  min-width: 10rem;
+}
+
+#validation-table .refs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case,
+.expected {
+  display: block;
+}
+
+.band {
+  display: block;
+  white-space: nowrap;
+}
+
+.case,
+.result {
+  font-weight: 700;
+}

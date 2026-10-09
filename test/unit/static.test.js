@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { SOURCE_URL } from '../../site/js/data.js';
+import { ORACLES } from '../../site/js/oracles.js';
 
 const SITE = new URL('../../site/', import.meta.url);
 const JS = new URL('js/', SITE);
@@ -64,6 +65,10 @@ function importGraph(entry, seen = new Set()) {
 
 test('the site has an index page', () => {
   assert.ok(pages.includes('index.html'), `pages found: ${pages.join(', ')}`);
+});
+
+test('the site has a methods page', () => {
+  assert.ok(pages.includes('methods.html'), `pages found: ${pages.join(', ')}`);
 });
 
 for (const page of pages) {
@@ -210,5 +215,158 @@ test('index.html turns autocomplete off on every input and select', () => {
   );
   for (const control of controls) {
     assert.equal(control.attrs.get('autocomplete'), 'off', `#${control.attrs.get('id')}`);
+  }
+});
+
+// The methods page
+
+const methods = () => read(new URL('methods.html', SITE));
+
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+
+// The page's text with markup removed and entities decoded; every run of
+// whitespace, no-break spaces included, reads as one space.
+function text(html) {
+  return withoutComments(html)
+    .replace(TAG, '')
+    .replace(/<\/[^>]*>/g, '')
+    .replace(/&(?:#(\d+)|#x([\da-f]+)|(\w+));/gi, (entity, dec, hex, name) => {
+      if (dec) {
+        return String.fromCodePoint(Number(dec));
+      }
+      if (hex) {
+        return String.fromCodePoint(parseInt(hex, 16));
+      }
+      return ENTITIES[name] ?? entity;
+    })
+    .replace(/\s+/g, ' ');
+}
+
+const MATHML_CORE = new Set([
+  'math',
+  'mrow',
+  'mi',
+  'mn',
+  'mo',
+  'ms',
+  'mtext',
+  'mspace',
+  'msup',
+  'msub',
+  'msubsup',
+  'mfrac',
+  'msqrt',
+  'mroot',
+  'mover',
+  'munder',
+  'munderover',
+  'mmultiscripts',
+  'mprescripts',
+  'none',
+  'mtable',
+  'mtr',
+  'mtd',
+  'mpadded',
+  'mphantom',
+  'mstyle',
+  'merror',
+  'semantics',
+  'annotation',
+  'annotation-xml',
+]);
+
+test('methods.html has its sections in order', () => {
+  const ids = tags(methods())
+    .filter((tag) => tag.name === 'section')
+    .map((tag) => tag.attrs.get('id'));
+  assert.deepEqual(ids, [
+    'assumptions',
+    'atmosphere',
+    'model',
+    'calibration',
+    'display',
+    'validation',
+    'limitations',
+    'sources',
+  ]);
+});
+
+test('methods.html states the assumptions, limitations and caveats', () => {
+  const content = text(methods());
+  for (const phrase of [
+    '25 °C',
+    'dry air',
+    'barometer',
+    'launch elevation',
+    'for driver shots',
+    'about 1 yd',
+    'indicative',
+    '−30 %',
+    '+25 %',
+    'contrast',
+    'Mehta & Pallis',
+  ]) {
+    assert.ok(content.includes(phrase), `missing "${phrase}"`);
+  }
+});
+
+// Chromium renders MathML Core only; anything else shows as plain text.
+test('methods.html writes its equations in MathML Core', () => {
+  const blocks = [...withoutComments(methods()).matchAll(/<math\b[\s\S]*?<\/math\s*>/gi)];
+  assert.ok(blocks.length > 0, 'no <math> elements');
+  for (const [block] of blocks) {
+    for (const { name } of tags(block)) {
+      assert.ok(MATHML_CORE.has(name), `<${name}> is not MathML Core`);
+    }
+  }
+});
+
+test('methods.html links the main page and cites Penner by DOI', () => {
+  const html = methods();
+  assert.ok(
+    tags(html).some((tag) => tag.name === 'a' && tag.attrs.get('href') === 'index.html'),
+    'no link to index.html',
+  );
+  assert.ok(text(html).includes('10.1119/1.1344164'), 'no Penner DOI');
+});
+
+test('methods.html lists the data source and every oracle source under Sources', () => {
+  const section = methods().match(/<section\b[^>]*\bid="sources"[^>]*>([\s\S]*?)<\/section>/);
+  assert.ok(section, 'no #sources section');
+  const linked = new Set(
+    tags(section[1])
+      .filter((tag) => tag.name === 'a')
+      .map((tag) => tag.attrs.get('href')),
+  );
+  const urls = new Set([SOURCE_URL, ...ORACLES.flatMap(({ sources }) => sources.map(({ url }) => url))]);
+  for (const url of urls) {
+    assert.ok(linked.has(url), `Sources does not link ${url}`);
+  }
+});
+
+// An overflowing equation or table must be scrollable from the keyboard.
+test('methods.html makes every scroller a focusable, named region', () => {
+  const scrollers = tags(methods()).filter((tag) =>
+    (tag.attrs.get('class') ?? '').split(/\s+/).some((name) => name === 'eq' || name === 'scroller'),
+  );
+  assert.ok(scrollers.length > 0, 'no scrollers');
+  for (const { name, attrs } of scrollers) {
+    const what = `<${name} class="${attrs.get('class')}">`;
+    assert.equal(attrs.get('tabindex'), '0', `${what} tabindex`);
+    assert.equal(attrs.get('role'), 'region', `${what} role`);
+    assert.ok(attrs.get('aria-label') || attrs.get('aria-labelledby'), `${what} has no name`);
+  }
+});
+
+// boot.js reports a failed load through these two ids.
+test('methods.html carries the boot contract and both live tables', () => {
+  const html = methods();
+  const entry = byId(html, 'app-module');
+  assert.equal(entry?.name, 'script');
+  assert.equal(entry.attrs.get('type'), 'module');
+  const loadError = byId(html, 'load-error');
+  assert.ok(loadError?.attrs.has('hidden'), '#load-error is missing or not hidden');
+  for (const id of ['calibration-table', 'validation-table', 'version']) {
+    assert.ok(byId(html, id), `no #${id}`);
   }
 });
