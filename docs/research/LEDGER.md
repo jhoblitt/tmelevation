@@ -32,3 +32,15 @@ Target: docs/superpowers/plans/2026-10-08-tmelevation.md (against the approved s
 | coverage | spec coverage, seam consistency, expected values, executability | docs/reviews/plan-2026-10-08/coverage.md | docs/reviews/plan-2026-10-08/coverage.md.notes.md | complete 2026-10-08 |
 | delivery | Tasks 1, 13, 14: GitHub API calls, workflows, release/deploy chain | docs/reviews/plan-2026-10-08/delivery.md | docs/reviews/plan-2026-10-08/delivery.md.notes.md | complete 2026-10-08 |
 | browser  | Tasks 10-12: CDP harness, load-failure handling, e2e feasibility | docs/reviews/plan-2026-10-08/browser.md | docs/reviews/plan-2026-10-08/browser.md.notes.md | complete 2026-10-08 |
+
+## Land-angle model spike (dispatched 2026-10-09)
+
+Brief: docs/research/land-angle-spike/BRIEF.md. Research only; no product code.
+
+| Agent | Mandate | Output | Notes | Status |
+|-------|---------|--------|-------|--------|
+| aero-data  | measured C_D/C_L(Re, S), spin decay, independent trajectories and altitude data | docs/research/land-angle-spike/aero-data.md | docs/research/land-angle-spike/aero-data.md.notes.md | complete 2026-10-09 |
+| model-fits | fitting harness; model families fitted to carry, height and land angle | docs/research/land-angle-spike/model-fits.md | docs/research/land-angle-spike/model-fits.md.notes.md | complete 2026-10-09 |
+| provenance | how TrackMan's land angle is measured or extrapolated; table provenance | docs/research/land-angle-spike/provenance.md | docs/research/land-angle-spike/provenance.md.notes.md | complete 2026-10-09 |
+
+Synthesis: docs/research/land-angle-spike/SYNTHESIS.md (coordinator, 2026-10-09).
