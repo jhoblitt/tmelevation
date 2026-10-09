@@ -9,6 +9,7 @@ import { ORACLES } from '../../site/js/oracles.js';
 const SITE = new URL('../../site/', import.meta.url);
 const JS = new URL('js/', SITE);
 const FONTS = new URL('fonts/', SITE);
+const ICONS = new URL('icons/', SITE);
 
 const CSP =
   "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; " +
@@ -43,6 +44,29 @@ function tags(html) {
 
 function byId(html, id) {
   return tags(html).find((tag) => tag.attrs.get('id') === id);
+}
+
+// The source of the first element whose start tag matches, through its
+// matching end tag; null when there is none.
+function element(html, matches) {
+  const source = withoutComments(html);
+  for (const start of source.matchAll(TAG)) {
+    const name = start[1].toLowerCase();
+    if (!matches({ name, attrs: attributes(start[2]) })) {
+      continue;
+    }
+    const boundary = new RegExp(`<(/?)${name}\\b(?:[^>"']|"[^"]*"|'[^']*')*>`, 'gi');
+    boundary.lastIndex = start.index;
+    let depth = 0;
+    for (let tag = boundary.exec(source); tag !== null; tag = boundary.exec(source)) {
+      depth += tag[1] === '' ? 1 : -1;
+      if (depth === 0) {
+        return source.slice(start.index, tag.index + tag[0].length);
+      }
+    }
+    return null;
+  }
+  return null;
 }
 
 const pages = readdirSync(SITE).filter((name) => name.endsWith('.html'));
@@ -216,6 +240,60 @@ test('index.html turns autocomplete off on every input and select', () => {
   for (const control of controls) {
     assert.equal(control.attrs.get('autocomplete'), 'off', `#${control.attrs.get('id')}`);
   }
+});
+
+const index = () => read(new URL('index.html', SITE));
+const footerOf = (page) => element(read(new URL(page, SITE)), ({ name }) => name === 'footer');
+const footer = () => footerOf('index.html');
+const REPO_URL = 'https://github.com/jhoblitt/tmelevation';
+
+test('index.html links the methods page first in its footer, not from the controls', () => {
+  const html = index();
+  assert.equal(tags(html).filter((tag) => tag.attrs.get('id') === 'methods-link').length, 1);
+  const controls = element(html, ({ attrs }) => attrs.get('id') === 'controls');
+  assert.ok(controls, 'no #controls');
+  assert.equal(byId(controls, 'methods-link'), undefined, '#methods-link is in the controls');
+  assert.ok(footer(), 'no <footer>');
+  const [first] = tags(footer()).filter((tag) => tag.name === 'a');
+  assert.equal(first?.attrs.get('id'), 'methods-link', 'the first footer link is not #methods-link');
+  assert.equal(first.attrs.get('href'), 'methods.html');
+});
+
+const repoLink = (page) =>
+  element(footerOf(page), ({ name, attrs }) => name === 'a' && attrs.get('href') === REPO_URL);
+
+for (const page of ['index.html', 'methods.html']) {
+  test(`${page} links the repository from its footer with a GitHub icon`, () => {
+    const link = repoLink(page);
+    assert.ok(link, `no <a href="${REPO_URL}"> in the footer`);
+    const svg = element(link, ({ name }) => name === 'svg');
+    assert.ok(svg, 'the link has no <svg>');
+    const [svgTag] = tags(svg);
+    assert.equal(svgTag.attrs.get('aria-hidden'), 'true');
+    assert.equal(svgTag.attrs.get('focusable'), 'false');
+    assert.equal(svgTag.attrs.get('fill'), 'currentColor');
+    // The svg is hidden, so the link's text is its name.
+    const [anchor] = tags(link);
+    const name = anchor.attrs.get('aria-label') || text(link.replace(svg, '')).trim();
+    assert.ok(name, 'the link has no accessible name');
+    assert.equal(anchor.attrs.get('title'), name);
+  });
+}
+
+test('both pages carry the same repository link', () => {
+  assert.ok(repoLink('index.html'), 'index.html has no repository link');
+  assert.equal(repoLink('methods.html'), repoLink('index.html'));
+});
+
+test('the Octicons licence and the icon source ship in site/icons', () => {
+  for (const name of ['LICENSE-octicons.txt', 'SOURCES.md']) {
+    assert.ok(existsSync(fileURLToPath(new URL(name, ICONS))), `${name} missing`);
+  }
+  assert.match(read(new URL('LICENSE-octicons.txt', ICONS)), /^MIT License\b/);
+  assert.match(
+    read(new URL('SOURCES.md', ICONS)),
+    /https:\/\/raw\.githubusercontent\.com\/primer\/octicons\/\S+\/mark-github-24\.svg/,
+  );
 });
 
 // The methods page

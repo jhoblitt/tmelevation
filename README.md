@@ -21,9 +21,11 @@ The tour-average figures are TrackMan's 2023 PGA and LPGA Tour Averages, publish
 
 The [methods page](https://jhoblitt.github.io/tmelevation/methods.html) states every equation, constant, assumption, limitation and source. In short: elevation sets the air pressure through the U.S. Standard Atmosphere 1976, and the air is taken as dry and at 25 °C, so its density scales with pressure alone. Each shot is flown by a two-dimensional point-mass model with backspin, using Smits & Smith's (1994) drag, lift and spin-decay terms and integrated by fourth-order Runge–Kutta; per table row, its drag and lift are scaled so that at sea level it reproduces that row's published carry and max height. A displayed value is the published value plus the modelled change at the chosen density; launch conditions stay as published, and the land-angle column is indicative.
 
-## Fonts
+## Fonts and icon
 
 The pages use Oswald and Lato, both under the SIL Open Font License 1.1. The unmodified font files, their licence texts and their sources are in `site/fonts/`.
+
+The footer's GitHub icon is GitHub's Octicons `mark-github`, under the MIT License; its licence text and source are in `site/icons/`.
 
 ## Accessibility
 
