@@ -1,0 +1,103 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Serialize release runs: concurrent pushes to main would race to compute the
+# same next version from the same baseline tag. A running release is never
+# cancelled, but a group holds only one pending run, so a third push cancels
+# the older queued one. Nothing is lost, since the next run releases every
+# commit since the last tag, but a burst of merges can yield fewer versions
+# than merges.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      # The release notes name the PRs in the range and the issues they close.
+      issues: read
+      pull-requests: read
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      # Every plugin semantic-release loads is pinned exactly, so none floats
+      # on a range while the write-scoped token is in the environment.
+      # semantic-release@25.0.8 declares commit-analyzer ^13.0.1,
+      # release-notes-generator ^14.1.0 and github ^12.0.0 as dependencies.
+      # Each pin lies inside its declared range (the highest release that
+      # does), and being inside the range is what lets npm dedupe it into the
+      # one copy semantic-release loads rather than nesting a second under it.
+      # Bump them together with semantic-release.
+      #
+      # conventional-changelog-conventionalcommits stays on 9.x. Preset 10
+      # renamed the writer's mainTemplate key and compiled its partials into
+      # functions; conventional-changelog-writer@8, which
+      # release-notes-generator@14 loads, renders neither and emits notes
+      # holding nothing but the compare link — with no error. Dependabot
+      # cannot see a pin inside a run block, so bump this by hand, and only
+      # once release-notes-generator handles preset 10.
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The npx graph below is not lockfile-pinned; keep install
+          # scripts off so transitive packages can't run code with the
+          # write-scoped token in the environment.
+          npm_config_ignore_scripts: "true"
+        run: |
+          npx --yes \
+            --package semantic-release@25.0.8 \
+            --package @semantic-release/commit-analyzer@13.0.1 \
+            --package @semantic-release/release-notes-generator@14.1.1 \
+            --package @semantic-release/github@12.0.10 \
+            --package @semantic-release/exec@7.1.0 \
+            --package conventional-changelog-conventionalcommits@9.3.1 \
+            semantic-release
+
+      # Runs even when a plugin step failed after the tag was pushed, so a
+      # pushed tag still deploys.
+      - name: Read the release tag
+        id: tag
+        if: ${{ !cancelled() }}
+        run: |
+          tag=$(git tag --points-at HEAD --list 'v*')
+          if [ -n "$tag" ]; then
+            git ls-remote --exit-code --tags origin "refs/tags/$tag"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: release
+    # Without a status function a failed release job would skip this one,
+    # even when it had already pushed the tag.
+    if: ${{ !cancelled() && needs.release.outputs.tag != '' }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
