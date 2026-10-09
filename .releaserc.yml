@@ -1,0 +1,58 @@
+branches:
+  - main
+
+plugins:
+  - - "@semantic-release/commit-analyzer"
+    - preset: conventionalcommits
+      # Methods-page and explanatory changes are user-visible content, so
+      # docs/refactor/perf changes must cut a release; only
+      # chore/ci/test/build/style merges release nothing.
+      releaseRules:
+        - type: docs
+          release: patch
+        - type: refactor
+          release: patch
+        - type: perf
+          release: patch
+  - - "@semantic-release/release-notes-generator"
+    - preset: conventionalcommits
+      # presetConfig.types replaces the preset's default list, which hides
+      # docs/refactor/perf. Every type releaseRules above can cut a release
+      # from has to be visible here, or a release built only from those types
+      # ships notes with nothing under the header.
+      presetConfig:
+        types:
+          - type: feat
+            section: Features
+          - type: fix
+            section: Bug Fixes
+          - type: perf
+            section: Performance Improvements
+          - type: refactor
+            section: Refactoring
+          - type: docs
+            section: Documentation
+          - type: revert
+            section: Reverts
+          - type: chore
+            hidden: true
+          - type: ci
+            hidden: true
+          - type: build
+            hidden: true
+          - type: test
+            hidden: true
+          - type: style
+            hidden: true
+  # semantic-release joins every plugin's generateNotes output in plugin
+  # order, so exec's stdout lands after the commit-derived notes above.
+  - - "@semantic-release/exec"
+    - generateNotesCmd: >-
+        .github/scripts/release-notes.sh
+        "${nextRelease.gitTag}" "${lastRelease.gitTag || ''}"
+  # Publish the GitHub Release and nothing else: no comment or label on the
+  # pull requests and issues a release resolves, and no issue opened or
+  # closed for a failed release.
+  - - "@semantic-release/github"
+    - successCommentCondition: false
+      failCommentCondition: false

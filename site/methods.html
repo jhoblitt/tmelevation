@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en" data-state="loading">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'">
+<title>Method &amp; sources · TrackMan Tour Averages at Elevation</title>
+<meta name="description" content="How the elevation tables are computed: the atmosphere, the ball-flight model and its calibration, validation against published altitude figures, the limitations, and the sources.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/lato-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="js/methods.js">
+<link rel="modulepreload" href="js/atmosphere.js">
+<link rel="modulepreload" href="js/data.js">
+<link rel="modulepreload" href="js/model.js">
+<link rel="modulepreload" href="js/calibrate.js">
+<link rel="modulepreload" href="js/flight.js">
+<link rel="modulepreload" href="js/oracles.js">
+<link rel="modulepreload" href="js/present.js">
+<link rel="modulepreload" href="js/units.js">
+<link rel="modulepreload" href="js/version.js">
+<script src="js/boot.js" defer></script>
+<script type="module" src="js/methods.js" id="app-module"></script>
+</head>
+<body>
+<main id="methods" class="doc">
+  <p><a class="back" href="index.html">← Back to the tables</a></p>
+  <h1>Method &amp; sources</h1>
+  <noscript>
+    <p class="notice">The calibration and validation tables on this page are computed in your browser and need JavaScript. The rest of the page does not.</p>
+  </noscript>
+  <p id="load-error" class="notice" role="alert" hidden>The calibration and validation tables could not be computed. The rest of the page does not depend on them.</p>
+
+  <nav aria-label="Contents">
+    <ol>
+      <li><a href="#assumptions">What the tables show, and the assumptions</a></li>
+      <li><a href="#atmosphere">Atmosphere</a></li>
+      <li><a href="#model">Ball-flight model</a></li>
+      <li><a href="#calibration">Calibration</a></li>
+      <li><a href="#display">From the model to the displayed values</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <section id="assumptions" aria-labelledby="assumptions-title">
+    <h2 id="assumptions-title">What the tables show, and the assumptions</h2>
+    <p>The <a href="index.html">main page</a> reproduces <a href="https://www.trackman.com/blog/introducing-updated-tour-averages">TrackMan’s 2023 PGA TOUR and LPGA Tour Averages</a> and recomputes three of their columns, Max Height, Land Angle and Carry, for the elevation or air pressure you choose. At sea level every cell shows exactly the published value, in both units. The other six columns (club speed, attack angle, ball speed, smash factor, launch angle and spin rate) are launch conditions fixed at impact and stay as published.</p>
+    <p>TrackMan states no measurement conditions for the tables. Its post says the averages come from competition and range data, from 40+ events for the men and 30+ for the women, with official stat holes “picked going in opposite directions to reduce any effects from wind”. Every value above sea level rests on these assumptions:</p>
+    <ul>
+      <li>The published tables are calm, sea-level flight at 25 °C (77 °F). TrackMan does not say so; this site assumes it.</li>
+      <li>The air is dry air held at 25 °C (77 °F), the default of TrackMan’s Normalization feature, at every elevation, so elevation changes only the pressure (<a href="#atmosphere">Atmosphere</a>).</li>
+      <li>Launch conditions are held fixed at altitude: the same ball speed, launch angle and spin rate as at sea level. Real players may change clubs, trajectory or swing.</li>
+      <li>No wind, temperature, humidity, ball-model or roll effects are modelled.</li>
+      <li>Carry, max height and land angle are measured against the launch elevation, as TrackMan measures them: the ball lands at the height it was struck from.</li>
+    </ul>
+  </section>
+
+  <section id="atmosphere" aria-labelledby="atmosphere-title">
+    <h2 id="atmosphere-title">Atmosphere</h2>
+    <p>Elevation and pressure are linked by the troposphere of the U.S. Standard Atmosphere 1976, which is identical to the ICAO standard atmosphere in this range. A geometric elevation <i>Z</i> is first converted to a geopotential height <i>H</i>, both in metres, with <i>r</i><sub>0</sub> = 6,356,766 m:</p>
+    <div class="eq" role="region" aria-label="Equation: geopotential height from elevation" tabindex="0">
+      <math display="block">
+        <mi>H</mi><mo>=</mo>
+        <mfrac>
+          <mrow><msub><mi>r</mi><mn>0</mn></msub><mi>Z</mi></mrow>
+          <mrow><msub><mi>r</mi><mn>0</mn></msub><mo>+</mo><mi>Z</mi></mrow>
+        </mfrac>
+      </math>
+    </div>
+    <p>The pressure at that height is the barometric formula</p>
+    <div class="eq" role="region" aria-label="Equation: barometric formula" tabindex="0">
+      <math display="block">
+        <mi>P</mi><mo>=</mo><mn>101325</mn><mo>·</mo>
+        <msup>
+          <mrow>
+            <mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mn>2.25577</mn><mo>×</mo>
+            <msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup>
+            <mo>·</mo><mi>H</mi><mo stretchy="false">)</mo>
+          </mrow>
+          <mn>5.255876</mn>
+        </msup>
+        <mspace width="0.3em"/><mtext>Pa</mtext>
+      </math>
+    </div>
+    <p>and its inverse, used when a pressure is typed, is</p>
+    <div class="eq" role="region" aria-label="Equation: geopotential height from pressure" tabindex="0">
+      <math display="block">
+        <mi>H</mi><mo>=</mo>
+        <mfrac><mn>288.15</mn><mn>0.0065</mn></mfrac><mo>·</mo>
+        <mrow>
+          <mo>(</mo><mn>1</mn><mo>−</mo>
+          <msup>
+            <mrow><mo>(</mo><mfrac><mi>P</mi><mn>101325</mn></mfrac><mo>)</mo></mrow>
+            <mn>0.190263</mn>
+          </msup>
+          <mo>)</mo>
+        </mrow>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: elevation from geopotential height" tabindex="0">
+      <math display="block">
+        <mi>Z</mi><mo>=</mo>
+        <mfrac>
+          <mrow><msub><mi>r</mi><mn>0</mn></msub><mi>H</mi></mrow>
+          <mrow><msub><mi>r</mi><mn>0</mn></msub><mo>−</mo><mi>H</mi></mrow>
+        </mfrac>
+      </math>
+    </div>
+    <p>The constants are those of the standard: sea-level pressure <i>P</i><sub>0</sub> = 101,325 Pa, sea-level temperature 288.15 K, lapse rate <i>L</i> = 0.0065 K/m, <i>g</i><sub>0</sub> = 9.80665 m/s², molar mass of air <i>M</i> = 28.9644 kg/kmol and gas constant <i>R</i>* = 8314.32 J/(kmol·K). The exponent 5.255876 is <i>g</i><sub>0</sub><i>M</i>/(<i>R</i>*<i>L</i>) and 2.25577×10<sup>−5</sup> per metre is <i>L</i>/288.15 K; the code derives both from the constants instead of using these rounded figures, so that the formula and its inverse round-trip.</p>
+
+    <h3>Air density</h3>
+    <p>The air is dry and held at the reference temperature <i>T</i><sub>ref</sub> = 298.15 K (25 °C, 77 °F), the default of TrackMan’s Normalization feature, at every elevation: elevation changes only the pressure. At a fixed temperature the density of an ideal gas is proportional to its pressure, so</p>
+    <div class="eq" role="region" aria-label="Equation: density ratio" tabindex="0">
+      <math display="block">
+        <mfrac><mi>ρ</mi><msub><mi>ρ</mi><mn>0</mn></msub></mfrac><mo>=</mo>
+        <mfrac><mi>P</mi><msub><mi>P</mi><mn>0</mn></msub></mfrac>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: sea-level air density" tabindex="0">
+      <math display="block">
+        <msub><mi>ρ</mi><mn>0</mn></msub><mo>=</mo>
+        <mfrac>
+          <mrow><msub><mi>P</mi><mn>0</mn></msub><mi>M</mi></mrow>
+          <mrow><msup><mi>R</mi><mo>*</mo></msup><msub><mi>T</mi><mtext>ref</mtext></msub></mrow>
+        </mfrac>
+        <mo>=</mo><mn>1.1839</mn><mspace width="0.3em"/><mtext>kg/m³</mtext>
+      </math>
+    </div>
+    <p>Humidity is neglected: holding 50 % relative humidity instead changes the density ratio by 0.1–0.5 % and carry by at most 0.18 yd. Letting the temperature fall with the standard lapse rate instead would make the air about 3.5 % denser at 5,000 ft and understate the effect for warm-season golf, so the temperature is held constant.</p>
+
+    <h3>Units and range</h3>
+    <p>Pressure: 1 inHg = 3386.389 Pa (the conventional inch of mercury, NIST SP 811), 1 kPa = 1000 Pa and 1 mbar = 1 hPa = 100 Pa. Length: 1 ft = 0.3048 m and 1 yd = 0.9144 m. Speed: 1 mph = 0.44704 m/s. The controls cover elevations from 0 to 15,000 ft (0 to 4,572 m), that is pressures from 101,325 Pa down to 57,206.8 Pa.</p>
+
+    <h3>Why a weather report’s barometer reading cannot be entered</h3>
+    <p>The pressure box expects the absolute air pressure at the course, the station pressure. The “barometric pressure” in a weather report or a weather app’s “barometer” is not that: it is reduced to sea level so that stations at different elevations can be compared (in the US it is the altimeter setting, in inHg), and so it reads about 30 inHg on an ordinary day at any elevation. Typed into the pressure box it would tell the model that the ball flies at or near sea level. At 5,280 ft the standard atmosphere gives 24.64 inHg. Converting a weather report back to station pressure needs the station’s elevation, which this site does not ask for; enter the course elevation instead, or a station pressure if you have one.</p>
+  </section>
+
+  <section id="model" aria-labelledby="model-title">
+    <h2 id="model-title">Ball-flight model</h2>
+    <p>A two-dimensional point-mass model with pure backspin. The state is the position (<i>x</i>, <i>y</i>), the velocity (<i>v</i><sub>x</sub>, <i>v</i><sub>y</sub>) and the spin <i>ω</i> in rad/s. The velocity relative to the air is (<i>u</i><sub>x</sub>, <i>u</i><sub>y</sub>), where <i>w</i> is a horizontal wind used only by tests (zero on this site), and <i>U</i> is its magnitude:</p>
+    <div class="eq" role="region" aria-label="Equation: velocity relative to the air" tabindex="0">
+      <math display="block">
+        <msub><mi>u</mi><mi>x</mi></msub><mo>=</mo><msub><mi>v</mi><mi>x</mi></msub><mo>−</mo><mi>w</mi><mo>,</mo>
+        <mspace width="1em"/>
+        <msub><mi>u</mi><mi>y</mi></msub><mo>=</mo><msub><mi>v</mi><mi>y</mi></msub>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: air speed" tabindex="0">
+      <math display="block">
+        <mi>U</mi><mo>=</mo>
+        <msqrt><msubsup><mi>u</mi><mi>x</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>u</mi><mi>y</mi><mn>2</mn></msubsup></msqrt>
+      </math>
+    </div>
+
+    <h3>Equations of motion</h3>
+    <p>The equations of motion are those of Penner (2001), eqs. 12–15, written for the velocity relative to the air; the third equation is his spin decay, eq. 16, scaled by air density (<a href="#spin-decay">Spin decay</a>):</p>
+    <div class="eq" role="region" aria-label="Equation: horizontal motion" tabindex="0">
+      <math display="block">
+        <mfrac>
+          <mrow><mi mathvariant="normal">d</mi><msub><mi>v</mi><mi>x</mi></msub></mrow>
+          <mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow>
+        </mfrac>
+        <mo>=</mo><mo>−</mo><mi>k</mi><mi>U</mi>
+        <mrow>
+          <mo stretchy="false">(</mo>
+          <msub><mi>C</mi><mi mathvariant="normal">D</mi></msub><msub><mi>u</mi><mi>x</mi></msub>
+          <mo>+</mo>
+          <msub><mi>C</mi><mi mathvariant="normal">L</mi></msub><msub><mi>u</mi><mi>y</mi></msub>
+          <mo stretchy="false">)</mo>
+        </mrow>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: vertical motion" tabindex="0">
+      <math display="block">
+        <mfrac>
+          <mrow><mi mathvariant="normal">d</mi><msub><mi>v</mi><mi>y</mi></msub></mrow>
+          <mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow>
+        </mfrac>
+        <mo>=</mo><mo>−</mo><mi>k</mi><mi>U</mi>
+        <mrow>
+          <mo stretchy="false">(</mo>
+          <msub><mi>C</mi><mi mathvariant="normal">D</mi></msub><msub><mi>u</mi><mi>y</mi></msub>
+          <mo>−</mo>
+          <msub><mi>C</mi><mi mathvariant="normal">L</mi></msub><msub><mi>u</mi><mi>x</mi></msub>
+          <mo stretchy="false">)</mo>
+        </mrow>
+        <mo>−</mo><mi>g</mi>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: spin decay" tabindex="0">
+      <math display="block">
+        <mfrac>
+          <mrow><mi mathvariant="normal">d</mi><mi>ω</mi></mrow>
+          <mrow><mi mathvariant="normal">d</mi><mi>t</mi></mrow>
+        </mfrac>
+        <mo>=</mo><mo>−</mo><msub><mi>λ</mi><mn>0</mn></msub>
+        <mfrac><mi>ρ</mi><msub><mi>ρ</mi><mn>0</mn></msub></mfrac>
+        <mfrac><mrow><mi>U</mi><mi>ω</mi></mrow><mi>r</mi></mfrac>
+      </math>
+    </div>
+    <p>with</p>
+    <div class="eq" role="region" aria-label="Equation: drag constant and cross-section" tabindex="0">
+      <math display="block">
+        <mi>k</mi><mo>=</mo><mfrac><mrow><mi>ρ</mi><mi>A</mi></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><mo>,</mo>
+        <mspace width="1em"/>
+        <mi>A</mi><mo>=</mo><mfrac><mrow><mi>π</mi><msup><mi>D</mi><mn>2</mn></msup></mrow><mn>4</mn></mfrac>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: ball radius and spin parameter" tabindex="0">
+      <math display="block">
+        <mi>r</mi><mo>=</mo><mfrac><mi>D</mi><mn>2</mn></mfrac><mo>,</mo>
+        <mspace width="1em"/>
+        <mi>S</mi><mo>=</mo><mfrac><mrow><mi>r</mi><mi>ω</mi></mrow><mi>U</mi></mfrac>
+      </math>
+    </div>
+    <p>where <i>ρ</i> is the air density, <i>m</i> and <i>D</i> the ball’s mass and diameter, <i>S</i> the spin parameter and <i>g</i> = 9.80665 m/s².</p>
+
+    <h3>Drag and lift</h3>
+    <div class="eq" role="region" aria-label="Equation: drag coefficient" tabindex="0">
+      <math display="block">
+        <msub><mi>C</mi><mi mathvariant="normal">D</mi></msub><mo>=</mo>
+        <msub><mi>k</mi><mi mathvariant="normal">D</mi></msub>
+        <mrow><mo stretchy="false">(</mo><mn>0.24</mn><mo>+</mo><mn>0.18</mn><mi>S</mi><mo stretchy="false">)</mo></mrow>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: lift coefficient" tabindex="0">
+      <math display="block">
+        <msub><mi>C</mi><mi mathvariant="normal">L</mi></msub><mo>=</mo>
+        <msub><mi>k</mi><mi mathvariant="normal">L</mi></msub><mo>·</mo><mn>0.54</mn><mo>·</mo>
+        <msup><mi>S</mi><mn>0.4</mn></msup>
+      </math>
+    </div>
+    <p>These are the Smits &amp; Smith (1994) shapes without their Reynolds-number term, scaled by two factors <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> fitted for each table row (<a href="#calibration">Calibration</a>). The only surviving text of that model states that it was fitted “for driver shots” (70,000 &lt; Re &lt; 210,000, 0.08 &lt; <i>S</i> &lt; 0.2). <i>S</i> rises as the ball slows, and at sea level with the calibrated factors only the two Driver rows stay below 0.2 for the whole flight (launch <i>S</i> = 0.074 PGA, 0.088 LPGA; peak ≈ 0.17). The other woods, the hybrids, the PGA 3–5 Iron and the LPGA 4 Iron launch inside the range (<i>S</i> ≈ 0.096–0.195) but peak at ≈ 0.21–0.51; the PGA 6 Iron to PW and the LPGA 5 Iron to PW launch above it (<i>S</i> ≈ 0.22–0.48) and peak at ≈ 0.47–1.17. Those rows are an extrapolation, absorbed in part by the per-row calibration.</p>
+
+    <h3 id="spin-decay">Spin decay</h3>
+    <p>The third equation of motion decays the spin with</p>
+    <div class="eq" role="region" aria-label="Equation: spin-decay constant" tabindex="0">
+      <math display="block">
+        <msub><mi>λ</mi><mn>0</mn></msub><mo>=</mo><mn>2.0</mn><mo>×</mo>
+        <msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup>
+      </math>
+    </div>
+    <p>from Smits &amp; Smith, as given in Penner (2001), eq. 16, scaled by <i>ρ</i>/<i>ρ</i><sub>0</sub> because the decay torque scales with dynamic pressure.</p>
+
+    <h3>Ball</h3>
+    <p>Mass <i>m</i> = 45.93 g and diameter <i>D</i> = 42.67 mm, the limits of the Equipment Rules, Part 4.</p>
+
+    <h3>Launch, outputs and integration</h3>
+    <p>Each row is launched from <i>y</i> = 0 at its published ball speed, launch angle and spin rate. The outputs are measured against the launch elevation, as TrackMan measures them: carry is the <i>x</i> at which the descending ball crosses <i>y</i> = 0, max height is the apex <i>y</i>, and land angle is atan2(−<i>v</i><sub>y</sub>, <i>v</i><sub>x</sub>) at landing.</p>
+    <p>The equations are integrated with the fixed-step fourth-order Runge–Kutta method (RK4) at d<i>t</i> = 0.05 s, and the apex and the landing are located within their step by cubic Hermite interpolation. Two independent implementations measured the error against d<i>t</i> = 0.001 s at ≤ 1×10<sup>−6</sup> yd and ≤ 1.1×10<sup>−3</sup>°; no displayed cell changes anywhere in the range. A flight is capped at 60 s of simulated time. Reaching the cap, or any non-finite state, is a model failure: the row keeps its published values and shows — in place of its changes, and the other rows are unaffected.</p>
+  </section>
+
+  <section id="calibration" aria-labelledby="calibration-title">
+    <h2 id="calibration-title">Calibration</h2>
+    <p>For every table row, <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> are fitted so that the sea-level model reproduces the published carry and max height in yards. The fit is a damped 2×2 Newton iteration with a finite-difference Jacobian, starting from <i>k</i><sub>D</sub> = <i>k</i><sub>L</sub> = 1. Two independent implementations converge in 3 iterations (about 10 flights) on every row, with Jacobian condition numbers 3–9. A row that does not converge within 20 iterations is a model failure.</p>
+    <p>Expressed as density-independent products, the fitted values lie near <i>ρ</i><sub>0</sub><i>k</i><sub>D</sub> ≈ 1.08–1.50 and <i>ρ</i><sub>0</sub><i>k</i><sub>L</sub> ≈ 0.96–1.32 kg/m³ (<i>k</i><sub>D</sub> ≈ 0.92–1.27 and <i>k</i><sub>L</sub> ≈ 0.81–1.12 at <i>ρ</i><sub>0</sub> = 1.1839 kg/m³).</p>
+    <p>The fit targets the published yards. The metres column could narrow the rounding intervals slightly, but the gain is below the other uncertainties: the table’s rounding alone makes the carry change uncertain by up to about 1 yd at 10,000 ft.</p>
+    <p>Land angle is not a calibration target but a check: the table below sets the model’s sea-level land angle beside TrackMan’s (<a href="#limitations">Limitations</a>, item 2).</p>
+    <p>The fit runs in the browser each time a page loads, after the tables are painted, and yields between rows. The fitted values are a pure function of the table and the model, so they are never stored: the table below was computed just now, by the same modules the main page uses.</p>
+    <h3 id="calibration-table-title">Fitted factors per row</h3>
+    <div class="scroller" role="region" aria-labelledby="calibration-table-title" tabindex="0">
+      <table id="calibration-table" aria-labelledby="calibration-table-title">
+        <thead>
+          <tr>
+            <th scope="col">Tour</th>
+            <th scope="col">Club</th>
+            <th scope="col" class="num"><i>k</i><sub>D</sub></th>
+            <th scope="col" class="num"><i>k</i><sub>L</sub></th>
+            <th scope="col" class="num"><i>ρ</i><sub>0</sub><i>k</i><sub>D</sub><span class="unit">(kg/m³)</span></th>
+            <th scope="col" class="num"><i>ρ</i><sub>0</sub><i>k</i><sub>L</sub><span class="unit">(kg/m³)</span></th>
+            <th scope="col" class="num">Model land angle<span class="unit">(sea level)</span></th>
+            <th scope="col" class="num">TrackMan land angle</th>
+            <th scope="col" class="num">Difference<span class="unit">(model − TrackMan)</span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="display" aria-labelledby="display-title">
+    <h2 id="display-title">From the model to the displayed values</h2>
+    <p>Only Max Height, Land Angle and Carry are recomputed. For each calibrated row and the density ratio <i>ρ</i>/<i>ρ</i><sub>0</sub> = <i>P</i>/<i>P</i><sub>0</sub> of the chosen pressure, the model is run at that ratio and at 1 (the sea-level run is cached), and the change in carry, max height and land angle is</p>
+    <div class="eq" role="region" aria-label="Equation: modelled change" tabindex="0">
+      <math display="block">
+        <mi mathvariant="normal">Δ</mi><mo>=</mo>
+        <mtext>model</mtext><mo stretchy="false">(</mo><mi>ρ</mi><mo>/</mo><msub><mi>ρ</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mo>−</mo><mtext>model</mtext><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo>
+      </math>
+    </div>
+    <p>converted to each display unit (Δ<sub>m</sub> = Δ<sub>yd</sub> × 0.9144). Each unit is then rounded on its own, halves away from zero:</p>
+    <div class="eq" role="region" aria-label="Equation: displayed value" tabindex="0">
+      <math display="block">
+        <mtext>displayed</mtext><mo>=</mo>
+        <mtext>round</mtext><mo stretchy="false">(</mo><mtext>published</mtext><mo>+</mo><mi mathvariant="normal">Δ</mi><mo stretchy="false">)</mo>
+      </math>
+    </div>
+    <p>In absolute mode (Δ) the change line shows displayed − published in each unit, with its sign; a rounded change of zero shows ±0. In percent mode (Δ %) it shows the unrounded change as a share of the published value, in yards for the distance columns and in degrees for land angle, to one decimal:</p>
+    <div class="eq" role="region" aria-label="Equation: percent change" tabindex="0">
+      <math display="block">
+        <mtext>percent</mtext><mo>=</mo>
+        <mfrac><mi mathvariant="normal">Δ</mi><mtext>published</mtext></mfrac>
+        <mo>×</mo><mn>100</mn><mspace width="0.2em"/><mo>%</mo>
+      </math>
+    </div>
+    <p>A percentage that rounds to 0.0 shows ±0.0%; −0.0% never appears.</p>
+    <p>Rounding each unit separately keeps TrackMan’s own quirks exact at sea level: the PGA 4 Iron carries 209 yd and 192 m, although 209 yd rounds to 191 m. A PGA 8 Iron carry change of +7.6 yd shows 172/157 over +8/+7.</p>
+    <p>While a row is still being calibrated its change line shows …; a row whose model failed shows — and keeps its published values. At sea level the change lines are hidden.</p>
+
+    <h3>Why absolute and percent changes can disagree near zero</h3>
+    <p>Absolute changes are differences of rounded values and percent changes are not. A 39° land angle that the model lowers by 0.5° still displays 39°, because 38.5 rounds to 39, so absolute mode shows ±0° while percent mode shows −1.3%.</p>
+  </section>
+
+  <section id="validation" aria-labelledby="validation-title">
+    <h2 id="validation-title">Validation</h2>
+    <p>The model is checked against reference oracles: published figures for known shots at stated elevations, the direction of the change, and TrackMan’s own model shots. Hard oracles fail the build; soft ones are reported as warnings in CI and shown here. An oracle is hard only when its source measures carry (or apex, or land angle) for a known shot at a stated elevation. Sea level and altitude use the same temperature, so the density ratio is the pressure ratio.</p>
+    <p>The bands are deliberately wide: the altitude sources are secondary quotes or planning numbers, and none gives iron launch conditions alongside altitude carry. Oracles 10 and 12 are the only checks against TrackMan’s own model with fully specified inputs, read from the images of TrackMan’s 2014 post “Normalization feature explained”.</p>
+    <p>The table below is evaluated in the browser, one oracle at a time, by the same modules the main page uses. Here the two monotonicity sweeps, 9a and 9b, use a 500 ft grid; CI runs them on a 250 ft grid up to 10,000 ft and a 10 ft grid above.</p>
+    <h3 id="validation-table-title">Reference oracles</h3>
+    <div class="scroller" role="region" aria-labelledby="validation-table-title" tabindex="0">
+      <table id="validation-table" aria-labelledby="validation-table-title">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Kind</th>
+            <th scope="col">What it measures</th>
+            <th scope="col">Condition</th>
+            <th scope="col">Source</th>
+            <th scope="col">Expected<span class="unit">(band)</span></th>
+            <th scope="col">Model</th>
+            <th scope="col">Result</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="limitations" aria-labelledby="limitations-title">
+    <h2 id="limitations-title">Limitations</h2>
+    <ol>
+      <li><strong>No Reynolds-number dependence.</strong> The dimpled-ball drag crisis lies at Re ≈ 5×10<sup>4</sup>–10<sup>5</sup> on current tour balls (Lyu et al. 2018, spinning or not, up to <i>S</i> ≈ 0.3), which overlaps the slow end of every flight; spin moves the crisis to lower Re (Li et al. 2017), and no open data cover <i>S</i> 0.3–1.2. Lower density lowers Re, so a Re term would alter the change with altitude, not just the sea-level level that calibration absorbs. The Re-free model is chosen because it is the closest match to TrackMan’s own model: TrackMan’s 2014 model trajectories (oracle 10 and the wind cases) and TrackMan-derived altitude figures. That evidence is largely TrackMan’s model and players’ TrackMan-derived planning numbers, so it cannot rule out Re effects; drag-crisis variants that let spin move the crisis also pass every hard oracle. Across physically plausible variants, iron and wedge carry gains are uncertain by about −30 % to +25 % of the shown gain.</li>
+      <li><strong>Land-angle offset.</strong> After calibration the model lands shallower than TrackMan’s table: by about 1–9° for the PGA rows and the LPGA woods to 7 Iron (worst for hybrids and long irons), and within 0.7° for LPGA 8 Iron to PW (<a href="#calibration">Calibration</a>). Against TrackMan’s own fully specified model shots the gap is only 1.1–1.8°: at the same launch, the 2023 table rows are longer, lower and steeper than TrackMan’s model trajectory, which no single trajectory can be, so most of the gap reflects averaging in the table. The one physical mechanism found that closes the rest is a low-Re drag rise, the same effect item 1 omits. The land-angle column is therefore labelled indicative; its change carries about ±2° of structural uncertainty at 10,000 ft. An alternative, launch-anchored mapping (equally exact at sea level) would show larger land-angle changes for woods, hybrids and long irons, by up to 3.4° at 10,000 ft; no source discriminates between the two.</li>
+      <li><strong>Low-spin clubs plateau at extreme altitude.</strong> As density falls, carry tends to its vacuum value, and for low-spin, low-launch shots that is shorter than at moderate density: the LPGA 3-wood and 4 Iron peak near 14,500 ft (by 0.03 yd, invisible in the displayed integers).</li>
+      <li><strong>Launch conditions are held fixed at altitude.</strong> Real players may change clubs, trajectory or swing.</li>
+      <li><strong>No wind, temperature, humidity, ball-model or roll effects.</strong></li>
+      <li><strong>TrackMan does not state the tables’ conditions.</strong> Calm sea level is assumed.</li>
+      <li><strong>The coefficient shapes are a driver fit.</strong> Every row except the two Drivers is outside the fit’s spin-parameter range for some or all of its flight, and is an extrapolation (<a href="#model">Ball-flight model</a>).</li>
+    </ol>
+    <h3>Contrast</h3>
+    <p>The main page reproduces TrackMan’s palette exactly, including its white text, whose contrast is 2.26:1 on the striped rows and 3.18:1 on the orange, below WCAG AA. This is accepted for fidelity: no text shadow or palette change is applied. What this site adds meets AA: the change lines, the methods link, the focus rings and the hints use a dark charcoal (#262425), 4.85:1 on the orange and 6.81:1 on the stripe.</p>
+  </section>
+
+  <section id="sources" aria-labelledby="sources-title">
+    <h2 id="sources-title">Sources</h2>
+    <p>Each source is marked as read at the primary source or seen only second hand. All were accessed on 2026-10-08.</p>
+
+    <h3>Data</h3>
+    <ul>
+      <li><a href="https://www.trackman.com/blog/introducing-updated-tour-averages">TrackMan, “Introducing updated tour averages”</a>: the 2023 PGA TOUR and LPGA Tour Averages tables. <span class="mark">Primary.</span></li>
+      <li><a href="https://www.trackman.com/blog/golf/normalization-feature-explained">TrackMan, “Normalization feature explained”, 2014-07-09</a>: the 77 °F (25 °C), sea-level defaults, and the 2014 “Calm”, head- and tailwind 6 Iron model shots of oracles 10a, 10b and 12. <span class="mark">Primary.</span></li>
+    </ul>
+
+    <h3>Equations and ball</h3>
+    <ul>
+      <li>A. R. Penner (2001), “The physics of golf: The optimum loft of a driver”, <i>Am. J. Phys.</i> 69(5), 563–568, <a href="https://doi.org/10.1119/1.1344164">doi:10.1119/1.1344164</a> (<a href="https://www.viurrspace.ca/server/api/core/bitstreams/59c73ed3-fece-4b2c-8e96-a14336895139/content">open author copy</a>): the equations of motion (eqs. 12–15) and the spin decay (eq. 16). <span class="mark">Primary.</span></li>
+      <li>A. J. Smits and D. R. Smith (1994), “A new aerodynamic model of a golf ball in flight”, in <i>Science and Golf II</i> (Cochran &amp; Farrally, eds.), E &amp; FN Spon, pp. 340–347: the drag and lift shapes. <span class="mark">Second hand.</span> The chapter was not available. Its text was read as reproduced in <a href="https://patents.google.com/patent/US11230375B1/en">US patent 11,230,375 B1</a>, apparently from Mehta &amp; Pallis (2001), “Sports Ball Aerodynamics: Effects of Velocity, Spin and Surface Roughness”, <i>Materials and Science in Sports</i>, pp. 185–197; the patent does not attribute the passage. The page range is confirmed by <a href="https://patents.google.com/patent/US6186002B1/en">US patent 6,186,002 B1</a>, and the spin-decay constant was read as given in Penner (2001), eq. 16.</li>
+      <li><a href="https://www.randa.org/roe/the-rules-of-equipment/part-4-conformance-of-balls">R&amp;A and USGA, Equipment Rules, Part 4</a>: the ball’s mass and diameter limits. <span class="mark">Primary.</span></li>
+    </ul>
+
+    <h3>Atmosphere and units</h3>
+    <ul>
+      <li><a href="https://ntrs.nasa.gov/api/citations/19770009539/downloads/19770009539.pdf">U.S. Standard Atmosphere, 1976</a> (NOAA-S/T 76-1562, NASA-TM-X-74335; NASA NTRS 19770009539): the troposphere equations and constants. <span class="mark">Primary.</span></li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8">NIST Special Publication 811 (2008), Appendix B.8</a>: the conversion factors. <span class="mark">Primary.</span></li>
+      <li><a href="https://forecast.weather.gov/glossary.php">National Weather Service glossary</a>: station pressure, sea-level pressure and altimeter setting. <span class="mark">Primary.</span></li>
+    </ul>
+
+    <h3>Limitations</h3>
+    <ul>
+      <li>B. Lyu, J. Kensrud, L. Smith and T. Tosaya (2018), “Aerodynamics of Golf Balls in Still Air”, <i>Proceedings</i> 2(6), 238, <a href="https://doi.org/10.3390/proceedings2060238">doi:10.3390/proceedings2060238</a>. <span class="mark">Primary.</span></li>
+      <li>J. Li, M. Tsubokura and M. Tsunoda (2017), “Numerical Investigation of the Flow Past a Rotating Golf Ball and Its Comparison with a Rotating Smooth Sphere”, <i>Flow, Turbulence and Combustion</i>, <a href="https://doi.org/10.1007/s10494-017-9859-1">doi:10.1007/s10494-017-9859-1</a>. <span class="mark">Primary.</span></li>
+    </ul>
+
+    <h3>Reference data</h3>
+    <ul>
+      <li><a href="https://www.pgatour.com/article/news/long-form/2017/02/28/elevated-expectations-wgc-mexico-championship-altitude">PGA TOUR, “Elevated expectations”, 2017-02-28</a>, oracles 1–4, 7, 9a and 9b. <span class="mark">Second hand.</span> The article was read, but its figures are quotes of Justin Padjen (TrackMan) and Steve Aoyama (Titleist).</li>
+      <li><a href="https://pgatour.com/article/news/latest/2024/08/21/altitude-adjustment-colorado-castle-pines-golf-club-elevation-challenge-bmw-championship">PGA TOUR, Paul Hodowanic, “Altitude adjustment … BMW Championship”, 2024-08-21</a>, oracles 7, 9a and 9b. <span class="mark">Second hand:</span> a paraphrase of TrackMan’s Harrison Shih.</li>
+      <li><a href="https://support.trackmangolf.com/hc/en-us/articles/51714287935387-VG-Altitude-in-Course-Play">TrackMan Support, “VG | Altitude in Course Play”, 2026-06-15</a>, oracle 5. <span class="mark">Primary.</span></li>
+      <li><a href="https://taylormadegolf.fr/clubhouse/801423-seen-on-tour-scottie-rory-collin-tommy-prepare-for-altitude-at-the-bmw-championship.html?lang=fr_FR">TaylorMade Clubhouse, Mike Esse, “Seen on Tour: … prepare for altitude at the BMW Championship”, 2024-08-22</a>, oracles 6 and 7. <span class="mark">Primary:</span> the publication of the players’ own planning yardages, which are not measurements.</li>
+      <li><a href="https://app.europeantour.com/dpworld-tour/news/articles/detail/a-numbers-game-players-tackle-altitude-at-omega-european-masters/">DP World Tour, “A numbers game – Players tackle altitude at Omega European Masters”, 2026-09-02</a>, oracles 7, 8a and 8b. <span class="mark">Second hand:</span> a player’s quoted launch-monitor planning numbers.</li>
+      <li><a href="https://golfwrx.com/545618/tiger-woods-lofting-up-for-thin-air-examining-the-switch-and-what-happens-when-you-play-at-altitude/">GolfWRX, Ryan Barath, 2019-02-17</a>, oracle 4. <span class="mark">Second hand:</span> verbatim quotes of Steve Aoyama.</li>
+      <li><a href="http://web.archive.org/web/20260509230837/https://www.titleist.com/learning-lab/performance/altitude-and-golf-ball-flight">Titleist Learning Lab, “Altitude and Ball Flight”</a> (Wayback Machine copy of 2026-05-09; titleist.com returns 403), oracle 4. <span class="mark">Primary.</span></li>
+      <li><a href="https://www.titleist.com/teamtitleist/b/tourblog/posts/the-effect-of-altitude-golf-ball-aerodynamics">Titleist, Steve Aoyama, “The Effect of Altitude on Golf Ball Performance” and “Golf Ball Aerodynamics and the Effect of Altitude”</a>, oracle 11. <span class="mark">Second hand:</span> search-engine excerpts and quotes only, because the pages return 403.</li>
+      <li><a href="https://www.australiangolfdigest.com.au/pro-golfers-calculate-their-yardages-golf-course-strategy-game-plan-golf-digest/">Australian Golf Digest / Golf Digest, Luke Kerr-Dineen, “According to Trackman … 6 percent at 1,500 metres”, 2025-01-24</a>, oracle 11. <span class="mark">Second hand:</span> a paraphrase of TrackMan.</li>
+      <li><a href="https://www.foresightsports.com/how-altitude-affects-golf-ball-distance">Foresight Sports, “How Altitude Affects Golf Ball Distance”, 2020-11-25</a>, oracles 9a and 9b. <span class="mark">Primary.</span></li>
+    </ul>
+  </section>
+
+  <p><a class="back" href="index.html">← Back to the tables</a></p>
+</main>
+
+<footer class="footer">
+  <p><a href="https://www.trackman.com/blog/introducing-updated-tour-averages">Data: TrackMan 2023 Tour Averages</a></p>
+  <p>Values above sea level are this site’s model, not TrackMan’s publication. Not affiliated with TrackMan.</p>
+  <p>Version <span id="version"></span></p>
+  <p>Fonts: Oswald and Lato, SIL Open Font License</p>
+  <p><a href="https://github.com/jhoblitt/tmelevation">github.com/jhoblitt/tmelevation</a></p>
+</footer>
+</body>
+</html>

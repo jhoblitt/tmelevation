@@ -1,0 +1,122 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: Release tag to deploy (vX.Y.Z)
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to deploy (vX.Y.Z); an older tag rolls the site back
+        required: true
+        type: string
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+# A deploy is serialized and never cancelled mid-run: the second exception to
+# the canon's cancel-in-progress rule, alongside the release workflow's. The
+# group is a literal because under workflow_call github.* is the caller's
+# context.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      deploy: ${{ steps.guard.outputs.deploy }}
+    # Chrome starts with its sandbox. If the runner cannot provide one, set
+    # CHROME_NO_SANDBOX: '1' here, as in ci.yml's browser job.
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Validate the tag
+        run: |
+          if ! [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::the tag to deploy must be vX.Y.Z"
+            exit 1
+          fi
+
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.TAG }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      # The tag must be on main. A push-triggered run then deploys it only if
+      # it is the highest release there, so neither a re-run of an old release
+      # run nor an old tag pushed by hand can roll the site back. Under
+      # workflow_call github.event_name is the caller's push, and a tag the
+      # release just cut is by construction the highest on main. Only a
+      # manual run may deploy an older tag, as a deliberate rollback.
+      - name: Check the tag is on main
+        id: guard
+        env:
+          GUARD_HIGHEST: ${{ github.event_name == 'push' }}
+        run: |
+          if ! git merge-base --is-ancestor "$TAG^{commit}" origin/main; then
+            echo "::error::$TAG is not on main"
+            exit 1
+          fi
+          deploy=true
+          if [ "$GUARD_HIGHEST" = true ]; then
+            # A tag such as v2.0.0-rc.1 or vtest is no release, yet can sort
+            # above the releases. Captured before filtering, so a git failure
+            # fails the step.
+            tags=$(git for-each-ref --merged origin/main --sort=-v:refname --format='%(refname:short)' 'refs/tags/v*')
+            latest=$(awk '/^v[0-9]+\.[0-9]+\.[0-9]+$/ { print; exit }' <<<"$tags")
+            if [ "$TAG" != "$latest" ]; then
+              echo "::notice::not deploying $TAG: the highest release on main is $latest"
+              deploy=false
+            fi
+          fi
+          echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node.js
+        if: steps.guard.outputs.deploy == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Unit tests
+        if: steps.guard.outputs.deploy == 'true'
+        run: npm test
+
+      - name: Build the artifact
+        if: steps.guard.outputs.deploy == 'true'
+        run: node scripts/build-artifact.mjs "$TAG" _site
+
+      - name: Smoke-test the artifact
+        if: steps.guard.outputs.deploy == 'true'
+        run: node test/browser/smoke.mjs _site --expect-version "$TAG"
+
+      - name: Upload the Pages artifact
+        if: steps.guard.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
