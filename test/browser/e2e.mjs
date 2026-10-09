@@ -1,6 +1,7 @@
 // End-to-end tests of the pages in headless Chrome: the Review Focus cases
-// RF-1…RF-5, a background tab, back/forward with and without the
-// back/forward cache, and the sticky controls.
+// RF-1…RF-5, the footer's links from the keyboard, a background tab,
+// back/forward with and without the back/forward cache, and the sticky
+// controls.
 //
 //   node test/browser/e2e.mjs [siteDir]      (default: site/)
 import assert from 'node:assert/strict';
@@ -342,6 +343,22 @@ function focused() {
   return { id: node.id, outline: getComputedStyle(node).outlineStyle };
 }
 
+function footerStop() {
+  const node = document.activeElement;
+  const style = getComputedStyle(node);
+  const { left, right, height } = node.getBoundingClientRect();
+  return {
+    id: node.id,
+    inFooter: node.closest('footer') !== null,
+    outline: style.outlineStyle,
+    outlineWidth: parseFloat(style.outlineWidth),
+    left,
+    right,
+    height,
+    clientWidth: document.documentElement.clientWidth,
+  };
+}
+
 function visible(selector) {
   const node = document.querySelector(selector);
   const { width, height } = node?.getBoundingClientRect() ?? { width: 0, height: 0 };
@@ -491,22 +508,13 @@ test('RF-3: keyboard only', () =>
     await page.send('Emulation.setFocusEmulationEnabled', { enabled: true });
     await load(page, url('index.html'));
     const stops = [];
-    for (let i = 0; i < 8; i += 1) {
+    for (let i = 0; i < 7; i += 1) {
       await page.key('Tab');
       stops.push(await page.eval(call(focused)));
     }
     assert.deepEqual(
       stops.map(({ id }) => id),
-      [
-        'elev',
-        'elev-unit',
-        'press',
-        'press-unit',
-        'methods-link',
-        'slider',
-        'mode-abs',
-        'mode-pct',
-      ],
+      ['elev', 'elev-unit', 'press', 'press-unit', 'slider', 'mode-abs', 'mode-pct'],
     );
     for (const { id, outline } of stops) {
       assert.notEqual(outline, 'none', `#${id} shows no focus outline`);
@@ -553,6 +561,34 @@ test('RF-3: keyboard only', () =>
     assert.deepEqual(await page.eval(call(readCells)), expectedCells(setMode(AT_5280, 'pct')));
     assert.deepEqual(seen.problems, []);
   }));
+
+for (const viewport of [NARROW, DESKTOP]) {
+  test(`footer at ${viewport.width} px: Tab reaches the methods and GitHub links`, () =>
+    withPage({ viewport }, async ({ page, seen, url }) => {
+      await page.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+      await load(page, url('index.html'));
+      await page.eval(`document.querySelector('footer').scrollIntoView()`);
+      await frames(page);
+      const stops = [];
+      for (let i = 0; i < 20 && stops.at(-1)?.id !== 'repo-link'; i += 1) {
+        await page.key('Tab');
+        stops.push(await page.eval(call(footerStop)));
+      }
+      const footer = stops.filter(({ inFooter }) => inFooter);
+      assert.deepEqual(
+        footer.map(({ id }) => id),
+        ['methods-link', '', 'repo-link'],
+        JSON.stringify(stops.map(({ id }) => id)),
+      );
+      for (const stop of footer.filter(({ id }) => id !== '')) {
+        const { id, outline, outlineWidth, left, right, height, clientWidth } = stop;
+        assert.ok(outline !== 'none' && outlineWidth > 0, `#${id} shows no focus outline`);
+        assert.ok(left >= 0 && right <= clientWidth, `#${id} spans ${left}…${right} px`);
+        assert.ok(height >= 44, `#${id} is ${height} px tall`);
+      }
+      assert.deepEqual(seen.problems, []);
+    }));
+}
 
 test('RF-4: 320 px phones and rotation', () =>
   withPage({ viewport: NARROW }, async ({ page, seen, url }) => {

@@ -160,13 +160,6 @@ input[aria-invalid='true'] {
   box-shadow: inset 0 0 0 2px var(--invalid);
 }
 
-.methods-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-weight: 700;
-}
-
 .pinned {
   position: sticky;
   top: 0;
@@ -419,6 +412,37 @@ tbody tr:nth-child(odd) .club {
   max-width: 80rem;
 }
 
+.methods-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* The icon, not its 44 px target, lines up with the text above, so the
+   target reaches into the footer's padding; its ring is drawn inside it,
+   which keeps the ring clear of the viewport edge at 320 px. */
+.repo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin-left: -10px;
+}
+
+.repo-link:focus-visible {
+  outline-offset: -3px;
+}
+
+.icon {
+  flex: none;
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 /* A phone held sideways is as wide as this but too short to pin the whole
    bar, so it keeps the phone layout and its compact pinned row. */
 @media (min-width: 768px) and (min-height: 500px) {
@@ -441,10 +465,6 @@ tbody tr:nth-child(odd) .club {
 
   .fields {
     padding: 0;
-  }
-
-  .methods-link {
-    margin-top: calc(var(--label-block) + 0.25rem);
   }
 
   /* One row needs about 960 px; below that the pinned row takes a line of

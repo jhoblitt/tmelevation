@@ -67,8 +67,7 @@ reproduced with attribution, and are not covered by the repository's licence.
 1. **Controls.**
    - Elevation slider; elevation text box with a `ft | m` dropdown; pressure
      text box with a `inHg | kPa | mbar (hPa)` dropdown; a delta-mode toggle
-     (`Δ` absolute change in the cell's own units, or `Δ %`); a small
-     `Method & sources` link to the methods page.
+     (`Δ` absolute change in the cell's own units, or `Δ %`).
    - Defaults: ft and inHg.
    - The pressure box is labelled "Air pressure at the course (absolute)" and
      carries an inline hint that a weather app's "barometer" value is reduced
@@ -76,18 +75,19 @@ reproduced with attribution, and are not covered by the repository's licence.
      methods page explains further.
    - Desktop: the whole control bar is one row, sticky at the top.
    - Phones: only a compact row stays pinned — the slider, a one-line readout
-     (`5,280 ft · 24.64 inHg`) and the Δ toggle (about 60 px). The text boxes,
-     dropdowns and methods link sit above the tables and scroll away.
+     (`5,280 ft · 24.64 inHg`) and the Δ toggle (about 60 px). The text boxes
+     and dropdowns sit above the tables and scroll away.
 2. **PGA table**, then **LPGA table**, stacked, each with TrackMan's header
    treatment: "PGA TOUR AVERAGES" in white heavy condensed caps, "YARDS/METERS"
    in charcoal, "2023" right-aligned in a thin condensed face. On narrow
    screens the title wraps to two lines; the year stays right-aligned. When
    elevation is above 0 a caption under the title names the conditions
    (`at 5,280 ft · 24.64 inHg`).
-3. **Footer**: "Data: TrackMan 2023 Tour Averages" linking to the blog post; a
-   statement that values above sea level are this site's model, not TrackMan's
-   publication, and that the site is not affiliated with TrackMan; the
-   deployed version; font credits; a link to the GitHub repository.
+3. **Footer**: first, a `Method & sources` link to the methods page; "Data:
+   TrackMan 2023 Tour Averages" linking to the blog post; a statement that
+   values above sea level are this site's model, not TrackMan's publication,
+   and that the site is not affiliated with TrackMan; the deployed version;
+   font credits; a GitHub-icon link to the GitHub repository.
 
 ### 4.2 Linked inputs
 
@@ -173,8 +173,13 @@ reproduced with attribution, and are not covered by the repository's licence.
   2.26:1 on the stripe and 3.18:1 on the orange, below WCAG AA. No text shadow
   or palette change is applied; the methods page and README note it. Elements
   this project adds (deltas, the methods link, focus rings, hints) meet AA.
-- The methods link uses dark charcoal text, not white, with a tap target of at
-  least 44 px. Focus rings are a dark outline visible on both row colours.
+- The footer's methods link uses dark charcoal text, not white, with a tap
+  target of at least 44 px. The footer's repository link is GitHub's Octicons
+  `mark-github` icon (MIT; its licence text and upstream URL ship in
+  `site/icons/`), inlined as an SVG drawn in the same charcoal, hidden from
+  assistive technology, with a visually hidden accessible name "Source code
+  on GitHub", a matching tooltip and a 44 px tap target. Focus rings are a
+  dark outline visible on both row colours.
 - Fonts: Oswald (titles, column headers) and Lato 400 / 700 (values, deltas),
   self-hosted woff2 files taken unmodified from Google Fonts (no subsetting, so
   Lato's reserved font name is not an issue), `font-display: swap`. Each file's
