@@ -120,7 +120,9 @@ const lerp = (a, b, s) => a + (b - a) * s;
 
 // Returns carry, max height, land angle and, with diag, the ballooning
 // diagnostics: peak ground flight-path angle and apex downrange position.
-export function fly(launch, law, p, { kD = 1, kL = 1 } = {}, { rhoRatio = 1, windMps = 0 } = {}, { dt = DT_S, diag = false } = {}) {
+// groundM (round 2c): landing height relative to the launch point (positive =
+// landing area above the tee); the default 0 is the launch plane.
+export function fly(launch, law, p, { kD = 1, kL = 1 } = {}, { rhoRatio = 1, windMps = 0 } = {}, { dt = DT_S, diag = false, groundM = 0 } = {}) {
   const f = derivative(law, p, { kD, kL }, { rhoRatio, windMps });
   const { speedMps, angleRad, spinRadS } = launch;
   let state = [0, 0, speedMps * Math.cos(angleRad), speedMps * Math.sin(angleRad), spinRadS, 0];
@@ -157,10 +159,10 @@ export function fly(launch, law, p, { kD = 1, kL = 1 } = {}, { rhoRatio = 1, win
         apexXM = at(0, s);
       }
     }
-    if (next[1] < 0 && next[3] < 0) {
-      let s = state[1] / (state[1] - next[1]);
+    if (next[1] < groundM && next[3] < 0 && state[1] >= groundM) {
+      let s = (state[1] - groundM) / (state[1] - next[1]);
       for (let i = 0; i < NEWTON_ITERATIONS; i++) {
-        const residual = at(1, s);
+        const residual = at(1, s) - groundM;
         if (residual === 0) break;
         s -= residual / hermiteSlope(state[1], rate[1], next[1], nextRate[1], dt, s);
       }
@@ -196,8 +198,10 @@ const MAX_ITERATIONS = 30;
 
 // Per-row kD, kL fitted to carry and max height at sea level, as
 // site/js/calibrate.js does (damped Newton, forward-difference Jacobian).
-export function calibrate(launch, law, p, { carryM, maxHeightM }, start = { kD: 1, kL: 1 }, tol = TOLERANCE_M) {
-  const flyAt = (kD, kL) => fly(launch, law, p, { kD, kL });
+// env (round 2, R2-2): optional { rhoRatio, windMps } to calibrate in other
+// air; the default keeps the sea-level calibration of rounds 1 and 2.
+export function calibrate(launch, law, p, { carryM, maxHeightM }, start = { kD: 1, kL: 1 }, tol = TOLERANCE_M, env = {}) {
+  const flyAt = (kD, kL) => fly(launch, law, p, { kD, kL }, env);
   const residual = (fl) => [fl.carryM - carryM, fl.maxHeightM - maxHeightM];
   const sq = (r) => r[0] * r[0] + r[1] * r[1];
   let { kD, kL } = start;

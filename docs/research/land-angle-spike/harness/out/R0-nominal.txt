@@ -1,0 +1,129 @@
+# R0: measured supercritical laws only (no low-Re band), ball-spread scales free
+weights carry/height/land = 2/1/1.5; restarts 10; seed 1; altitude-constrained: false
+
+## Mode G (0.0 s)
+theta: sD=1.000, sL=1.000; at bound: []
+weighted cost 786.355 (altitude-penalty part 35.350); restart costs: 
+RMS carry 5.23 yd, height 3.06 yd, land 6.36 deg
+| Row | carry | height | land |
+|---|---|---|---|
+| PGA Driver | -5.9 | -6.8 | -6.4 |
+| PGA 3-wood | 10.0 | -3.5 | -7.7 |
+| PGA 5-wood | 9.1 | -2.7 | -8.7 |
+| PGA Hybrid | -1.2 | -1.7 | -9.2 |
+| PGA 3 Iron | 5.6 | -3.2 | -10.1 |
+| PGA 4 Iron | 2.4 | -4.0 | -9.7 |
+| PGA 5 Iron | 0.2 | -4.5 | -8.2 |
+| PGA 6 Iron | -2.4 | 0.2 | -3.9 |
+| PGA 7 Iron | -6.2 | -1.4 | -3.4 |
+| PGA 8 Iron | -5.6 | -0.8 | -3.1 |
+| PGA 9 Iron | -5.4 | -0.4 | -3.8 |
+| PGA PW | -9.7 | -0.5 | -2.7 |
+| LPGA Driver | 2.0 | -3.3 | -5.8 |
+| LPGA 3-wood | 3.0 | -7.1 | -11.2 |
+| LPGA 5-wood | 7.3 | -1.2 | -6.4 |
+| LPGA Hybrid | 9.0 | 0.2 | -6.3 |
+| LPGA 4 Iron | -3.2 | -3.0 | -6.0 |
+| LPGA 5 Iron | -2.9 | -2.8 | -6.7 |
+| LPGA 6 Iron | 0.1 | 0.6 | -2.9 |
+| LPGA 7 Iron | 0.5 | -0.5 | -2.5 |
+| LPGA 8 Iron | 1.6 | -0.7 | -1.2 |
+| LPGA 9 Iron | -0.7 | -1.6 | -1.8 |
+| LPGA PW | -2.1 | -3.9 | -2.1 |
+
+## Mode A, shape from mode G (0.1 s)
+land RMS 3.96 deg; kD 0.87..1.32, kL 0.92..1.48; failed: 0
+| Row | land A(G shape) | kD | kL | land A* | kD | kL |
+|---|---|---|---|---|---|---|
+| PGA Driver | -0.5 | 1.08 | 1.22 | -0.5 | 1.08 | 1.22 |
+| PGA 3-wood | -3.2 | 1.12 | 1.15 | -3.2 | 1.12 | 1.15 |
+| PGA 5-wood | -5.3 | 1.09 | 1.11 | -5.3 | 1.09 | 1.11 |
+| PGA Hybrid | -8.0 | 1.01 | 1.04 | -8.0 | 1.01 | 1.04 |
+| PGA 3 Iron | -6.3 | 1.08 | 1.12 | -6.3 | 1.08 | 1.12 |
+| PGA 4 Iron | -5.9 | 1.06 | 1.13 | -5.9 | 1.06 | 1.13 |
+| PGA 5 Iron | -4.8 | 1.04 | 1.14 | -4.8 | 1.04 | 1.14 |
+| PGA 6 Iron | -4.4 | 0.98 | 0.98 | -4.4 | 0.98 | 0.98 |
+| PGA 7 Iron | -3.6 | 0.95 | 1.00 | -3.6 | 0.95 | 1.00 |
+| PGA 8 Iron | -3.6 | 0.94 | 0.98 | -3.6 | 0.94 | 0.98 |
+| PGA 9 Iron | -4.5 | 0.94 | 0.96 | -4.5 | 0.94 | 0.96 |
+| PGA PW | -4.3 | 0.87 | 0.92 | -4.3 | 0.87 | 0.92 |
+| LPGA Driver | -0.9 | 1.14 | 1.20 | -0.9 | 1.14 | 1.20 |
+| LPGA 3-wood | 0.2 | 1.32 | 1.48 | 0.2 | 1.32 | 1.48 |
+| LPGA 5-wood | -3.6 | 1.10 | 1.09 | -3.6 | 1.10 | 1.09 |
+| LPGA Hybrid | -4.6 | 1.10 | 1.05 | -4.6 | 1.10 | 1.05 |
+| LPGA 4 Iron | -3.1 | 1.02 | 1.12 | -3.1 | 1.02 | 1.12 |
+| LPGA 5 Iron | -4.1 | 1.02 | 1.12 | -4.1 | 1.02 | 1.12 |
+| LPGA 6 Iron | -3.5 | 0.99 | 0.97 | -3.5 | 0.99 | 0.97 |
+| LPGA 7 Iron | -2.0 | 1.01 | 1.03 | -2.0 | 1.01 | 1.03 |
+| LPGA 8 Iron | -0.4 | 1.04 | 1.06 | -0.4 | 1.04 | 1.06 |
+| LPGA 9 Iron | -0.9 | 1.01 | 1.10 | -0.9 | 1.01 | 1.10 |
+| LPGA PW | -0.4 | 1.01 | 1.27 | -0.4 | 1.01 | 1.27 |
+
+## Altitude (0.5 s)
+### mode G: monotone @250 ft: 0-10k false (12 violations), 10-15k 98 violations, worst carry fall 0.23 yd; first: LPGA 3-wood carry falls at 7250 ft; LPGA 3-wood carry falls at 7500 ft; LPGA 3-wood carry falls at 7750 ft; LPGA 3-wood carry falls at 8000 ft; LPGA 3-wood carry falls at 8250 ft; LPGA 3-wood carry falls at 8500 ft
+| Row | carry % 5,280 | 10,000 | height yd 5,280 | 10,000 | land deg 5,280 | 10,000 |
+|---|---|---|---|---|---|---|
+| PGA Driver | 5.5 | 8.4 | -2.8 | -5.3 | -5.1 | -9.3 |
+| PGA 3-wood | 6.6 | 9.9 | -3.6 | -7.0 | -6.4 | -12.0 |
+| PGA Hybrid | 8.1 | 12.3 | -3.6 | -7.0 | -6.5 | -12.3 |
+| PGA 4 Iron | 7.5 | 11.5 | -3.3 | -6.4 | -6.4 | -12.1 |
+| PGA 7 Iron | 9.9 | 17.8 | -1.8 | -3.9 | -4.1 | -8.7 |
+| PGA PW | 9.7 | 17.6 | -0.8 | -1.8 | -2.9 | -5.8 |
+| LPGA Driver | 3.5 | 4.9 | -2.0 | -3.8 | -4.4 | -7.6 |
+| LPGA 5 Iron | 5.8 | 8.8 | -2.1 | -4.1 | -5.3 | -9.7 |
+| LPGA 7 Iron | 7.7 | 13.3 | -1.5 | -3.0 | -4.3 | -8.5 |
+| LPGA PW | 7.1 | 12.5 | -0.8 | -1.5 | -3.0 | -5.8 |
+5280 ft carry %: PGA 5.5..9.9, LPGA 1.8..7.7; land -6.6..-2.9; height -3.7..-0.8 yd
+10000 ft carry %: PGA 8.4..17.8, LPGA 1.6..13.6; land -12.3..-5.8; height -7.3..-1.5 yd
+Padjen (PGA Driver 7,800 ft): carry 7.3% (+8.5%), apex -14.6% (-18%), land -7.41 deg (-9)
+app oracles: 1 true 2 true 3 true 6 true (7i@6400 11.9%) 9a(0-10k) false; soft: 4 Dr@5280 5.5% [3.5,8.5]; 5 PGA mean@7200 10.8% [6.5,13]; 7 Dr/7i/PW@6400 6.4/11.9/11.6; PW-7i@6300 -0.2 pts; 8a 7i@4920 9.2% [4,10]; 8b Dr@4920 5.2% [3,7.5]; 11 LPGA-PGA Dr@5280 -2.0 pts (<=1)
+### mode A: monotone @250 ft: 0-10k true (0 violations), 10-15k 21 violations, worst carry fall 0.07 yd; first: LPGA 3-wood carry falls at 13500 ft; LPGA 3-wood carry falls at 13750 ft; LPGA 3-wood carry falls at 14000 ft; LPGA 4 Iron carry falls at 14000 ft; LPGA 3-wood carry falls at 14250 ft; LPGA 4 Iron carry falls at 14250 ft
+| Row | carry % 5,280 | 10,000 | height yd 5,280 | 10,000 | land deg 5,280 | 10,000 |
+|---|---|---|---|---|---|---|
+| PGA Driver | 7.5 | 12.2 | -3.5 | -6.9 | -5.7 | -10.8 |
+| PGA 3-wood | 8.6 | 14.1 | -3.7 | -7.3 | -6.2 | -12.2 |
+| PGA Hybrid | 8.6 | 13.5 | -3.7 | -7.4 | -6.5 | -12.5 |
+| PGA 4 Iron | 9.4 | 15.5 | -3.5 | -7.0 | -6.1 | -12.1 |
+| PGA 7 Iron | 9.7 | 17.5 | -2.0 | -4.4 | -4.2 | -8.9 |
+| PGA PW | 8.7 | 15.5 | -1.1 | -2.3 | -3.0 | -6.0 |
+| LPGA Driver | 5.4 | 8.1 | -2.4 | -4.6 | -5.2 | -9.3 |
+| LPGA 5 Iron | 7.0 | 10.9 | -2.5 | -4.8 | -5.4 | -10.2 |
+| LPGA 7 Iron | 7.9 | 13.8 | -1.5 | -3.1 | -4.2 | -8.5 |
+| LPGA PW | 8.6 | 15.2 | -1.1 | -2.2 | -2.8 | -5.5 |
+5280 ft carry %: PGA 7.5..10.2, LPGA 5.4..8.6; land -6.5..-2.8; height -3.7..-1.1 yd
+10000 ft carry %: PGA 12.2..17.5, LPGA 8.1..15.2; land -12.5..-5.5; height -7.4..-2.2 yd
+Padjen (PGA Driver 7,800 ft): carry 10.3% (+8.5%), apex -15.2% (-18%), land -8.46 deg (-9)
+app oracles: 1 true 2 true 3 true 6 true (7i@6400 11.7%) 9a(0-10k) true; soft: 4 Dr@5280 7.5% [3.5,8.5]; 5 PGA mean@7200 12.0% [6.5,13]; 7 Dr/7i/PW@6400 8.8/11.7/10.4; PW-7i@6300 -1.3 pts; 8a 7i@4920 9.1% [4,10]; 8b Dr@4920 7.1% [3,7.5]; 11 LPGA-PGA Dr@5280 -2.2 pts (<=1)
+
+## TrackMan 2014 (informational; 0.5 s)
+mode G: PGA 6i shot model-TM carry 2.4 height -0.5 land -1.3; LPGA 6i 1.4 / 0.3 / -0.4
+  wind land-response errors (model - TM): pgaHW10 -0.3, pgaHW20 -0.1, pgaTW10 0.5, pgaTW20 0.9, lpgaHW10 -0.1, lpgaHW20 -0.0, lpgaTW10 0.0, lpgaTW20 -0.0; max |.| 0.9
+  wind carry-response errors yd: -0.4 0.2 -0.0 0.3 -0.7 -0.8 0.3 -0.5
+mode A: PGA 6i shot model-TM carry -0.0 height 0.0 land -0.6; LPGA 6i 0.0 / 0.0 / -0.3
+  wind land-response errors (model - TM): pgaHW10 -0.1, pgaHW20 0.1, pgaTW10 0.3, pgaTW20 0.6, lpgaHW10 -0.1, lpgaHW20 0.1, lpgaTW10 -0.0, lpgaTW20 -0.1; max |.| 0.6
+  wind carry-response errors yd: -1.0 -0.9 0.5 1.4 -0.8 -0.8 0.4 -0.3
+
+## Ballooning (0.6 s)
+mode G: rise 0.0..4.3 deg at 1.7..30.6% carry; apex at 59.6..67.2% carry; minRe 4.62e+4..8.25e+4; maxS 0.15..1.14
+  PGA Driver: launch 10.4 peak 11.5 (+1.1) at 19.6%; apex at 64.0%; minRe 8.25e+4; maxS 0.15; land speed 30.5 m/s
+  PGA Hybrid: launch 10.2 peak 13.4 (+3.2) at 30.1%; apex at 67.0%; minRe 6.40e+4; maxS 0.37; land speed 25.5 m/s
+  PGA 7 Iron: launch 16.1 peak 20.4 (+4.3) at 28.2%; apex at 64.8%; minRe 5.19e+4; maxS 0.75; land speed 23.5 m/s
+  PGA PW: launch 23.7 peak 25.9 (+2.2) at 20.9%; apex at 61.6%; minRe 4.62e+4; maxS 1.14; land speed 22.9 m/s
+  LPGA Driver: launch 12.6 peak 12.7 (+0.1) at 6.0%; apex at 61.3%; minRe 8.08e+4; maxS 0.16; land speed 29.7 m/s
+  LPGA PW: launch 25.2 peak 25.5 (+0.3) at 8.3%; apex at 59.6%; minRe 4.69e+4; maxS 1.04; land speed 21.4 m/s
+mode A: rise 0.8..5.4 deg at 16.3..35.4% carry; apex at 60.1..68.3% carry; minRe 4.23e+4..7.38e+4; maxS 0.17..1.15
+  PGA Driver: launch 10.4 peak 13.4 (+3.0) at 27.6%; apex at 65.8%; minRe 7.38e+4; maxS 0.17; land speed 28.8 m/s
+  PGA Hybrid: launch 10.2 peak 14.0 (+3.8) at 31.9%; apex at 67.3%; minRe 6.25e+4; maxS 0.38; land speed 25.4 m/s
+  PGA 7 Iron: launch 16.1 peak 20.5 (+4.4) at 28.4%; apex at 64.7%; minRe 5.26e+4; maxS 0.74; land speed 24.0 m/s
+  PGA PW: launch 23.7 peak 25.2 (+1.5) at 17.8%; apex at 61.0%; minRe 4.96e+4; maxS 1.05; land speed 23.8 m/s
+  LPGA Driver: launch 12.6 peak 13.4 (+0.8) at 16.3%; apex at 63.2%; minRe 7.22e+4; maxS 0.18; land speed 27.3 m/s
+  LPGA PW: launch 25.2 peak 27.2 (+2.0) at 19.1%; apex at 60.1%; minRe 4.23e+4; maxS 1.15; land speed 21.6 m/s
+
+## Coefficient map, mode G (rows Re; columns S = 0.1, 0.2, 0.3, 0.5)
+Re 5.0e+4: C_D 0.216 0.279 0.329 0.405 | C_L 0.150 0.235 0.320 0.370
+Re 7.0e+4: C_D 0.216 0.279 0.329 0.405 | C_L 0.150 0.235 0.320 0.370
+Re 1.0e+5: C_D 0.216 0.279 0.329 0.405 | C_L 0.150 0.235 0.320 0.370
+Re 1.5e+5: C_D 0.223 0.286 0.336 0.412 | C_L 0.150 0.235 0.320 0.370
+Re 2.0e+5: C_D 0.230 0.293 0.343 0.419 | C_L 0.150 0.235 0.320 0.370
+
+wrote /home/jhoblitt/github/tmelevation/.claude/worktrees/land-angle-spike/docs/research/land-angle-spike/harness/out/R0-nominal.json (0.6 s)

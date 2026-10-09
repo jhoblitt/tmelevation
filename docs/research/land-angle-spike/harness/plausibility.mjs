@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FAMILIES, paramObject } from './laws.mjs';
+import './laws2.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 

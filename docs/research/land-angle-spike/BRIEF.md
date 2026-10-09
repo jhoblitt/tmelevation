@@ -127,3 +127,138 @@ versus the table (model − table):
   read both and continue after the last finished section — never restart.
 - Mark every claim primary, secondary or derived; say plainly what you could
   not verify.
+
+## Round 2 (dispatched 2026-10-09)
+
+### User rulings (binding)
+
+- **One physics for everything.** Both tours and every club share one set of
+  laws and parameters. No per-tour or per-club physics parameters, in any
+  candidate model. The user assumes largely the same mix of balls on both
+  tours. Round 1's per-tour fits stay in the record as diagnostics only.
+- **Data provenance, both on record.** The user believes the tour data come
+  from tournament play, not range sessions. TrackMan's 2023 post says:
+  "Averages are based on data from competition as well as on the range." and
+  "There are multiple processes in place to eliminate shots hit with a
+  non-driver during competition." (verified against the live page
+  2026-10-09).
+- Round 1's rulings stand: TrackMan's 2014 shots and wind table are
+  informational; Padjen is soft; land angle is a target.
+
+### R2-1 — measured-surface refit
+
+Pin C_L(Re, S) and C_D(Re, S) to the measured surfaces in `aero-data.md` §1
+and `aero-data.csv`. The only free parameters are the ones the measurements
+leave uncertain, each bounded by them: the low-Re band's onset Re (7–8e4), its
+minimum Re (5.5–6.5e4), its depth (0.4–1.3), and, if needed, one ball-spread
+scale on each coefficient within the measured ball-to-ball spread. Where the
+flight leaves the measured range (S > 0.36 at Re < 7e4; anything past the
+measured Re span), extrapolate explicitly and test at least two alternatives,
+for example the loss persisting at high S versus fading with S; use the
+digitized Bearman & Harvey high-S points as the only guide and say how weak
+that guide is. Spin decay: the shipped law unless the data say otherwise.
+
+Report, as in round 1: mode G and mode A RMS and leave-one-out CV for carry,
+height and land; per-row residuals; the **full hard-oracle set — 1, 2, 3, 6
+and 9a** (9a: every row monotone 0–10,000 ft); altitude response; Padjen
+(soft); the PGA TOUR 2022-23 driver shape (hang time 6.4 s, apex at 65.5 % of
+carry; soft); TrackMan 2014 shots (informational); ballooning diagnostic.
+State plainly whether the measured surfaces, unfitted, already beat today's
+model, and which extrapolation the table prefers.
+
+Deliverable: `round2.md` with verified results in `round2.md.notes.md`.
+Harness changes stay additive: `harness/check-f0.mjs` must still pass.
+
+### R2-2 — tour conditions diagnostic (approved by the user 2026-10-09)
+
+Hypothesis: the tour-shaped residual comes from the air each tour plays in,
+not from physics. TrackMan's 2010 and 2019 editions say "Location and weather
+conditions are not considered"; if the shots come mostly from real venues,
+each tour's schedule averages its own elevation, temperature and humidity.
+
+- **Fit side (model-fits).** One physics, shared by both tours and every
+  club. The only per-tour freedom is an effective air density, an environment
+  term that never enters a candidate model. Run it on today's laws (F0) and
+  round 2's R0 and R2, in mode G; in mode A only where density is not
+  degenerate with the per-row kD/kL (a Re-free law makes it degenerate — say
+  so instead of fitting it). Report how much of the tour-shaped residual and
+  of each RMS it removes, the fitted densities as a ratio to 25 °C sea level
+  and as an equivalent elevation (at 25 °C) or temperature (at sea level),
+  cross-validated error, and whether the PGA Driver carry shortfall closes.
+- **Schedule side (provenance).** From the PGA TOUR and LPGA schedules for the
+  seasons the 2023 table most likely drew on (state the assumption), estimate
+  each event's venue elevation and typical tournament-week temperature and
+  humidity, convert each to an air-density ratio against 25 °C sea level, and
+  give each tour's event-weighted mean and spread. Shot counts per event are
+  unknown; say so and show how sensitive the means are to that weighting. The
+  range share is unknown too.
+
+Deliverables: `round2-conditions.md` (fit side) and `conditions.md` (schedule
+side), each with its `.notes.md`, and the schedule data as `conditions.csv`.
+
+## Round 2b (dispatched 2026-10-09)
+
+### User ruling (binding)
+
+- **Altitude checks are soft in the spike unless a hard reference exists.**
+  The user: demote 9a "unless you can find a hard reference that says carry
+  should be going up at 10,000'" — in a hard vacuum carry should fall,
+  because the lift from spin is gone. Applying the same rule, every app
+  altitude oracle is soft here, since none rests on a measurement: 1–3 are
+  Padjen (TrackMan model figures), 6 is players' planning yardages ("not
+  measurements"), 9a is Padjen plus qualitative statements. Report every one;
+  pass/fail on none. Oracle 6 (PGA 7-iron +7–16 % at 6,400 ft; Scheffler and
+  McIlroy planned +12–14 %) is the closest thing to real-world iron evidence
+  and must be reported prominently. The shipped app's CI is unchanged.
+
+### R2b-1 — search for a hard altitude reference (aero-data)
+
+Find a **measurement** of golf-ball carry at altitude versus sea level for
+irons (or any club), ideally near 10,000 ft (La Paz, Quito, Bogotá, Cusco,
+Mexico City, Breckenridge, Tuctu): radar or launch-monitor data recorded on
+site, robot tests at elevation, USGA/R&A test-range altitude work, peer-
+reviewed studies. Also anything measured showing carry falling with altitude.
+Rule-of-thumb percentages, simulator outputs and TrackMan/vendor model figures
+do not count; list them separately as non-hard. Baseball's measured altitude
+effect (Coors Field, Statcast) may be noted as a weak analog. Deliverable:
+`altitude-evidence.md` with its `.notes.md`.
+
+### R2b-2 — re-rank with altitude soft, plus the raw radar driver (model-fits)
+
+1. Re-rank the round-2 candidates (R0–R3, both modes, and F0 for reference)
+   with every altitude oracle soft. For each row report the elevation where
+   carry turns over (stops rising), up to 15,000 ft.
+2. **Raw radar driver test.** PGA TOUR 2022-23 TrackMan radar, tee shots,
+   measured to ground impact at real venues (mean air-density ratio 0.992
+   against 25 °C sea level, `conditions.md`): club 115.08 mph, ball 172.85,
+   launch 10.49°, spin 2571 rpm, apex 34.0 yd, carry 283.8 yd, hang time
+   6.4 s, apex at 186.0 yd (65.5 % of carry) — `provenance.md` §5. For each
+   candidate law, fly that launch at density 0.992, (a) with nothing fitted
+   and (b) calibrated per row to the raw carry and apex, and report hang time
+   and apex position against 6.4 s and 65.5 %. Say which laws the raw driver
+   prefers and by how much. Note that averages of shots are not the shot of
+   averages; bound that effect if you can.
+
+Deliverable: `round2b.md` with its `.notes.md`.
+
+## Round 2c (dispatched 2026-10-09)
+
+R2b-1 found the first **hard** altitude reference (`altitude-evidence.md`):
+PGA TOUR on-site TrackMan radar, driver tee shots, carry to ground impact,
+each player paired against his own season elsewhere — Chapultepec 7,746 ft
+(ρ ≈ 0.783; +16 to +22 yd, +5.7 to +7.8 % over four years), Castle Pines
+6,234 ft (ρ 0.804; +27.5 yd, +9.5 %, apex −10.5 %), Old Greenwood 5,843 ft
+(ρ 0.812; +23.0 yd, +8.1 %), sea-level control −1.1 %. Launch shifts at the
+altitude events (+1–3° launch, spin changes) and terrain confound it. Per the
+user's ruling, this is a hard check **for drivers up to 7,746 ft only**;
+everything for irons and above 7,746 ft stays soft.
+
+### R2c — score every law against the measured driver altitude gains
+
+For F0 and R0–R3 (both modes, and the raw-driver calibration from R2b-2):
+predict each event's driver carry gain and apex change, (a) at the season
+launch and (b) with the event's measured launch shift applied, and compare
+with the measured gains and their uncertainty. Report whether any law
+reproduces Chapultepec's shortfall against the low-altitude trend, and how
+much terrain or launch confounding could explain instead. Deliverable:
+`round2c.md` with its `.notes.md`.

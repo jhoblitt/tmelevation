@@ -9,6 +9,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FAMILIES, paramObject } from './laws.mjs';
+import './laws2.mjs';
 import { ROWS } from './eval.mjs';
 import { calibrate, fly, toYd, M_PER_YD } from './core.mjs';
 

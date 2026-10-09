@@ -37,7 +37,8 @@ for (const name of process.argv.slice(2)) {
       return `${f1(Math.min(...v))}…${f1(Math.max(...v))}`;
     };
     const h = a.oracles.hard;
-    const fails = ['o1', 'o2', 'o3', 'o6'].filter((k) => !h[k]).map((k) => k.slice(1));
+    // Round 2: the app's hard set is 1, 2, 3, 6 and 9a (site/js/oracles.js).
+    const fails = ['o1', 'o2', 'o3', 'o6', 'o9a'].filter((k) => !h[k]).map((k) => k.slice(1));
     alt.push(
       `| ${name} | ${mode === 'A' ? 'A*' : 'G'} | ${range(5280, 'carryPct', 'PGA')} / ${range(5280, 'carryPct', 'LPGA')} | ${range(10000, 'carryPct', 'PGA')} / ${range(10000, 'carryPct', 'LPGA')} | ${allRange(10000, 'heightYd')} | ${allRange(10000, 'landDeg')} | ${a.mono.ok10k ? 'yes' : `no (${a.mono.low})`} / ${a.mono.high === 0 ? 'yes' : `no (${a.mono.high}, ≤${f2(a.mono.worstCarryFallYd)} yd)`} | ${f1(pd(7800).carryPct)} / ${f1(pd(7800).heightPct)} / ${f2(pd(7800).landDeg)} | ${fails.length ? fails.join(', ') : 'pass'} |`,
     );

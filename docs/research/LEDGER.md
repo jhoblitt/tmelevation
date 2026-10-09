@@ -44,3 +44,16 @@ Brief: docs/research/land-angle-spike/BRIEF.md. Research only; no product code.
 | provenance | how TrackMan's land angle is measured or extrapolated; table provenance | docs/research/land-angle-spike/provenance.md | docs/research/land-angle-spike/provenance.md.notes.md | complete 2026-10-09 |
 
 Synthesis: docs/research/land-angle-spike/SYNTHESIS.md (coordinator, 2026-10-09).
+
+## Land-angle spike, round 2 (dispatched 2026-10-09)
+
+Brief: docs/research/land-angle-spike/BRIEF.md, "Round 2". Same agent as model-fits, resumed.
+
+| Agent | Mandate | Output | Notes | Status |
+|-------|---------|--------|-------|--------|
+| model-fits (R2-1) | measured-surface refit, one shared physics | docs/research/land-angle-spike/round2.md | docs/research/land-angle-spike/round2.md.notes.md | complete 2026-10-09 |
+| model-fits (R2-2 fit) | per-tour effective air density, shared physics | docs/research/land-angle-spike/round2-conditions.md | docs/research/land-angle-spike/round2-conditions.md.notes.md | complete 2026-10-09 |
+| provenance (R2-2 schedule) | schedule-weighted venue air density per tour | docs/research/land-angle-spike/conditions.md | docs/research/land-angle-spike/conditions.md.notes.md | complete 2026-10-09 |
+| aero-data (R2b-1) | hard (measured) altitude reference for carry | docs/research/land-angle-spike/altitude-evidence.md | docs/research/land-angle-spike/altitude-evidence.md.notes.md | complete 2026-10-09 |
+| model-fits (R2b-2) | re-rank with altitude soft; raw radar driver test | docs/research/land-angle-spike/round2b.md | docs/research/land-angle-spike/round2b.md.notes.md | complete 2026-10-09 |
+| model-fits (R2c) | laws vs measured PGA TOUR driver altitude gains | docs/research/land-angle-spike/round2c.md | docs/research/land-angle-spike/round2c.md.notes.md | complete 2026-10-09 |

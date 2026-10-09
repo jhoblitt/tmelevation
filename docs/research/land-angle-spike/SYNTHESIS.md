@@ -5,6 +5,9 @@ answering the question in `BRIEF.md`. Every number below was re-checked
 against the probe files or re-derived; where a probe document was wrong, the
 correction is noted.
 
+**Round 2 (at the end) supersedes this section's recommendation and next
+experiments.**
+
 ## Answer
 
 **Not yet, and not with today's evidence.** A measured mechanism exists that
@@ -110,3 +113,84 @@ No law met the success bar (land ≤ 1.5°, carry ≤ 2 yd, height ≤ 1 yd).
   documents cite. The raw `harness/out/*.json` fit dumps (3.5 MB) are not
   committed; re-running `harness/run-family.mjs` regenerates them.
 - `provenance.md`, `provenance.md.notes.md` — probe 3.
+
+---
+
+## Round 2 (2026-10-09)
+
+Round 2 ran under the user's rulings in `BRIEF.md` ("Round 2", "Round 2b"):
+one physics for both tours and every club, and altitude checks soft unless a
+measurement backs them. Files: `round2.md`, `round2-conditions.md`,
+`conditions.md`, `round2b.md`, `altitude-evidence.md`, `round2c.md`, each with
+its notes. The headline numbers below were re-run or recomputed by the
+coordinator.
+
+### Findings
+
+1. **Measured surfaces, nothing fitted, already beat today's model.** With
+   C_L and C_D pinned to the measured supercritical laws and no low-Re band
+   (R0), the app's per-row calibration lands at 3.96° RMS against 4.65°, and
+   all five of the app's hard oracles pass (`harness/out/R0-nominal.txt`).
+2. **Adding the measured low-Re band fits land best,** fading with spin ratio
+   where no data exist: per-row calibration 1.62° (CV 1.79°) with a slow fade
+   (R3); one shared law set 5.39 / 2.04 / 2.73 yd / yd / ° (CV 5.88 / 2.12 /
+   2.81) with a fade by S ≈ 0.6 (R2). Keeping the band at every S fits worse
+   than no band. No law met the success bar.
+3. **The band costs iron gains at altitude.** Under per-row calibration the
+   banded laws give the PGA 7-iron +6.0 to +8.7 % at 6,400 ft against players'
+   planned +12–14 % (soft oracle 6; R0 +11.7 %, today +11.3 %). LPGA iron
+   carry turns over between 600 and 8,100 ft; under R2 the LPGA 5-iron peaks
+   at 600 ft. Physically coherent — thin air lowers Re at a given speed, so
+   the band arrives earlier — but no measurement confirms or refutes it for
+   irons.
+4. **Different air per tour is not the explanation.** Fitting one effective
+   air density per tour moves carry but not land, and needs the PGA in
+   3.5–7.7 % thinner air. The real schedules differ by 0.2 %: event-weighted
+   tournament-week air is 0.9918 (40 PGA TOUR radar events, 2022-23) and
+   0.9937 (32 LPGA events, 2023) of 25 °C sea level. The tour-shaped land
+   residual stays unexplained; it is not physics shared across tours and not
+   venue air.
+5. **The raw radar driver wants a faster descent.** PGA TOUR's 2022-23 radar
+   averages (172.85 mph, 10.49°, 2571 rpm; carry 283.8 yd to ground impact,
+   apex 34.0 yd at 65.5 % of carry, hang 6.4 s; venue air 0.992). Unfitted,
+   the measured surface gives 6.38 s and 64.1 % with the apex 4.8 yd low;
+   today's law gives 7.67 s with the apex 9.3 yd high. Calibrated to the raw
+   carry and apex, every law hangs 0.40–0.55 s too long (0.26–0.49 s after an
+   assumed shot spread) and the laws differ by at most 0.15 s.
+6. **One hard altitude reference exists — drivers only, ≤ 7,746 ft.** PGA
+   TOUR on-site radar, player-paired: Chapultepec (ρ 0.78) +16 to +22 yd over
+   four years, Castle Pines (0.80) +27.5 yd with apex −10.5 %, Old Greenwood
+   (0.81) +23.0 yd; sea-level control −1.1 %. Players launched 1–3° higher at
+   these events. Whether that shift is real decides the scoring: with it,
+   only R2 calibrated to the raw driver passes all six events, and today's
+   law overshoots Chapultepec by 15–23 yd; without it, nothing passes all
+   six. Nothing measured exists for irons, above 7,746 ft, or showing carry
+   falling with altitude.
+
+### Recommendation
+
+- **Base for the 3-D project.** Coefficients as `C_D(Re, S)` and
+  `C_L(Re, S)` in vector form, built from the measured supercritical laws
+  (R0), plus an explicit, parameterized low-Re band: measured onset, minimum
+  and depth for S ≤ 0.36, and a fade with spin ratio beyond the data (R2's
+  fade by S ≈ 0.6 is the best-supported default). The band is the model's
+  largest uncertainty; it must be switchable, with R0 as the band-free
+  reference.
+- **Validation order.** Raw measurements first (the radar driver's carry,
+  apex and hang time; the driver altitude events), the 2023 table second as
+  population averages with its provenance caveats, TrackMan model figures
+  last and informational.
+- **This app.** No change is forced. The low-risk option is R0 under the
+  app's calibration: measured lift and drag laws, land 4.65° → 3.96°, every
+  hard oracle passing. A banded law should wait for the data below.
+
+### What would settle it
+
+1. **Iron carry at altitude, measured.** TrackMan has tracked PGA TOUR
+   approach shots since 2022 without publishing them; Castle Pines 2024 is the
+   single most decisive dataset.
+2. **Lift and drag at Re 4–8e4 and S 0.36–1.3** — where iron and wedge
+   descents end and no modern-ball data exist (Aoki, Muto & Okanaga 2010 is
+   the nearest lead).
+3. **Whether the altitude events' launch shifts are real**, from per-shot
+   rather than averaged radar data.

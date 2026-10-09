@@ -51,8 +51,11 @@ export function residualsG(fam, theta, rows = ROWS, w = WEIGHTS) {
 // and land -13..-5 deg, PGA 7 Iron at 6,400 ft carry +7..+16 % (0.25 per unit).
 let CONSTRAINED = false;
 let PEN_RR = [2500, 5000, 7500, 10000].map(rhoRatioAtFt);
-export function setConstrained(v, stepFt = 2500) {
+// Round 2: penWeight multiplies every penalty residual (default 1 = round 1).
+let PEN_W = 1;
+export function setConstrained(v, stepFt = 2500, penWeight = 1) {
   CONSTRAINED = v;
+  PEN_W = penWeight;
   PEN_RR = [];
   for (let ft = stepFt; ft <= 10000 + 1e-9; ft += stepFt) PEN_RR.push(rhoRatioAtFt(ft));
 }
@@ -75,7 +78,7 @@ export function altitudePenalty(fam, p, ks) {
         continue;
       }
       const cur = { c: toYd(f.carryM - sea.carryM), h: toYd(f.maxHeightM - sea.maxHeightM), l: toDeg(f.landRad - sea.landRad) };
-      out.push(Math.max(0, prev.c - cur.c) / 0.1, Math.max(0, cur.h - prev.h) / 0.1, Math.max(0, cur.l - prev.l) / 0.1);
+      out.push((PEN_W * Math.max(0, prev.c - cur.c)) / 0.1, (PEN_W * Math.max(0, cur.h - prev.h)) / 0.1, (PEN_W * Math.max(0, cur.l - prev.l)) / 0.1);
       prev = cur;
     }
   });
@@ -89,7 +92,7 @@ export function altitudePenalty(fam, p, ks) {
   };
   const dr = oracle(0, 7800);
   const i7 = oracle(8, 6400);
-  out.push(dr ? band(dr.carryPct, 5, 12, 0.25) : FAIL, dr ? band(dr.landDeg, -13, -5, 0.25) : FAIL, i7 ? band(i7.carryPct, 7, 16, 0.25) : FAIL);
+  out.push(dr ? PEN_W * band(dr.carryPct, 5, 12, 0.25) : FAIL, dr ? PEN_W * band(dr.landDeg, -13, -5, 0.25) : FAIL, i7 ? PEN_W * band(i7.carryPct, 7, 16, 0.25) : FAIL);
   return out;
 }
 

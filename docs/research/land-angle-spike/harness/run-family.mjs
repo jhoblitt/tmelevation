@@ -8,8 +8,9 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FAMILIES } from './laws.mjs';
+import './laws2.mjs';
 import {
-  WEIGHTS, ROWS, fitG, tableG, rmsOf, looG, tableA, fitA, looA, calibrateAll,
+  WEIGHTS, ROWS, fitG, residualsG, tableG, rmsOf, looG, tableA, fitA, looA, calibrateAll,
   altitudeDeltas, monotonicity, trackman2014, ballooning, coefficientMap,
   setConstrained, altitudePenalty, calibrateAll as calAll,
 } from './eval.mjs';
@@ -28,8 +29,9 @@ const restarts = Number(opt('--restarts', 10));
 const seed = Number(opt('--seed', 1));
 const constrained = has('--constrained');
 const penStep = Number(opt('--pen-step', 2500));
-setConstrained(constrained, penStep);
-const tag = opt('--tag', constrained ? (penStep === 2500 ? 'c' : `c${penStep}`) : '');
+const penWeight = Number(opt('--pen-weight', 1));
+setConstrained(constrained, penStep, penWeight);
+const tag = opt('--tag', constrained ? `${penStep === 2500 ? 'c' : `c${penStep}`}${penWeight === 1 ? '' : `w${penWeight}`}` : '');
 const w = opt('--weights', null);
 const weights = w ? Object.fromEntries(['carry', 'height', 'land'].map((k, i) => [k, Number(w.split(',')[i])])) : WEIGHTS;
 
@@ -46,7 +48,15 @@ console.log(`weights carry/height/land = ${weights.carry}/${weights.height}/${we
 const penCost = (theta, ks) => altitudePenalty(fam, paramObject(fam, theta), ks).reduce((s, v) => s + v * v, 0);
 
 // Mode G
-const g = fitG(fam, { w: weights, restarts, seed });
+// --fixed (round 2): no fit; evaluate the family's init (nominal) values.
+const fixed = has('--fixed');
+const g = fixed
+  ? (() => {
+      const theta = fam.params.map((sp) => sp.init);
+      const r = residualsG(fam, theta, ROWS, weights);
+      return { theta, cost: r.reduce((acc, v) => acc + v * v, 0), startCosts: [] };
+    })()
+  : fitG(fam, { w: weights, restarts, seed });
 const tg = tableG(fam, g.theta);
 const rg = rmsOf(tg);
 console.log(`\n## Mode G (${elapsed()})`);
@@ -58,7 +68,7 @@ console.log('|---|---|---|---|');
 for (const t of tg) console.log(`| ${t.id} | ${f1(t.carry)} | ${f1(t.height)} | ${f1(t.land)} |`);
 
 let loo = null;
-if (!has('--no-loo')) {
+if (!has('--no-loo') && !fixed) {
   loo = looG(fam, g.theta, { w: weights });
   console.log(`LOO-CV RMS carry ${f2(loo.rms.carry)} yd, height ${f2(loo.rms.height)} yd, land ${f2(loo.rms.land)} deg (${elapsed()})`);
   const spread = fam.params.map((s, i) => {
@@ -80,7 +90,7 @@ let aStar = { theta: g.theta, free: [] };
 let tas = tag0;
 let rmsAs = rmsA0;
 let looAres = null;
-if (!has('--no-fitA')) {
+if (!has('--no-fitA') && !fixed) {
   aStar = fitA(fam, g.theta, {});
   tas = tableA(fam, aStar.theta);
   rmsAs = Math.sqrt(tas.reduce((s, t) => s + t.land * t.land, 0) / tas.length);
