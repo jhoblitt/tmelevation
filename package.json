@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test \"test/unit/*.test.js\"",
-    "oracles": "node scripts/oracle-report.mjs"
+    "oracles": "node scripts/oracle-report.mjs",
+    "test:browser": "node test/browser/run.mjs"
   }
 }
