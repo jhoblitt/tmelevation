@@ -1,1 +1,9 @@
-{"name":"tmelevation","private":true,"type":"module","scripts":{"test":"node --test \"test/unit/*.test.js\""}}
+{
+  "name": "tmelevation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/unit/*.test.js\"",
+    "oracles": "node scripts/oracle-report.mjs"
+  }
+}
