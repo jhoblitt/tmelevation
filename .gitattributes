@@ -1,0 +1,3 @@
+# The font and licence files are checked against recorded SHA-256 sums, so
+# no checkout may convert their line endings.
+site/fonts/* -text

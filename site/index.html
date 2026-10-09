@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-state="loading">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'">
+<title>TrackMan Tour Averages at Elevation</title>
+<meta name="description" content="TrackMan's 2023 PGA and LPGA Tour Averages, with carry, max height and land angle recomputed for the elevation or air pressure of your course.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/lato-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/lato-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="js/app.js">
+<link rel="modulepreload" href="js/controls.js">
+<link rel="modulepreload" href="js/atmosphere.js">
+<link rel="modulepreload" href="js/units.js">
+<link rel="modulepreload" href="js/data.js">
+<link rel="modulepreload" href="js/model.js">
+<link rel="modulepreload" href="js/calibrate.js">
+<link rel="modulepreload" href="js/flight.js">
+<link rel="modulepreload" href="js/present.js">
+<link rel="modulepreload" href="js/version.js">
+<script src="js/boot.js" defer></script>
+<script type="module" src="js/app.js" id="app-module"></script>
+</head>
+<body>
+<h1 class="sr">TrackMan Tour Averages at Elevation</h1>
+
+<div id="controls" class="controls">
+  <div class="fields">
+    <div class="field">
+      <label for="elev">Elevation</label>
+      <div class="entry">
+        <input id="elev" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+        <select id="elev-unit" aria-label="Elevation unit" autocomplete="off">
+          <option value="ft">ft</option>
+          <option value="m">m</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="press">Air pressure at the course (absolute)</label>
+      <div class="entry">
+        <input id="press" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="press-hint">
+        <select id="press-unit" aria-label="Air pressure unit" autocomplete="off">
+          <option value="inHg">inHg</option>
+          <option value="kPa">kPa</option>
+          <option value="mbar">mbar (hPa)</option>
+        </select>
+      </div>
+      <p id="press-hint" class="hint">Not a weather app’s “barometer” value, which is reduced to sea level (≈&nbsp;30&nbsp;inHg everywhere).</p>
+    </div>
+    <a id="methods-link" class="methods-link" href="methods.html">Method &amp; sources</a>
+  </div>
+  <div id="pinned" class="pinned">
+    <input id="slider" type="range" min="0" max="15000" step="10" value="0" aria-label="Elevation" autocomplete="off">
+    <span id="readout" class="readout"></span>
+    <div class="mode" role="group" aria-label="Show change as">
+      <button id="mode-abs" type="button" aria-pressed="true">Δ</button>
+      <button id="mode-pct" type="button" aria-pressed="false">Δ %</button>
+    </div>
+  </div>
+</div>
+
+<main id="tables">
+  <noscript>
+    <p class="notice">This calculator needs JavaScript. TrackMan’s published averages are in <a href="https://www.trackman.com/blog/introducing-updated-tour-averages">TrackMan’s post</a>.</p>
+  </noscript>
+  <p id="load-error" class="notice" role="alert" hidden>The calculator did not load. TrackMan’s published averages are in <a href="https://www.trackman.com/blog/introducing-updated-tour-averages">TrackMan’s post</a>.</p>
+  <p id="land-footnote" class="footnote" hidden>† Land-angle changes are indicative — see <a href="methods.html">Method &amp; sources</a>.</p>
+</main>
+
+<footer class="footer">
+  <p><a href="https://www.trackman.com/blog/introducing-updated-tour-averages">Data: TrackMan 2023 Tour Averages</a></p>
+  <p>Values above sea level are this site’s model, not TrackMan’s publication. Not affiliated with TrackMan.</p>
+  <p>Version <span id="version"></span></p>
+  <p>Fonts: Oswald and Lato, SIL Open Font License</p>
+  <p><a href="https://github.com/jhoblitt/tmelevation">github.com/jhoblitt/tmelevation</a></p>
+</footer>
+</body>
+</html>

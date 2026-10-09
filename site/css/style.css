@@ -1,0 +1,499 @@
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/oswald-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/lato-400-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/lato-700-latin.woff2') format('woff2');
+}
+
+:root {
+  --orange: #ec6919;
+  --stripe: #f3955f;
+  --accent: #3d3b3c;
+  --ink: #262425;
+  --rule: rgba(0, 0, 0, 0.2);
+  --invalid: #b3001b;
+  --gap: 0.75rem;
+  --pad-left: max(var(--gap), env(safe-area-inset-left));
+  --pad-right: max(var(--gap), env(safe-area-inset-right));
+  /* Two label lines, so every input row starts at the same height. */
+  --label-block: 2.25rem;
+  --title: 'Oswald', 'Arial Narrow', sans-serif;
+  --text: 'Lato', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  background: var(--orange);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--text);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--orange);
+}
+
+a {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Controls. Phones: the fields scroll away and only the pinned row sticks;
+   the bar itself generates no box, so the pinned row's sticky range is the
+   whole page rather than the bar. */
+
+.controls {
+  display: contents;
+}
+
+.fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 1.25rem;
+  padding: max(0.5rem, env(safe-area-inset-top)) var(--pad-right) 0.25rem var(--pad-left);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  display: flex;
+  align-items: flex-end;
+  min-height: var(--label-block);
+  margin-bottom: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* The label and hint wrap within the width of the input row instead of
+   widening the field. */
+.field label,
+.hint {
+  contain: inline-size;
+}
+
+.entry {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+input[type='text'],
+select {
+  height: 44px;
+  font-family: var(--text);
+  font-size: 1rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+}
+
+input[type='text'] {
+  width: 5.75rem;
+  padding: 0 0.5rem;
+}
+
+select {
+  padding: 0 0.25rem;
+}
+
+input[aria-invalid='true'] {
+  border-color: var(--invalid);
+  box-shadow: inset 0 0 0 2px var(--invalid);
+}
+
+.methods-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.pinned {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem var(--pad-right) 0.5rem var(--pad-left);
+  background: var(--orange);
+  box-shadow: 0 1px 0 var(--rule);
+}
+
+input[type='range'] {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+/* A fixed width, so the slider does not change length while dragging. */
+.readout {
+  flex: none;
+  width: 18ch;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.mode {
+  display: flex;
+  flex: none;
+}
+
+.mode button {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.375rem;
+  font-family: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+.mode button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.mode button:last-child {
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.mode button[aria-pressed='true'] {
+  color: #fff;
+  background: var(--ink);
+}
+
+/* Tables */
+
+main {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 var(--pad-right) 0 var(--pad-left);
+}
+
+.notice {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+}
+
+.notice a {
+  color: #fff;
+}
+
+/* The page's focus ring is the notice's own background colour. */
+.notice a:focus-visible {
+  outline-color: #fff;
+}
+
+section {
+  margin: 1.5rem 0 2rem;
+}
+
+.title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 1rem;
+}
+
+.title h2,
+.year {
+  margin: 0;
+  font-family: var(--title);
+  font-size: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  line-height: 1.15;
+  color: #fff;
+}
+
+.title h2 {
+  min-width: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.title .units {
+  color: var(--accent);
+}
+
+.year {
+  flex: none;
+  font-weight: 300;
+}
+
+/* Reserves its line at sea level, so the tables do not move when it fills. */
+.caption {
+  min-height: 1.4em;
+  margin: 0.25rem 0 0.5rem;
+  font-weight: 700;
+}
+
+/* Positioned, so the absolutely positioned .sr text inside resolves against
+   the scroller and cannot widen the page. */
+.scroller {
+  position: relative;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #fff;
+}
+
+th,
+td {
+  padding: 0.375rem 0.625rem;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: top;
+  border-right: 1px solid var(--rule);
+}
+
+tr > :last-child {
+  border-right: 0;
+}
+
+thead th {
+  padding-bottom: 0.5rem;
+  font-family: var(--title);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+thead .name,
+thead .unit {
+  display: block;
+}
+
+thead .unit {
+  font-family: var(--text);
+  font-size: 0.75rem;
+}
+
+tbody tr:nth-child(odd) {
+  background: var(--stripe);
+}
+
+/* The pinned Club column: opaque in its row's colour, so cells scrolled
+   beneath it never show through, and carrying its own rule. */
+.club {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  text-align: left;
+  background: var(--orange);
+}
+
+tbody tr:nth-child(odd) .club {
+  background: var(--stripe);
+}
+
+.v {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* Every cell keeps a delta line, empty or not, so values align across a row. */
+.d {
+  display: block;
+  height: 1.125rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.125rem;
+  color: var(--ink);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+/* Chrome breaks at a <wbr> even under nowrap, so the unit line's break
+   opportunity exists only where the narrow layout below wants it. */
+[data-tour] wbr {
+  display: none;
+}
+
+/* Narrower than 390 px, the Club column and the three modelled columns
+   only fit side by side if the headers wrap and the cells tighten, so a
+   table starting at its right edge shows every column that changes.
+   max-width, not range syntax, which Safari before 16.4 ignores. */
+@media (max-width: 389.98px) {
+  [data-tour] th,
+  [data-tour] td {
+    padding: 0.25rem 0.375rem;
+  }
+
+  [data-tour] thead th {
+    white-space: normal;
+  }
+
+  [data-tour] wbr {
+    display: inline;
+  }
+}
+
+.footnote {
+  margin: 0 0 1.5rem;
+}
+
+.footer {
+  padding: 1rem var(--pad-right) max(1.5rem, env(safe-area-inset-bottom)) var(--pad-left);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  box-shadow: 0 -1px 0 var(--rule);
+}
+
+.footer p {
+  margin: 0.25rem auto;
+  max-width: 80rem;
+}
+
+/* A phone held sideways is as wide as this but too short to pin the whole
+   bar, so it keeps the phone layout and its compact pinned row. */
+@media (min-width: 768px) and (min-height: 500px) {
+  :root {
+    --gap: 1.5rem;
+  }
+
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem 1.5rem;
+    padding: max(0.5rem, env(safe-area-inset-top)) var(--pad-right) 0.5rem var(--pad-left);
+    background: var(--orange);
+    box-shadow: 0 1px 0 var(--rule);
+  }
+
+  .fields {
+    padding: 0;
+  }
+
+  .methods-link {
+    margin-top: calc(var(--label-block) + 0.25rem);
+  }
+
+  /* One row needs about 960 px; below that the pinned row takes a line of
+     its own. */
+  .pinned {
+    position: static;
+    flex: 1 1 100%;
+    gap: 0.75rem;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  input[type='range'] {
+    min-width: 6rem;
+  }
+
+  .readout {
+    width: 20ch;
+    font-size: 0.875rem;
+  }
+
+  section {
+    margin-top: 2rem;
+  }
+
+  thead th {
+    font-size: 1.25rem;
+  }
+
+  thead .unit {
+    font-size: 0.875rem;
+  }
+
+  .v {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .d {
+    height: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) and (min-height: 500px) {
+  .pinned {
+    flex: 1 1 24rem;
+    margin-top: calc(var(--label-block) + 0.25rem);
+  }
+}
