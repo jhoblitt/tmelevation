@@ -262,3 +262,13 @@ with the measured gains and their uncertainty. Report whether any law
 reproduces Chapultepec's shortfall against the low-altitude trend, and how
 much terrain or launch confounding could explain instead. Deliverable:
 `round2c.md` with its `.notes.md`.
+
+## Round 3 — literature search (dispatched 2026-10-09)
+
+The user asked for another search of published ball-flight research, with
+particular interest in **ballistic coefficients** and **how lift behaves as
+spin decays** through a flight. Deliverable: `literature.md` with its
+`.notes.md`, and any extracted numbers in `literature-data.csv` (columns as
+`aero-data.csv`, plus `quantity` for values that are not C_D/C_L pairs, such
+as ballistic coefficients or spin-decay rates). `aero-data.md` §2 lists what
+round 1 already found; extend beyond it rather than repeat it.
