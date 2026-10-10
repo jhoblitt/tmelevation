@@ -56,6 +56,9 @@ only where this round adds something new about them.
   - This backs round 2's "band fades with S" (R2) over "persists at all S".
   - It says the band cannot steepen high-S short-iron and wedge descents.
     That fits the LPGA short irons rejecting it.
+  - Round 3b (§10) adds two golf-size dimpled spheres measured to S 2.0 at
+    Re 4–5e4 (Aoki 2004, 2011). They recover by S ≈ 0.4 and then follow one
+    Re-independent C_L(S) that saturates at 0.45–0.50.
 - **Ballistic coefficient is not a constant.** No golf source publishes one.
   Converted from C_D:
   - BC falls 30–40 % from launch (≈ 145–150 kg/m²) to the slowest point
@@ -541,6 +544,11 @@ Reading **[D]**:
 - **Still empty:** any modern ball at Re < 7e4 with S > 0.39. That is where
   wedge and short-iron descents end. Smits & Smith 1994 (S to 1.4 from Re 4e4)
   is the one source known to cover it, and it is paywalled (§8).
+  - *Round 3b update (§10):* two open Tokai University papers now cover this
+    box for a golf-size 328-dimple PVC sphere: Re 4–5e4, S to 2.0 (Aoki,
+    Muto & Okanaga 2011), and Re 4.3e4, S to 0.6 (Aoki 2004). Lift recovers
+    by S ≈ 0.4 and saturates at 0.45–0.50.
+  - Commercial modern balls in this box remain unmeasured in public.
 
 ## 8 Sources worth obtaining by hand
 
@@ -601,7 +609,9 @@ against Crossref unless marked otherwise (notes N9).
    Visualization* 6(1):67–76, doi:10.1007/BF03180966. Closed.
    - Why: a load-cell spin sweep versus dimple depth and number.
 10. **Bearman, P. W. & Harvey, J. K. (1976).** "Golf ball aerodynamics."
-    *Aeronaut. Q.* 27:112–122, doi:10.1017/S0001925900007575. Paywalled.
+    *Aeronaut. Q.* 27(2):112–122, doi:10.1017/S0001925900007617 (corrected in
+    round 3b; the …7575 DOI used earlier is the issue's front matter, §10).
+    Paywalled.
     - Why: the original tables. Round 1 digitised two reproductions, which
       disagree by ≈ 1e4 in Re; the originals are the only high-S/low-Re lift
       data until (1) is read.
@@ -669,3 +679,169 @@ and Nike US 8,550,940 (no values).
    - Everything listed in §8.
    - All Polara and Watanabe numbers are visual reads of figures: ±0.005 in
      C_L and C_D for the patent curves, ±0.01–0.02 for the JSME figures.
+
+## 10 Obtained documents (round 3b, 2026-10-10)
+
+Status: COMPLETE 2026-10-10. Retrieval of §8 and aero-data.md §9 sources by
+legitimate routes only, per BRIEF.md "Round 3b". Per source: route tried, outcome, what it
+adds, and whether it changes a §1 conclusion. Notes: N13 onward.
+
+**Routes used:**
+- OpenAlex API, for metadata and open-access locations.
+- The Semantic Scholar API.
+- Publisher pages and PDFs with an ordinary browser User-Agent.
+- J-STAGE, Cal Poly Digital Commons and Purdue e-Pubs.
+- The Wayback Machine availability API and its raw snapshots.
+
+Unpaywall was not used, because it requires an email. Captcha pages were not
+bypassed. These hosts served one:
+- sciencedirect.com (Elsevier);
+- iopscience.iop.org (Radware);
+- usga.org (HTTP 403).
+
+The Internet Archive's CDX search was "temporarily offline" and its snapshots
+rate-limited (HTTP 429) during part of the session.
+
+### 10.1 Sources in §8 and aero-data.md §9
+
+**Erratum first.** The DOI used for Bearman & Harvey 1976 in round 1–3
+documents is wrong. It is 10.1017/S0001925900007575, which Crossref and OpenAlex
+give as the *cover and front matter* of Aeronautical Quarterly 27(2). Their
+paper "Golf Ball Aerodynamics", Aeronaut. Q. 27(2):112–122, is
+**doi:10.1017/S0001925900007617** (Crossref, N16). It is closed access.
+The wrong DOI appeared in this file and in `docs/research/aero-model.md`;
+both are corrected (coordinator, 2026-10-10). The site never cited it.
+
+- **Aoki, Muto & Okanaga 2010** (Procedia Eng. 2:2431,
+  doi:10.1016/j.proeng.2010.04.011).
+  - Tried: OpenAlex lists the sciencedirect PDF (CC BY-NC-ND) and a CiteSeerX
+    record with no PDF. Sciencedirect serves a captcha. CiteSeerX redirects to
+    a dead Wayback copy. The Wayback captures of the /pdf URL could not be read
+    (429).
+  - **Not obtained, but superseded.** The same authors' journal paper on the
+    same 328-arc-dimple ball, Aoki, Muto & Okanaga 2011 (below), is open and
+    carries the force data.
+- **Naruo & Mizota 2014** (Procedia Eng. 72:780, doi:10.1016/j.proeng.2014.06.132).
+  - Tried: the publisher PDF serves a captcha. A Wayback snapshot of the
+    article page (2021-02-18) was fetched.
+  - **Abstract only.** The snapshot has no full text. The abstract matches the
+    JSME 2014 paper (L4): lift "extremely-little" below 30 m/s for very shallow
+    dimples, and "ball velocity became under 30 m/s over the vertex of the
+    trajectory in many cases, including professional male golfers and female
+    golfers".
+  - Changes nothing. Get the full text by hand.
+- **USGA ODS/ITR documents.**
+  - The 2028 "ITR test conditions" PDF and Protocol 4.0 have no Wayback
+    capture. usga.org returns 403, and digital-pd.usopen.com does not
+    resolve. **Not obtained.**
+  - Obtained instead: a 2026-03-16 Wayback snapshot of **TPX3006 Rev 2.0.0
+    (28 Feb 2011)** (N17). It gives:
+    - the ODS launch: 120 mph club, 10° ± 0.5°, 42 rps (2,520 rpm), 256 fps
+      ball speed;
+    - standard air: 75 °F, 30.0 inHg, 50 % RH;
+    - the limits: 317.0 yd, + 3.0 yd tolerance;
+    - symmetry: PP vs PH carry difference ≤ 4.0 yd and flight-time
+      difference ≤ 0.40 s;
+    - 15 ITR test settings, "described in the ITR Manual", which is not public.
+  - It has no coefficient data. It does show that the Acushnet prior-art
+    ball's 5.2° land-angle difference between orientations (§6: 3.8 yd,
+    0.29 s) would still **pass** today's symmetry test. Orientation scatter of
+    several degrees in land angle is within the Rules.
+- **Penner 2003**, "The physics of golf", Rep. Prog. Phys. 66:131,
+  doi:10.1088/0034-4885/66/2/202.
+  - OpenAlex lists it as OA via IOP, but IOP serves a Radware captcha.
+    **Not obtained.**
+
+### 10.2 New open sources found on the way (not in §8)
+
+- **Aoki, Muto & Okanaga 2011,** "Effects of dimples for drag and lift on a
+  sphere with rotation", Trans. JSME B 77(775):793–802, doi:10.1299/kikaib.77.793.
+  J-STAGE, open (N15). **The most important document of round 3b.**
+  - Measured: C_D and C_L for a golf-size (42.6 mm) sphere with 328
+    circular-arc dimples, at Re 0.4, 0.5, 0.8 and 1.3e5 and **S 0–2.0**, with
+    Bearman & Harvey overlaid. CSV: 49 rows, "Aoki2011".
+  - At Re 0.5e5 lift is negative at S 0.15 (−0.17), zero at S 0.2, and back on
+    the supercritical curve by **S ≈ 0.4** (0.375).
+  - For S ≥ 0.4, lift at all four Re collapses within ±0.03 and saturates at
+    **0.45–0.50 for S ≥ 1**.
+  - Drag at high S depends on Re. At S 1.0 it is 0.515 (Re 0.4e5), 0.50
+    (0.5e5) and 0.47 (0.8e5). It climbs to 0.6–0.65 at S 1.5–1.9 (Re 0.4e5).
+  - The B&H overlay matches round 1's digitization of B&H.
+- **Aoki 2004,** "Flying characteristics and flow pattern around a ball on
+  dimple structure of a golf ball", Wind Engineers JAWE 29(3):61–67,
+  doi:10.5359/jawe.2004.100_61. J-STAGE, open (N13).
+  - Golf-size PVC spheres with 104–504 dimples at Re 0.43e5 (S 0.15–0.6) and
+    Re 0.85e5 (S 0.08–0.3). CSV: 27 rows, "Aoki2004".
+  - The 328-dimple sphere at Re 4.3e4 has reverse Magnus up to S ≈ 0.26 and
+    recovers by S ≈ 0.4. Lift reaches 0.38–0.46 at S 0.5–0.6, with drag
+    0.37–0.41.
+  - A 184-dimple sphere at Re 8.5e4 shows the same fade, from C_L 0.01 at
+    S 0.09 to 0.28 at S 0.3.
+- **Miller 2009,** Cal Poly MS thesis, doi:10.15368/theses.2009.13. Open (N14).
+  - The thesis's own rig produced no usable data.
+  - Its motivation section reports TrackMan radar shots (T. Mase, Cal Poly):
+    "after the ball reaches its highest altitude … both the drag and lift
+    coefficients continue to decrease as the ball accelerates", and "the
+    descent—is far from the radar and the data is less accurate".
+  - It says the USGA ITR "non-functionality of the flight coefficients is also
+    present in their data. It is typically truncated" **[S]**.
+  - Spin "will decrease linearly with time" over the first quarter of flight.
+  - It reproduces Quintavalla's USGA C_L/C_D model form.
+- **Naruo & Mizota 2009,** "The influence of wind upon 3-dimensional trajectory
+  of golf ball", JSME Sports Eng. Symp. 2009 A-29,
+  doi:10.1299/jsmesports.2009.0_152. Open (N18). It is the open counterpart of
+  the closed Naruo & Mizota 2007 chapter (§8 item 7).
+  - Measured: 45 pro shots (driver, 3-wood, 5-iron, 9-iron) with measured
+    launch, measured wind (four 5.5 m masts, log-law profile) and measured
+    landing points.
+  - Computed distance / measured distance is 0.948 without wind and 0.981 with
+    the measured wind.
+  - Outdoor flights need the wind to close carry to ≈ 2 %. Late-flight
+    coefficients inferred from outdoor radar are exposed to the same wind.
+  - Landing points only; no apex or land angle.
+- Checked and set aside:
+  - Aoki, Muto & Okanaga 2007 (JSME Sports Symp. A15), non-spinning dimple
+    shapes.
+  - JAWE 2004 no. 99 p. 101 (soccer).
+  - Moriyama & Okanaga 2022 (ISEA), model balls at supercritical Re only.
+
+### 10.3 What remains blocked (exact citations for fetching by hand)
+
+| Source | Citation | Why it still matters | Blocked by |
+|---|---|---|---|
+| Smits & Smith 1994 | "A new aerodynamic model of a golf ball in flight", *Science and Golf II* (Cochran & Farrally eds., E & FN Spon, 1994) pp. 340–347; e-book doi:10.4324/9780203474709-58 | S to 1.4 from Re 4e4; spin-down law | paywall; no OA copy |
+| Tavares, Shannon & Melvin 1999 | "Golf ball spin decay model based on radar measurements", *Science and Golf III* (Farrally & Cochran eds., Human Kinetics, 1999) pp. 464–472 | radar spin-decay law | paywall; no DOI or OA copy |
+| USGA 2025 | "ITR test conditions — 2028 ODS" (March 2025); "Overall Distance and Symmetry Test Protocol 4.0" (1 Oct 2025) | the current ITR grid and 17-ball baseline C_L/C_D | usga.org 403; no Wayback capture |
+| Naruo & Mizota 2014 | *Procedia Eng.* 72:780–785, doi:10.1016/j.proeng.2014.06.132 | full text of the low-speed lift collapse | sciencedirect captcha; Wayback has the abstract only |
+| Aoki, Muto & Okanaga 2010 | *Procedia Eng.* 2:2431–2436, doi:10.1016/j.proeng.2010.04.011 | probably superseded by Aoki 2011 | sciencedirect captcha |
+| Penner 2003 | "The physics of golf", *Rep. Prog. Phys.* 66:131–171, doi:10.1088/0034-4885/66/2/202 | review; likely reproduces Smits & Smith | IOP Radware captcha |
+| Bearman & Harvey 1976 | "Golf ball aerodynamics", *Aeronaut. Q.* 27(2):112–122, **doi:10.1017/S0001925900007617** | original tables | paywall |
+| Kim & Choi 2014 | "Aerodynamics of a golf ball with grooves", *Proc. IMechE P* 228(4):233–241, doi:10.1177/1754337114543860; also the SNU thesis "Characteristics of flow over a rotating sphere with smooth or grooved surface" (2015), hdl:10371/118425 | dimpled reference ball to S 0.5 | paywall; SNU repository serves a JavaScript bot challenge |
+| Davies 1949 | "The aerodynamics of golf balls", *J. Appl. Phys.* 20(9):821–828, doi:10.1063/1.1698540 | early high-S data | paywall |
+| Sakib & Smith 2020 (new lead) | "Study of the reverse Magnus effect on a golf ball and a smooth ball moving through still air", *Exp. Fluids* 61(5):115, doi:10.1007/s00348-020-02946-2 | free-flight golf-ball PIV of reverse Magnus (Utah State / WSU), cited by Elliott et al. 2024 | paywall (OpenAlex: closed) |
+| Lieberman 1990; Zagarola, Lieberman & Smits 1994; Quintavalla 2002; Mizota et al. 2002 | *Science and Golf I/II/IV* chapters (§8 items 4, 7, 12) | ITR method and USGA model | paywall |
+| Aoki et al. 2003 | *J. Visualization* 6(1):67–76, doi:10.1007/BF03180966 | dimple-number spin sweeps | paywall |
+| Moriyama & Okanaga 2023 | *Sports Eng.* 26:10, doi:10.1007/s12283-023-00400-0 | English twin of L9 | paywall |
+| Naruo & Mizota 2007 / 2006 | *Impact of Technology on Sport II* pp. 223–227, doi:10.1201/9781439828427.ch30 (Crossref; OpenAlex lists 10.1201/9781439828427-40); *Engineering of Sport 6* vol. 1 pp. 149–154, doi:10.1007/978-0-387-46050-5_27 | wind + 3-D trajectory validation (the open 2009 paper covers it) | paywall |
+| Naruo & Mizota 2004 | *Nagare* 23(3):203–211 (Japan Soc. Fluid Mech.) | same data as Naruo 2004 JSME | not found online |
+| Ferguson MASc thesis; Sugiyama 2015 MSc | Univ. Waterloo; Ibaraki Univ. | per-shot radar data | not found |
+| TrackMan Newsletter #7 | cited by Lyu et al. 2018, ref 21 | vendor "4 %/s" spin decay | original URL dead and not recoverable |
+| USGA 2023 | "Golf Course Effects on Hitting Distance" (Distance Insights), usga.org/content/dam/usga/pdf/2023/Golf-Course-Distance-Effects-Final.pdf | ShotLink elevation coefficient (aero-data.md §7) | digital-pd.usga.org "Access Denied"; a Wayback snapshot (2023-09-14) exists but returned HTTP 429 throughout |
+| Alam et al. 2011 | "A study of golf ball aerodynamic drag", *Procedia Eng.* 13:226–231, doi:10.1016/j.proeng.2011.05.077 | non-spinning drag of several balls | sciencedirect captcha; Figshare record has no file |
+
+### 10.4 Does anything in §1 change?
+
+| §1 conclusion | Effect of round 3b | Basis |
+|---|---|---|
+| Low-Re lift loss fades with S and is gone by S ≈ 0.24–0.5 | **Strengthened, and the S > 0.39 / Re < 7e4 gap is partly filled.** Two more golf-size 328-dimple spheres lose lift at low S and recover by S ≈ 0.4: Aoki 2004 at Re 4.3e4 and Aoki 2011 at Re 5e4. Above S ≈ 0.4 lift at Re 0.4–1.3e5 collapses within ±0.03 onto one curve, saturating at 0.45–0.50 for S ≥ 1. The band should fade by S ≈ 0.4 for a ball whose crisis sits near Re 5e4. Caveat: these are PVC dimpled spheres, not commercial balls | N13, N15; CSV "Aoki2004", "Aoki2011" |
+| High-S drag rises to ≈ 0.5 at S ≈ 1 | **Confirmed and extended.** Aoki 2011 gives C_D 0.47–0.515 at S 1.0 (higher at lower Re), and 0.57–0.65 at S 1.4–1.9 (Re 0.4e5). BC at S 1.5–1.9 is therefore ≈ 50–55 kg/m² | N15 |
+| Late lift fall in radar data; cause unresolved | **Unchanged, with evidence on both sides.** For an artefact: Miller 2009 says TrackMan's descent "is far from the radar and the data is less accurate"; Naruo & Mizota 2009 show outdoor carry needs measured wind to close to 2 %. For physics: Miller says "both the drag and lift coefficients continue to decrease as the ball accelerates … confirmed independently by others", and that the indoor, wind-free USGA ITR also shows non-unique coefficients **[S]** | N14, N18 |
+| Spin decay at or below Smits & Smith | **Unchanged.** Smits & Smith and Tavares remain unobtained. Miller's radar data say spin falls "linearly with time" over the first quarter of flight (qualitative) | N14, N16 |
+| Ballistic coefficient is not a constant | Unchanged; extended to S 1.9 (above) | N15 |
+| Orientation moves land angle up to ≈ 5° (Acushnet) | **Context added.** That ball's PP-vs-PH differences (3.8 yd, 0.29 s) sit inside today's USGA symmetry limits (4.0 yd, 0.40 s). Orientation scatter of a few degrees in land angle is still legal | N17 |
+| Bearman & Harvey DOI | **Corrected** to doi:10.1017/S0001925900007617. Round 1–3 files cite the issue's front matter | N16 |
+
+Net: no §1 conclusion reverses. The best-supported low-Re extrapolation tightens
+from "gone by S ≈ 0.3–0.5" to "gone by S ≈ 0.4 for a crisis near Re 5e4". There
+is now a measured, Re-insensitive C_L(S) and a Re-dependent C_D(S) for a
+golf-like sphere to S 2.0.

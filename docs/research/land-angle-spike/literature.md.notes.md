@@ -358,3 +358,209 @@ in full 2026-10-09). PRIMARY. Univ. of Waterloo.
 - Mizuno US 11,135,481 B2: CL/CD only in figures at 44 m/s; simulated carry only.
 
 Status: research complete 2026-10-09; literature.md sections 1–9 written.
+
+## Round 3b retrieval log (2026-10-10)
+Each entry: source; route(s) tried; outcome; extracted facts (P/S/D).
+
+## N13 — NEW: Aoki, K. (2004) "Flying characteristics and flow pattern around a ball on dimple structure of a golf ball", Wind Engineers (J. Japan Assoc. Wind Eng., JAWE) 29(3) no. 100:61–67, doi:10.5359/jawe.2004.100_61
+Route: OpenAlex title search → J-STAGE open PDF
+https://www.jstage.jst.go.jp/article/jawe1982/2004/100/2004_100_61/_pdf (curl, browser UA; 200 OK;
+read in full 2026-10-10). PRIMARY. Tokai University.
+- [P] Test balls: PVC spheres of golf-ball size (D 42.6 mm) with regular circular dimples,
+  ND = 104, 184, 328, 504, depth/width k/c ≈ 0.096 (Table 1). Not commercial balls.
+  Open-jet tunnel 400×400 mm, 15–60 m/s, turbulence ≈ 0.3 %. Ball on a piano wire under
+  tension, motor-driven spin, 3-component load cell; wire forces subtracted. α = ball
+  surface speed / flow speed (= S). Fig 3: non-spinning CD vs Re 0.4–1.6e5 — more dimples
+  move the crisis to lower Re; ND 328/504 supercritical above ≈ 0.6e5 (CD ≈ 0.25–0.28).
+- [P/D] Fig 4(a), Re = 0.43e5 (15 m/s), α 0.15–0.6, read visually from a 400-dpi render
+  (±0.02): ND 328 CL −0.18 (α 0.18), −0.12 (0.22), −0.01 (0.26), 0.11 (0.30), 0.19
+  (0.33), 0.27 (0.37), 0.32 (0.41), 0.36 (0.45), 0.38 (0.48), 0.39 (0.52), 0.40 (0.56),
+  0.46 (0.59); CD 0.41 → minimum 0.33 at α 0.33 → 0.37–0.41 at α 0.41–0.6. ND 504 similar:
+  CL −0.23 (0.18) → 0.20 (0.33) → 0.45–0.52 (0.52–0.60), CD 0.41–0.47. Subcritical ND 104/184
+  give positive CL 0.28–0.40 at α 0.15–0.45 and then FALL to 0.24–0.28 at α 0.5–0.56.
+  Text: "for ND 328 and 504 (critical region) the values change greatly ... CL takes negative
+  values ... the separation-point asymmetry reverses" (translated).
+- [P/D] Fig 4(b), Re = 0.85e5 (30 m/s), α 0.08–0.30: ND 328/504 supercritical, CL 0.16 →
+  0.31, CD 0.23 → 0.31. ND 184 (still in its crisis) CL 0.01 at α 0.09 rising to 0.28 at
+  0.30; ND 104 goes negative (−0.03 at α 0.20).
+- [P] Text values (Figs 9–10, ND 328): Re 0.423e5, 2000 rpm, α 0.30: "CD=0.11, CL=−0.04";
+  4000 rpm, α 0.59: "CD=0.23, CL=0.23"; Re 1.27e5, 2000 rpm, α 0.10: CD 0.23, CL 0.17;
+  4000 rpm, α 0.20: CD 0.25, CL 0.24. The Re 0.423e5 printed values do not match Fig 4(a)
+  (which reads CL 0.11 / CD 0.345 at α 0.30 and CL 0.46 / CD 0.40 at α 0.59) — unresolved;
+  the figure is used in the CSV.
+- [D] First data found in the empty box of literature.md §7 at Re < 5e4 and S 0.36–0.6 for
+  a golf-like (328-dimple) sphere: at Re 4.3e4 the lift deficit (reverse Magnus at
+  α ≤ 0.26) is gone by α ≈ 0.4 and lift then exceeds the Re 8.5e4 curve's trend (0.38–0.46
+  at α 0.5–0.6). Drag at α 0.4–0.6 is 0.37–0.41 (328) and 0.41–0.47 (504).
+- [P] References: Aoki & Nonaka 2002, The Engineering of Sport 4, pp. 330–336; Aoki 2004,
+  J. Visualization Soc. Japan 24(93):25–31.
+
+## N14 — NEW: Miller, R. (2009) "A System for Measuring the Lift and Drag Forces of a Spinning Golf Ball Held Fixed Within a Wind Tunnel", MS thesis, California Polytechnic State University, doi:10.15368/theses.2009.13
+Route: OpenAlex → Cal Poly Digital Commons PDF
+https://digitalcommons.calpoly.edu/cgi/viewcontent.cgi?article=1048&context=theses (curl, browser UA;
+200 OK; text extracted and read in the relevant sections 2026-10-10). PRIMARY for its own
+statements; its TrackMan data are a faculty member's (T. Mase, "Radar data", ref [19]).
+- [P] Own tunnel rig (to 160 ft/s, 8,600 rpm) "was not able to produce useful results for
+  measuring lift"; no usable C_L/C_D. Not a data source.
+- [P] Motivation (§1.1): "The radar unit (ISG Trackman) used to obtain the trajectory data
+  was placed near the initial position of the ball. Therefore, the second half of the
+  trajectory—the descent—is far from the radar and the data is less accurate. It is in
+  this region where the Reynolds number falls, and some interesting changes occur in the
+  correlation between drag and lift coefficients ... Our data indicates that around the
+  apex of the balls trajectory a change in the flow regime over the ball may occur."
+- [P] "after the ball reaches its highest altitude ... as the ball begins to speed up its
+  state does not follow the same curve as it was slowing. Instead, both the drag and lift
+  coefficients continue to decrease as the ball accelerates. This finding has been
+  confirmed independently by others who have studied golf ball trajectories." And of the
+  USGA Indoor Test Range: "The non-functionality of the flight coefficients is also present
+  in their data. It is typically truncated [27]" ([27] = USGA ITR Technical Description and
+  Operation Manual, 2001; not public). [S] for the ITR claim.
+- [P] Spin: "Enough information was captured to accurately measure the spin rate of the
+  ball throughout the first quarter of its flight. The data indicates that a ball's speed
+  of rotation will decrease linearly with time."
+- [P] Reproduces Quintavalla's (2002) USGA model form, eqs 1.8–1.9 (as typeset, partly
+  garbled in the text layer): C_L = a1 + a2/Re⁵ + a3/Re⁷ + (b1 + b2·ln(Re)/Re² + b3/Re²)·α and
+  C_D = c1 + c2/Re³ + c3/Re⁵ + c4/Re⁷ + (d1 + d2·ln(Re)/Re²)·α², and the USGA-recommended fitting
+  terms ln(Re)/Re², e^−Re, 1/Re, 1/Re², 1/Re³, Re, (Re·Sp)²; "a drive differed from the
+  test data by 0.3 meters" with Quintavalla's model.
+- [D] A third, independent account (Cal Poly/TrackMan, c. 2008) of the same post-apex fall
+  in radar-derived C_L and C_D (cf. N1h Polara, N4 Watanabe), with the authors' own caveat
+  that the descent is the least accurate part of the radar track, and a [S] claim that the
+  USGA ITR sees non-unique coefficients too and truncates them.
+
+## N15 — NEW (supersedes the unobtainable Aoki 2010 for data): Aoki, K., Muto, K. & Okanaga, H. (2011) "Effects of dimples for drag and lift on a sphere with rotation", Trans. JSME B 77(775):793–802, doi:10.1299/kikaib.77.793
+Route: OpenAlex search → J-STAGE open PDF https://www.jstage.jst.go.jp/article/kikaib/77/775/77_775_793/_pdf
+(curl, browser UA; 200 OK; read pp. 1–5 and conclusions 2026-10-10). PRIMARY. Same authors and
+same 328-arc-dimple ball as Aoki, Muto & Okanaga 2010 (Procedia Eng. 2:2431), which stays
+fetch-refused; this journal paper carries the force data.
+- [P] Ball: PVC sphere d = 42.6 mm (and 100 mm for pressure/flow work) with 328 circular-arc
+  dimples, b/d 0.0152, c/d 0.0828, k/d 0.0079 (slightly shallower than B&H's k/d 0.009).
+  Open-jet tunnel 400×400 mm, U 10–50 m/s, turbulence 0.3 %, Re 0.3–1.4e5. Ball on a 1.58 mm
+  piano wire (dp/d 0.037), motor-spun; 3-component load cell; wire forces measured
+  separately and subtracted. α = πd(N/60)/U (= S).
+- [P] Fig 5 (no spin): dimpled-sphere critical Re ≈ 0.5e5; post-critical CD ≈ 0.25.
+- [P] Text on Fig 7 (dimpled sphere, CD and CL vs α 0–2.0): "Re = 0.4e5 is subcritical,
+  0.5e5 near critical, 0.8e5 and 1.3e5 supercritical. At Re 0.4e5, as α increases CD
+  increases monotonically and CL increases approaching CL = 0.5. At Re 0.5e5, for α
+  0.15–0.25 CD decreases as α increases; at α 0.15 CL is negative; above α 0.3 CD and CL
+  increase and CL changes from negative to positive. At Re 0.8e5 and 1.3e5, CD and CL
+  increase monotonically with α." Same trends as Bearman & Harvey (overlaid at 0.4e5 and
+  1.3e5). (Translated.)
+- [P/D] Fig 7 read visually from a 400-dpi render (±0.02): Re 0.5e5 CL −0.165 (α 0.15),
+  0.00 (0.2), 0.16–0.17 (0.25–0.3), 0.375 (0.4), 0.36–0.38 (0.5–0.6), 0.41–0.43 (0.7–1.0),
+  0.45–0.48 (1.1–1.6). Re 0.4e5 CL 0.35 (α 0.5), 0.40 (0.7), 0.47 (1.0), 0.49–0.50
+  (1.2–2.0). Re 1.3e5 CL 0.12 (0.1), 0.24 (0.2), 0.29 (0.3), 0.33 (0.4), 0.36 (0.5), 0.41
+  (0.7). CD: Re 0.4e5 0.465 (α 0.6), 0.515 (1.0), 0.57 (1.4), 0.645 (1.8); Re 0.5e5 0.295
+  minimum at α 0.25, 0.39 (0.4–0.6), 0.50 (0.9–1.0), 0.595 (1.4–1.6); Re 0.8e5 0.42 (0.6),
+  0.47 (1.0); Re 1.3e5 0.27 (0), 0.34 (0.3), 0.41 (0.5), 0.455 (0.7).
+- [D] For α ≥ 0.4 the CL curves for Re 0.4, 0.5, 0.8 and 1.3e5 collapse within ±0.03: no
+  low-Re lift deficit above S ≈ 0.4 for this ball, and CL saturates at ≈ 0.45–0.50 for
+  S ≥ 1. CD at high S is Re-dependent: at S ≈ 1.0, 0.515 (Re 0.4e5), 0.50 (0.5e5), 0.47
+  (0.8e5). Agrees with Naruo 2004's commercial ball (CL 0.46, CD 0.51 at S 1.0) and with
+  B&H (C_L 0.425–0.455 at α 0.77–0.92, Re 0.4e5, as Aoki overlays it — matching round 1's
+  digitization of B&H).
+- [P] Introduction: "for dimpled spheres the drag and lift characteristics have been
+  clarified over Re 0.4–2.4e5 and spin rate ratio 0.0–1.4 (refs 4, 8, 11, 12)" — i.e. the
+  Smits & Smith range; ref 12 not checked.
+
+## N16 — Retrieval attempts and outcomes (round 3b, 2026-10-10)
+- Bearman & Harvey 1976 DOI ERRATUM [P, Crossref + OpenAlex]: 10.1017/S0001925900007575 resolves
+  to "AEQ volume 27 issue 2 Cover and Front matter". The paper "Golf Ball Aerodynamics",
+  P. W. Bearman & J. K. Harvey, Aeronautical Quarterly 27(2):112–122 (1976) is
+  doi:10.1017/S0001925900007617 (Crossref query.bibliographic, item 1). OpenAlex: closed, no OA
+  location. Not obtained. The wrong DOI appears in docs/research/aero-model.md and in this
+  spike's aero-data.md (not edited — not this probe's files) and was repeated in
+  literature.md §8 item 10 (corrected there). Coordinator check, 2026-10-10:
+  `git grep` finds it only in aero-model.md (twice, now corrected) and
+  literature.md, not in aero-data.md.
+- Aoki, Muto & Okanaga 2010 (Procedia Eng. 2:2431): OpenAlex OA URL
+  https://www.sciencedirect.com/science/article/pii/S1877705810002651/pdf → captcha page (not
+  bypassed); CiteSeerX 10.1.1.611.3647 → redirected to a Wayback 404; Wayback CDX shows HTML
+  captures of /pdf (2024-04-15/16) but fetching them returned HTTP 429. Not obtained.
+- Naruo & Mizota 2014 (Procedia Eng. 72:780): OpenAlex/Semantic Scholar OA URL
+  .../pii/S1877705814006481/pdf → HTTP 403 captcha ("robot", "captcha", "challenge" in the
+  page). Wayback snapshot 20210218231440 of the article page fetched (200): abstract only
+  [P]: "when the depth of the dimples was much shallower, the lift coefficient was
+  extremely-little on the slow velocity, i.e. under 30m/s. When the golf ball trajectory which
+  was launched with a driver was calculated under various initial conditions, the ball
+  velocity became under 30 m/s over the vertex of the trajectory in many cases, including
+  professional male golfers and female golfers. Therefore, if the lift coefficient of the
+  velocity of 30m/s becomes smaller, distances will become shorter." Full text not obtained.
+- Penner 2003 (Rep. Prog. Phys. 66:131): OpenAlex lists OA PDF at iopscience; fetch returned a
+  "Radware Bot Manager Captcha" page. Not bypassed; not obtained.
+- USGA "ITR test conditions — 2028 ODS" and "Overall Distance and Symmetry Test Protocol 4.0":
+  Wayback availability API → no snapshot for the usga.org or digital-pd.usopen.com URLs;
+  usga.org direct → 403. Not obtained.
+- Smits & Smith 1994 (doi:10.4324/9780203474709-58), Tavares et al. 1999, Lieberman 1990,
+  Zagarola et al. 1994, Quintavalla 2002, Mizota et al. 2002 (Science and Golf I–IV), Davies
+  1949 (doi:10.1063/1.1698540), Kim & Choi 2014 (doi:10.1177/1754337114543860), Aoki et al. 2003
+  (doi:10.1007/BF03180966), Naruo & Mizota 2007 (doi:10.1201/9781439828427-40 per OpenAlex),
+  Moriyama & Okanaga 2023 Sports Eng. (doi:10.1007/s12283-023-00400-0): OpenAlex "closed", no
+  OA location; web searches found no author or repository copy. Not obtained.
+
+## N17 — USGA-TPX3006 "Actual Launch Conditions Overall Distance and Symmetry Test Procedure (Phase II)", Revision 2.0.0, 28 Feb 2011
+Route: Wayback availability API → snapshot
+http://web.archive.org/web/20260316203434id_/https://www.usga.org/content/dam/usga/pdf/Equipment/TPX3006-overall-distance-and-symmetry-test-procedure.pdf
+(200, application/pdf; read in full). PRIMARY.
+- [P] Mechanical-golfer calibration (Table 5.5): launch angle 10° ± 0.5°, spin 42 rps ± 2.0,
+  swing speed 120 mph ± 0.5, ball speed 256 fps (reference after ageing).
+- [P] ITR: CL and CD measured for 12 balls in PH and PP orientations at "the full set of test
+  settings (i.e. launch velocity and spin rate) described in the ITR Manual"; change record:
+  "Number of ITR test settings set to 15" (2004); calibration-ball CL, CD nominal ± 5 %; room
+  75 ± 3 °F.
+- [P] Conformance: carry, overall distance and flight time computed at 75 °F, 30.0 inHg, 50 %
+  RH; overall distance ≤ 317.0 yd (tolerance 3.0 yd). Symmetry: mean PP–PH difference must not
+  exceed 4.0 yd carry or 0.40 s flight time (if statistically significant).
+- [P] Control ball: Bridgestone "USGA/R&A Calibration", 2-piece Surlyn, 42.72 mm, 45.2 g,
+  quasi-icosahedral 432 dimples.
+- [D] The Acushnet prior-art ball of US 6,729,976 Table 5 (PP vs PH: 3.8 yd, 0.29 s, 5.2° land
+  angle) is inside these symmetry limits.
+- A 2019-path snapshot (20250908220319) exists but returned HTTP 429; not read.
+
+## N18 — NEW: Naruo, T. & Mizota, T. (2009) "The influence of wind upon 3-dimensional trajectory of golf ball", Proc. JSME Joint Symp. Sports Eng./Human Dynamics 2009, A-29, pp. 152–156, doi:10.1299/jsmesports.2009.0_152
+Route: OpenAlex → J-STAGE open PDF https://www.jstage.jst.go.jp/article/jsmesports/2009/0/2009_152/_pdf
+(200; read in full 2026-10-10). PRIMARY. The open counterpart of the closed Naruo & Mizota 2007
+(Impact of Technology on Sport II) chapter; also cites Naruo & Mizota 2006, Engineering of
+Sport 6 vol. 1 pp. 149–154 (experimental verification under the atmospheric boundary layer).
+- [P] Coefficients from the Naruo 2004 tunnel (Sp 0.03–1.13, to 44 m/s and 10,000 rpm);
+  wind by a log law V_Y = (V*/κ)·ln((Y−H)/Y′) with κ 0.4 and Y′ = 0.09 m (dense grassland);
+  aerodynamic force from the ball–air relative velocity.
+- [P] Field check of the log law at Shingu beach (Fukuoka): anemometers at 1.5–5.5 m; wind
+  4–6 m/s; direction steady over ≈ 3 h and uniform over 6 stations 50 m apart; "the ball flies
+  about 6 s, during which wind speed and direction hardly change".
+- [P] Validation: 45 shots by a pro (driver, 3-wood, 5-iron, 9-iron), launch measured by the
+  "Pythagoras" launch analyser, wind measured at four 5.5 m masts 60 m apart, landing point
+  measured. Least-squares slope of computed vs measured distance: 0.948 without wind, 0.981
+  with wind (Fig 7; distances ≈ 70–260 m). Example driver: 66.3 m/s, launch 18.9° (lateral
+  6.1°), spin 2,293 rpm, axis tilt 12.3°, wind 5.17 m/s from 157° (nearly a tailwind): wind
+  added ≈ 5 m of distance, and the windy calculation matched the landing point.
+- [D] Two points for this spike: (1) outdoor flights need the measured wind to close carry
+  to ≈ 2 %, so outdoor radar-derived late-flight coefficients (N1h, N4, N14) are exposed to
+  wind of this size; (2) only landing points were checked — no apex or land angle.
+
+## N19 — Other round-3b checks (2026-10-10)
+- Kim & Choi 2014 / SNU thesis "Characteristics of flow over a rotating sphere with smooth or
+  grooved surface" (2015), hdl:10371/118425 (OpenAlex: OA): s-space.snu.ac.kr returns a
+  JavaScript bot challenge ("js-challenge" cookie page); not bypassed; not obtained.
+- Sakib, N. & Smith, B. L. (2020) "Study of the reverse Magnus effect on a golf ball and a
+  smooth ball moving through still air", Exp. Fluids 61(5):115, doi:10.1007/s00348-020-02946-2
+  — NEW lead found in the reference list of Elliott, Smith, Lyu & Smith 2024 (Exp. Fluids 65:60,
+  open, read pp. 1–2: macro-roughness spheres, not golf). OpenAlex: closed. Not obtained.
+- USGA "Golf Course Effects on Hitting Distance" (2023): digital-pd.usga.org → 403 "Access
+  Denied"; Wayback snapshot 20230914113927 of the usga.org path exists but returned HTTP 429
+  repeatedly (background retry script, see N20 for the outcome).
+- Alam et al. 2011 (Procedia Eng. 13:226): OpenAlex lists a Figshare record (27378999) with no
+  files and a Swinburne handle; the Elsevier PDF serves the same captcha. Not obtained
+  (non-spinning drag only; low priority).
+- Ferguson MASc thesis (Waterloo): no record found in OpenAlex or by web search.
+- TrackMan Newsletter #7: original gavlegolf.com URL unknown/dead (aero-data.md.notes.md:95);
+  not recoverable through Wayback without the URL.
+- Naruo & Mizota 2004, Nagare 23(3):203–211: not found online.
+- Aoki, Muto & Okanaga 2007 (JSME Sports Symp. A15, open, read): non-spinning only (328
+  dimples, arc/cone/trapezoid; critical Re ≈ 0.5e5, supercritical CD ≈ 0.25). Nothing for
+  the descent model.
+
+## N20 — Wayback retry outcome (2026-10-10)
+- Background retry (scripts/wb_retry.py, generic UA, 75 s spacing) of the USGA 2023 report snapshot 20230914113927: HTTP 429 on attempts 0-3; stopped after ~5 min. The TPX3006 2019-path snapshot and the Aoki 2010 sciencedirect /pdf snapshot were not reached. All three remain unread; the Aoki 2010 force data are covered by Aoki 2011 (N15).
+
+Status: round 3b complete 2026-10-10.
