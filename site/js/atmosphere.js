@@ -18,6 +18,19 @@ const LAPSE_PER_T0 = LAPSE_RATE / T0_ISA_K;
 // every elevation, so density tracks pressure alone.
 export const RHO0 = (P0_PA * MOLAR_MASS) / (GAS_CONSTANT * T_REF_K);
 
+// Sutherland's law for air (1.716e-5 Pa·s at 273.15 K, Sutherland constant
+// 110.4 K) at the reference temperature. Viscosity depends on temperature
+// alone, so it too is the same at every elevation.
+const MU_SUTHERLAND_PA_S = 1.716e-5;
+const T_SUTHERLAND_K = 273.15;
+const SUTHERLAND_CONSTANT_K = 110.4;
+
+export const MU0_PA_S =
+  (MU_SUTHERLAND_PA_S *
+    (T_REF_K / T_SUTHERLAND_K) ** 1.5 *
+    (T_SUTHERLAND_K + SUTHERLAND_CONSTANT_K)) /
+  (T_REF_K + SUTHERLAND_CONSTANT_K);
+
 export function pressureAtElevation(zMeters) {
   const h = (EARTH_RADIUS_M * zMeters) / (EARTH_RADIUS_M + zMeters);
   return P0_PA * (1 - LAPSE_PER_T0 * h) ** PRESSURE_EXPONENT;

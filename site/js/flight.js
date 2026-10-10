@@ -1,4 +1,4 @@
-import { RHO0 } from './atmosphere.js';
+import { MU0_PA_S, RHO0 } from './atmosphere.js';
 import { MPS_PER_MPH, degToRad, rpmToRadPerS } from './units.js';
 
 export const BALL_MASS_KG = 0.04593;
@@ -7,6 +7,13 @@ export const G = 9.80665;
 export const LAMBDA0 = 2e-5;
 export const DT_S = 0.05;
 export const MAX_FLIGHT_S = 60;
+
+// The rise of drag with Reynolds number measured above Re 1e5, the middle of
+// +0.010 to +0.017 per 1e5, taken about Re 1.5e5 and frozen below Re 1e5: the
+// drag crisis lower down is left out.
+export const DRAG_PER_RE = 0.0135 / 1e5;
+export const RE_FLOOR = 1e5;
+const RE_PIVOT = 1.5e5;
 
 const RADIUS_M = BALL_DIAMETER_M / 2;
 const AREA_M2 = (Math.PI * BALL_DIAMETER_M ** 2) / 4;
@@ -33,6 +40,42 @@ export function spinParameter(spinRadS, airSpeedMps) {
   return (RADIUS_M * spinRadS) / airSpeedMps;
 }
 
+export function reynoldsNumber(rhoRatio, airSpeedMps) {
+  return (rhoRatio * RHO0 * airSpeedMps * BALL_DIAMETER_M) / MU0_PA_S;
+}
+
+// Supercritical lift of modern tour balls, measured from S 0.04 to 0.30;
+// below the data it falls linearly to zero, as a ball without spin has no
+// lift; above it, the shape of Bearman & Harvey's 1976 ball, capped at their
+// 0.45 at S 1.0.
+const LIFT_DATA_FROM_S = 0.04;
+
+function measuredLift(s) {
+  return 0.065 + 0.85 * s;
+}
+
+export function liftCoefficient(s) {
+  if (s < LIFT_DATA_FROM_S) {
+    return (measuredLift(LIFT_DATA_FROM_S) * s) / LIFT_DATA_FROM_S;
+  }
+  return s <= 0.3 ? measuredLift(s) : Math.min(0.45, 0.32 + 0.25 * (s - 0.3));
+}
+
+function dragAtLowSpin(s) {
+  return 0.22 - 0.27 * s + 3.0 * s * s;
+}
+
+const DRAG_AT_S_022 = dragAtLowSpin(0.22);
+
+// Supercritical drag of modern tour balls, measured up to S 0.22; above it,
+// Bearman & Harvey's slope (measured to S 0.46), joined continuously,
+// continued to S 0.64 and held flat beyond.
+export function dragCoefficient(s, re) {
+  const bySpin =
+    s <= 0.22 ? dragAtLowSpin(s) : DRAG_AT_S_022 + 0.38 * (Math.min(s, 0.64) - 0.22);
+  return bySpin + DRAG_PER_RE * (Math.max(re, RE_FLOOR) - RE_PIVOT);
+}
+
 function derivative({ kD, kL }, { rhoRatio, windMps }) {
   const k = (rhoRatio * RHO0 * AREA_M2) / (2 * BALL_MASS_KG);
   const decayPerM = (LAMBDA0 * rhoRatio) / RADIUS_M;
@@ -44,8 +87,8 @@ function derivative({ kD, kL }, { rhoRatio, windMps }) {
     const u = Math.sqrt(ux * ux + vy * vy);
     // With no airflow every force term is zero anyway; this keeps S out of 0/0.
     const s = u > 0 ? spinParameter(omega, u) : 0;
-    const cd = kD * (0.24 + 0.18 * s);
-    const cl = kL * 0.54 * s ** 0.4;
+    const cd = kD * dragCoefficient(s, reynoldsNumber(rhoRatio, u));
+    const cl = kL * liftCoefficient(s);
     return [
       vx,
       vy,

@@ -132,6 +132,29 @@
     </div>
     <p>Humidity is neglected: holding 50 % relative humidity instead changes the density ratio by 0.1–0.5 % and carry by at most 0.18 yd. Letting the temperature fall with the standard lapse rate instead would make the air about 3.5 % denser at 5,000 ft and understate the effect for warm-season golf, so the temperature is held constant.</p>
 
+    <h3>Air viscosity</h3>
+    <p>The drag depends weakly on the Reynolds number (<a href="#model">Ball-flight model</a>), which needs the air’s dynamic viscosity <i>μ</i>. Viscosity depends on temperature alone, so it too is the same at every elevation. Sutherland’s law, with reference viscosity 1.716×10<sup>−5</sup> Pa·s at 273.15 K and Sutherland constant 110.4 K, gives at <i>T</i><sub>ref</sub></p>
+    <div class="eq" role="region" aria-label="Equation: air viscosity" tabindex="0">
+      <math display="block">
+        <mi>μ</mi><mo>=</mo><mn>1.716</mn><mo>×</mo>
+        <msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup>
+        <mo>·</mo>
+        <msup>
+          <mrow><mo>(</mo><mfrac><msub><mi>T</mi><mtext>ref</mtext></msub><mn>273.15</mn></mfrac><mo>)</mo></mrow>
+          <mrow><mn>3</mn><mo>/</mo><mn>2</mn></mrow>
+        </msup>
+        <mo>·</mo>
+        <mfrac>
+          <mrow><mn>273.15</mn><mo>+</mo><mn>110.4</mn></mrow>
+          <mrow><msub><mi>T</mi><mtext>ref</mtext></msub><mo>+</mo><mn>110.4</mn></mrow>
+        </mfrac>
+        <mo>=</mo><mn>1.8371</mn><mo>×</mo>
+        <msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup>
+        <mspace width="0.3em"/><mtext>Pa·s</mtext>
+      </math>
+    </div>
+    <p>with the temperatures in kelvin.</p>
+
     <h3>Units and range</h3>
     <p>Pressure: 1 inHg = 3386.389 Pa (the conventional inch of mercury, NIST SP 811), 1 kPa = 1000 Pa and 1 mbar = 1 hPa = 100 Pa. Length: 1 ft = 0.3048 m and 1 yd = 0.9144 m. Speed: 1 mph = 0.44704 m/s. The controls cover elevations from 0 to 15,000 ft (0 to 4,572 m), that is pressures from 101,325 Pa down to 57,206.8 Pa.</p>
 
@@ -217,24 +240,94 @@
         <mi>S</mi><mo>=</mo><mfrac><mrow><mi>r</mi><mi>ω</mi></mrow><mi>U</mi></mfrac>
       </math>
     </div>
-    <p>where <i>ρ</i> is the air density, <i>m</i> and <i>D</i> the ball’s mass and diameter, <i>S</i> the spin parameter and <i>g</i> = 9.80665 m/s².</p>
+    <div class="eq" role="region" aria-label="Equation: Reynolds number" tabindex="0">
+      <math display="block">
+        <mi>Re</mi><mo>=</mo><mfrac><mrow><mi>ρ</mi><mi>U</mi><mi>D</mi></mrow><mi>μ</mi></mfrac>
+      </math>
+    </div>
+    <p>where <i>ρ</i> is the air density, <i>μ</i> its viscosity (<a href="#atmosphere">Atmosphere</a>), <i>m</i> and <i>D</i> the ball’s mass and diameter, <i>S</i> the spin parameter, Re the Reynolds number and <i>g</i> = 9.80665 m/s².</p>
 
     <h3>Drag and lift</h3>
     <div class="eq" role="region" aria-label="Equation: drag coefficient" tabindex="0">
       <math display="block">
         <msub><mi>C</mi><mi mathvariant="normal">D</mi></msub><mo>=</mo>
         <msub><mi>k</mi><mi mathvariant="normal">D</mi></msub>
-        <mrow><mo stretchy="false">(</mo><mn>0.24</mn><mo>+</mo><mn>0.18</mn><mi>S</mi><mo stretchy="false">)</mo></mrow>
+        <mrow>
+          <mo>[</mo>
+          <msub><mi>C</mi><mrow><mi mathvariant="normal">D</mi><mn>0</mn></mrow></msub>
+          <mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo>
+          <mo>+</mo><mn>1.35</mn><mo>×</mo>
+          <msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup>
+          <mo>·</mo>
+          <mrow>
+            <mo stretchy="false">(</mo><mo>max</mo><mo stretchy="false">(</mo><mi>Re</mi><mo>,</mo>
+            <msup><mn>10</mn><mn>5</mn></msup><mo stretchy="false">)</mo><mo>−</mo><mn>1.5</mn><mo>×</mo>
+            <msup><mn>10</mn><mn>5</mn></msup><mo stretchy="false">)</mo>
+          </mrow>
+          <mo>]</mo>
+        </mrow>
+      </math>
+    </div>
+    <div class="eq" role="region" aria-label="Equation: drag at the spin parameter" tabindex="0">
+      <math display="block">
+        <msub><mi>C</mi><mrow><mi mathvariant="normal">D</mi><mn>0</mn></mrow></msub>
+        <mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>=</mo>
+        <mrow>
+          <mo>{</mo>
+          <mtable>
+            <mtr>
+              <mtd><mn>0.22</mn><mo>−</mo><mn>0.27</mn><mi>S</mi><mo>+</mo><mn>3.0</mn><msup><mi>S</mi><mn>2</mn></msup></mtd>
+              <mtd><mi>S</mi><mo>≤</mo><mn>0.22</mn></mtd>
+            </mtr>
+            <mtr>
+              <mtd>
+                <msub><mi>C</mi><mrow><mi mathvariant="normal">D</mi><mn>0</mn></mrow></msub>
+                <mo stretchy="false">(</mo><mn>0.22</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0.38</mn>
+                <mo stretchy="false">(</mo><mo>min</mo><mo stretchy="false">(</mo><mi>S</mi><mo>,</mo><mn>0.64</mn><mo stretchy="false">)</mo>
+                <mo>−</mo><mn>0.22</mn><mo stretchy="false">)</mo>
+              </mtd>
+              <mtd><mi>S</mi><mo>&gt;</mo><mn>0.22</mn></mtd>
+            </mtr>
+          </mtable>
+        </mrow>
       </math>
     </div>
     <div class="eq" role="region" aria-label="Equation: lift coefficient" tabindex="0">
       <math display="block">
         <msub><mi>C</mi><mi mathvariant="normal">L</mi></msub><mo>=</mo>
-        <msub><mi>k</mi><mi mathvariant="normal">L</mi></msub><mo>·</mo><mn>0.54</mn><mo>·</mo>
-        <msup><mi>S</mi><mn>0.4</mn></msup>
+        <msub><mi>k</mi><mi mathvariant="normal">L</mi></msub><mo>·</mo>
+        <msub><mi>C</mi><mrow><mi mathvariant="normal">L</mi><mn>0</mn></mrow></msub>
+        <mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo>
       </math>
     </div>
-    <p>These are the Smits &amp; Smith (1994) shapes without their Reynolds-number term, scaled by two factors <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> fitted for each table row (<a href="#calibration">Calibration</a>). The only surviving text of that model states that it was fitted “for driver shots” (70,000 &lt; Re &lt; 210,000, 0.08 &lt; <i>S</i> &lt; 0.2). <i>S</i> rises as the ball slows, and at sea level with the calibrated factors only the two Driver rows stay below 0.2 for the whole flight (launch <i>S</i> = 0.074 PGA, 0.088 LPGA; peak ≈ 0.17). The other woods, the hybrids, the PGA 3–5 Iron and the LPGA 4 Iron launch inside the range (<i>S</i> ≈ 0.096–0.195) but peak at ≈ 0.21–0.51; the PGA 6 Iron to PW and the LPGA 5 Iron to PW launch above it (<i>S</i> ≈ 0.22–0.48) and peak at ≈ 0.47–1.17. Those rows are an extrapolation, absorbed in part by the per-row calibration.</p>
+    <div class="eq" role="region" aria-label="Equation: lift at the spin parameter" tabindex="0">
+      <math display="block">
+        <msub><mi>C</mi><mrow><mi mathvariant="normal">L</mi><mn>0</mn></mrow></msub>
+        <mo stretchy="false">(</mo><mi>S</mi><mo stretchy="false">)</mo><mo>=</mo>
+        <mrow>
+          <mo>{</mo>
+          <mtable>
+            <mtr>
+              <mtd><mn>2.475</mn><mi>S</mi></mtd>
+              <mtd><mi>S</mi><mo>&lt;</mo><mn>0.04</mn></mtd>
+            </mtr>
+            <mtr>
+              <mtd><mn>0.065</mn><mo>+</mo><mn>0.85</mn><mi>S</mi></mtd>
+              <mtd><mn>0.04</mn><mo>≤</mo><mi>S</mi><mo>≤</mo><mn>0.30</mn></mtd>
+            </mtr>
+            <mtr>
+              <mtd>
+                <mo>min</mo><mo stretchy="false">(</mo><mn>0.45</mn><mo>,</mo><mn>0.32</mn><mo>+</mo><mn>0.25</mn>
+                <mo stretchy="false">(</mo><mi>S</mi><mo>−</mo><mn>0.30</mn><mo stretchy="false">)</mo><mo stretchy="false">)</mo>
+              </mtd>
+              <mtd><mi>S</mi><mo>&gt;</mo><mn>0.30</mn></mtd>
+            </mtr>
+          </mtable>
+        </mrow>
+      </math>
+    </div>
+    <p><i>C</i><sub>D0</sub> and <i>C</i><sub>L0</sub> are the drag and lift measured on current tour balls at Re ≥ 7.5×10<sup>4</sup>, above the drag crisis, scaled by two factors <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> fitted for each table row (<a href="#calibration">Calibration</a>). Up to <i>S</i> = 0.22 for drag and 0.30 for lift they are least-squares fits (rms 0.020 and 0.024) to the published measurements of Lyu, Kensrud &amp; Smith (2020) and Lyu et al. (2018), the example data of the USGA’s Indoor Test Range patent and Bridgestone’s patents. The data start at <i>S</i> = 0.04; below it lift falls linearly to zero, since a ball without spin has none, and no tour flight goes below <i>S</i> = 0.074. No modern ball has been measured above <i>S</i> ≈ 0.36, and above the fitted ranges the shapes follow Bearman &amp; Harvey’s (1976) wind-tunnel ball: its lift up to its 0.45 at <i>S</i> = 1.0, and its drag slope, measured to <i>S</i> = 0.46, joined at <i>C</i><sub>D0</sub>(0.22) = 0.3058, continued to <i>S</i> = 0.64 and held flat beyond. The Reynolds-number term is the rise of drag with speed measured above Re = 10<sup>5</sup>, between the +0.011 per 10<sup>5</sup> of Bearman &amp; Harvey and the +0.0165 of the USGA patent’s example ball, and is frozen below Re = 10<sup>5</sup>. Lower density lowers Re at a given speed, and with it the drag slightly. Measured balls also lose lift and gain drag below Re ≈ 7.5×10<sup>4</sup>; the model leaves that out (<a href="#limitations">Limitations</a>, item 1).</p>
+    <p>At sea level with the calibrated factors, <i>S</i> rises from 0.074–0.48 at launch to 0.17–1.15 on the descent, and Re falls from 1.1–2.1×10<sup>5</sup> to 4.2–7.4×10<sup>4</sup>. Only the Drivers and 3-woods stay within the lift fit (<i>S</i> ≤ 0.30) for the whole flight. The other woods, the hybrids, the PGA 3–5 Iron and the LPGA 4–5 Iron peak at <i>S</i> ≈ 0.37–0.52, and the 6 Iron to PW of both tours at ≈ 0.58–1.15, where the shapes rest on the 1976 ball and, above <i>S</i> = 0.46, on extrapolation; the per-row calibration absorbs part of that.</p>
 
     <h3 id="spin-decay">Spin decay</h3>
     <p>The third equation of motion decays the spin with</p>
@@ -251,13 +344,13 @@
 
     <h3>Launch, outputs and integration</h3>
     <p>Each row is launched from <i>y</i> = 0 at its published ball speed, launch angle and spin rate. The outputs are measured against the launch elevation, as TrackMan measures them: carry is the <i>x</i> at which the descending ball crosses <i>y</i> = 0, max height is the apex <i>y</i>, and land angle is atan2(−<i>v</i><sub>y</sub>, <i>v</i><sub>x</sub>) at landing.</p>
-    <p>The equations are integrated with the fixed-step fourth-order Runge–Kutta method (RK4) at d<i>t</i> = 0.05 s, and the apex and the landing are located within their step by cubic Hermite interpolation. Two independent implementations measured the error against d<i>t</i> = 0.001 s at ≤ 1×10<sup>−6</sup> yd and ≤ 1.1×10<sup>−3</sup>°; no displayed cell changes anywhere in the range. A flight is capped at 60 s of simulated time. Reaching the cap, or any non-finite state, is a model failure: the row keeps its published values and shows — in place of its changes, and the other rows are unaffected.</p>
+    <p>The equations are integrated with the fixed-step fourth-order Runge–Kutta method (RK4) at d<i>t</i> = 0.05 s, and the apex and the landing are located within their step by cubic Hermite interpolation. Against d<i>t</i> = 0.001 s the error is at most 1×10<sup>−3</sup> yd and 1.3×10<sup>−3</sup>° for every row at its calibrated factors from 0 to 15,000 ft. The corners of the drag and lift laws (at <i>S</i> = 0.22, 0.30 and 0.64 and Re = 10<sup>5</sup>) keep it above RK4’s usual fourth-order size, but far below display precision: a displayed value can differ from the reference only where it lies within that error of a rounding boundary. A flight is capped at 60 s of simulated time. Reaching the cap, or any non-finite state, is a model failure: the row keeps its published values and shows — in place of its changes, and the other rows are unaffected.</p>
   </section>
 
   <section id="calibration" aria-labelledby="calibration-title">
     <h2 id="calibration-title">Calibration</h2>
-    <p>For every table row, <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> are fitted so that the sea-level model reproduces the published carry and max height in yards. The fit is a damped 2×2 Newton iteration with a finite-difference Jacobian, starting from <i>k</i><sub>D</sub> = <i>k</i><sub>L</sub> = 1. Two independent implementations converge in 3 iterations (about 10 flights) on every row, with Jacobian condition numbers 3–9. A row that does not converge within 20 iterations is a model failure.</p>
-    <p>Expressed as density-independent products, the fitted values lie near <i>ρ</i><sub>0</sub><i>k</i><sub>D</sub> ≈ 1.08–1.50 and <i>ρ</i><sub>0</sub><i>k</i><sub>L</sub> ≈ 0.96–1.32 kg/m³ (<i>k</i><sub>D</sub> ≈ 0.92–1.27 and <i>k</i><sub>L</sub> ≈ 0.81–1.12 at <i>ρ</i><sub>0</sub> = 1.1839 kg/m³).</p>
+    <p>For every table row, <i>k</i><sub>D</sub> and <i>k</i><sub>L</sub> are fitted so that the sea-level model reproduces the published carry and max height in yards. The fit is a damped 2×2 Newton iteration with a finite-difference Jacobian, starting from <i>k</i><sub>D</sub> = <i>k</i><sub>L</sub> = 1. It converges in 2–4 iterations (7–13 flights) on every row, with Jacobian condition numbers 4–9, and an independent implementation, the land-angle spike’s harness, fits the same factors to 10<sup>−13</sup>. A row that does not converge within 20 iterations is a model failure.</p>
+    <p>Expressed as density-independent products, the fitted values lie near <i>ρ</i><sub>0</sub><i>k</i><sub>D</sub> ≈ 1.03–1.56 and <i>ρ</i><sub>0</sub><i>k</i><sub>L</sub> ≈ 1.08–1.75 kg/m³ (<i>k</i><sub>D</sub> ≈ 0.87–1.32 and <i>k</i><sub>L</sub> ≈ 0.92–1.48 at <i>ρ</i><sub>0</sub> = 1.1839 kg/m³). Because the drag and lift laws are measured coefficients, a factor near 1 means the row flies like the measured balls.</p>
     <p>The fit targets the published yards. The metres column could narrow the rounding intervals slightly, but the gain is below the other uncertainties: the table’s rounding alone makes the carry change uncertain by up to about 1 yd at 10,000 ft.</p>
     <p>Land angle is not a calibration target but a check: the table below sets the model’s sea-level land angle beside TrackMan’s (<a href="#limitations">Limitations</a>, item 2).</p>
     <p>The fit runs in the browser each time a page loads, after the tables are painted, and yields between rows. The fitted values are a pure function of the table and the model, so they are never stored: the table below was computed just now, by the same modules the main page uses.</p>
@@ -342,13 +435,13 @@
   <section id="limitations" aria-labelledby="limitations-title">
     <h2 id="limitations-title">Limitations</h2>
     <ol>
-      <li><strong>No Reynolds-number dependence.</strong> The dimpled-ball drag crisis lies at Re ≈ 5×10<sup>4</sup>–10<sup>5</sup> on current tour balls (Lyu et al. 2018, spinning or not, up to <i>S</i> ≈ 0.3), which overlaps the slow end of every flight; spin moves the crisis to lower Re (Li et al. 2017), and no open data cover <i>S</i> 0.3–1.2. Lower density lowers Re, so a Re term would alter the change with altitude, not just the sea-level level that calibration absorbs. The Re-free model is chosen because it is the closest match to TrackMan’s own model: TrackMan’s 2014 model trajectories (oracle 10 and the wind cases) and TrackMan-derived altitude figures. That evidence is largely TrackMan’s model and players’ TrackMan-derived planning numbers, so it cannot rule out Re effects; drag-crisis variants that let spin move the crisis also pass every hard oracle. Across physically plausible variants, iron and wedge carry gains are uncertain by about −30 % to +25 % of the shown gain.</li>
-      <li><strong>Land-angle offset.</strong> After calibration the model lands shallower than TrackMan’s table: by about 1–9° for the PGA rows and the LPGA woods to 7 Iron (worst for hybrids and long irons), and within 0.7° for LPGA 8 Iron to PW (<a href="#calibration">Calibration</a>). The gap follows spin combined with low launch, not carry or flight time. Against TrackMan’s own fully specified model shots it is only 1.1–1.8°, and at the same launch the 2023 table rows are longer, lower and steeper than TrackMan’s model trajectory. Why is unresolved. Ruled out: the spread of launch conditions within a row (−0.45°, the wrong sign), faster spin decay, and different air on the two tours’ schedules, whose tournament-week air differs by 0.2 %. Measured tour-ball data show lift collapsing and drag rising once the ball slows below about 27 m/s (Re ≈ 7.5×10<sup>4</sup>), the late-flight steepening this model lacks. At the strength the table asks for, that closes most of the gap, but it also cuts iron carry gains at altitude, which no published iron measurement confirms or refutes. The land-angle column is therefore labelled indicative; its change carries about ±2° of structural uncertainty at 10,000 ft. An alternative, launch-anchored mapping (equally exact at sea level) would show larger land-angle changes for woods, hybrids and long irons, by up to 3.4° at 10,000 ft; no source discriminates between the two.</li>
-      <li><strong>Low-spin clubs plateau at extreme altitude.</strong> As density falls, carry tends to its vacuum value, and for low-spin, low-launch shots that is shorter than at moderate density: the LPGA 3-wood and 4 Iron peak near 14,500 ft (by 0.03 yd, invisible in the displayed integers).</li>
+      <li><strong>Only a weak Reynolds-number dependence.</strong> The model’s one Reynolds-number term is the small rise of drag with speed above Re = 10<sup>5</sup> (<a href="#model">Ball-flight model</a>). Measured tour balls also lose most of their lift, some briefly reversing it, and gain drag once the ball slows below Re ≈ 7.5×10<sup>4</sup>, about 27 m/s at sea level (Lyu, Kensrud &amp; Smith 2020; Bridgestone’s patents measure the onset of the lift loss), and no modern ball has been measured there above <i>S</i> ≈ 0.36, where iron and wedge descents end. Thin air lowers Re at a given speed, so that loss would arrive earlier in the flight and cut iron and wedge carry gains at altitude. It is left out because no measurement confirms or refutes such a cut: the only measured altitude carries are PGA TOUR drivers, up to 7,746 ft. The nearest evidence for irons is players’ planned gains of +12–14 % at 6,400 ft (oracle 6), plans rather than measurements; this model comes close (+11.7 %) and the models with the loss do not (+6.0 to +8.7 %; <a href="https://github.com/jhoblitt/tmelevation/blob/main/docs/research/land-angle-spike/SYNTHESIS.md">land-angle spike</a>). The spike fitted the loss in three ways under this site’s calibration: persisting at every <i>S</i>, or fading out by <i>S</i> = 0.6 or by 1.0. Across those three, the iron and wedge carry gains at 10,000 ft are 3.5 % to 174 % smaller than shown; past 100 %, as for the LPGA 4–7 Iron, carry would fall with elevation. None gives a larger gain.</li>
+      <li><strong>Land-angle offset.</strong> After calibration the model lands shallower than TrackMan’s table: by about 2–8° for the PGA 3-wood to PW and the LPGA 5-wood to 7 Iron (worst for the PGA 5-wood, hybrid and long irons), and within 0.9° for both Drivers, the LPGA 3-wood and the LPGA 8 Iron to PW (<a href="#calibration">Calibration</a>). The gap follows spin combined with low launch, not carry or flight time. Against TrackMan’s own fully specified model shots it is only 0.3–0.6°, and at the same launch the 2023 table rows are longer, lower and steeper than TrackMan’s model trajectory. Why is unresolved. Ruled out: the spread of launch conditions within a row (−0.45°, the wrong sign), faster spin decay, and different air on the two tours’ schedules, whose tournament-week air differs by 0.2 %. The low-speed lift loss and drag rise of item 1 are the late-flight steepening this model leaves out. At the strength the table asks for, they close most of the gap, but they also cut iron carry gains at altitude, which no published iron measurement confirms or refutes. The land-angle column is therefore labelled indicative: at 10,000 ft its change differs by up to 8° between this model and the three fits of item 1. An alternative, launch-anchored mapping (equally exact at sea level) would show larger land-angle changes for woods, hybrids and long irons, by up to 3.2° at 10,000 ft; no source discriminates between the two.</li>
+      <li><strong>Low-spin clubs plateau at extreme altitude.</strong> As density falls, carry tends to its vacuum value, and for low-spin, low-launch shots that is shorter than at moderate density. The PGA Hybrid, 3 and 4 Iron and the LPGA Driver, 3-wood, 5-wood and 4 Iron peak between 13,350 and 14,930 ft and lose at most 0.3 yd by 15,000 ft. Two displayed values show it: the PGA Hybrid’s carry drops from 266 to 265 yd near 14,910 ft (soft oracle 9b), and the LPGA 4 Iron’s from 178 to 177 m near 14,960 ft.</li>
       <li><strong>Launch conditions are held fixed at altitude.</strong> Real players may change clubs, trajectory or swing.</li>
       <li><strong>No wind, temperature, humidity, ball-model or roll effects.</strong></li>
       <li><strong>TrackMan does not state the tables’ conditions.</strong> Calm sea level is assumed.</li>
-      <li><strong>The coefficient shapes are a driver fit.</strong> Every row except the two Drivers is outside the fit’s spin-parameter range for some or all of its flight, and is an extrapolation (<a href="#model">Ball-flight model</a>).</li>
+      <li><strong>High spin parameters rest on one 1976 ball.</strong> Modern tour balls are measured up to <i>S</i> ≈ 0.36; above that the drag and lift follow Bearman &amp; Harvey’s ball, and the drag beyond <i>S</i> = 0.46 is an extrapolation. Every row except the Drivers and 3-woods leaves the modern-ball lift fit during its flight (<a href="#model">Ball-flight model</a>).</li>
     </ol>
     <h3>Contrast</h3>
     <p>The main page reproduces TrackMan’s palette exactly, including its white text, whose contrast is 2.26:1 on the striped rows and 3.18:1 on the orange, below WCAG AA. This is accepted for fidelity: no text shadow or palette change is applied. What this site adds meets AA: the change lines, the methods link, the focus rings and the hints use a dark charcoal (#262425), 4.85:1 on the orange and 6.81:1 on the stripe.</p>
@@ -356,7 +449,7 @@
 
   <section id="sources" aria-labelledby="sources-title">
     <h2 id="sources-title">Sources</h2>
-    <p>Each source is marked as read at the primary source or seen only second hand. All were accessed on 2026-10-08.</p>
+    <p>Each source is marked as read at the primary source or seen only second hand. All were accessed on 2026-10-08, and those for drag and lift on 2026-10-09.</p>
 
     <h3>Data</h3>
     <ul>
@@ -367,8 +460,17 @@
     <h3>Equations and ball</h3>
     <ul>
       <li>A. R. Penner (2001), “The physics of golf: The optimum loft of a driver”, <i>Am. J. Phys.</i> 69(5), 563–568, <a href="https://doi.org/10.1119/1.1344164">doi:10.1119/1.1344164</a> (<a href="https://www.viurrspace.ca/server/api/core/bitstreams/59c73ed3-fece-4b2c-8e96-a14336895139/content">open author copy</a>): the equations of motion (eqs. 12–15) and the spin decay (eq. 16). <span class="mark">Primary.</span></li>
-      <li>A. J. Smits and D. R. Smith (1994), “A new aerodynamic model of a golf ball in flight”, in <i>Science and Golf II</i> (Cochran &amp; Farrally, eds.), E &amp; FN Spon, pp. 340–347: the drag and lift shapes. <span class="mark">Second hand.</span> The chapter was not available. Its text was read as reproduced in <a href="https://patents.google.com/patent/US11230375B1/en">US patent 11,230,375 B1</a>, apparently from Mehta &amp; Pallis (2001), “Sports Ball Aerodynamics: Effects of Velocity, Spin and Surface Roughness”, <i>Materials and Science in Sports</i>, pp. 185–197; the patent does not attribute the passage. The page range is confirmed by <a href="https://patents.google.com/patent/US6186002B1/en">US patent 6,186,002 B1</a>, and the spin-decay constant was read as given in Penner (2001), eq. 16.</li>
+      <li>A. J. Smits and D. R. Smith (1994), “A new aerodynamic model of a golf ball in flight”, in <i>Science and Golf II</i> (Cochran &amp; Farrally, eds.), E &amp; FN Spon, pp. 340–347: the spin-decay constant. <span class="mark">Second hand.</span> The chapter was not available. The constant was read as given in Penner (2001), eq. 16; the USGA’s trajectory program in <a href="https://patents.google.com/patent/US6186002B1/en">US patent 6,186,002 B1</a>, which cites the chapter with this page range, uses the same value.</li>
       <li><a href="https://www.randa.org/roe/the-rules-of-equipment/part-4-conformance-of-balls">R&amp;A and USGA, Equipment Rules, Part 4</a>: the ball’s mass and diameter limits. <span class="mark">Primary.</span></li>
+    </ul>
+
+    <h3>Drag and lift</h3>
+    <ul>
+      <li>B. Lyu, J. Kensrud and L. Smith (2020), “The reverse Magnus effect in golf balls”, <i>Sports Engineering</i> 23, 3, <a href="https://doi.org/10.1007/s12283-020-0318-1">doi:10.1007/s12283-020-0318-1</a>: drag and lift of three current tour balls launched through still air, Re 4.9×10<sup>4</sup>–2×10<sup>5</sup>, including the low-speed lift loss and drag rise. <span class="mark">Primary.</span></li>
+      <li>B. Lyu, J. Kensrud, L. Smith and T. Tosaya (2018), “Aerodynamics of Golf Balls in Still Air”, <i>Proceedings</i> 2(6), 238, <a href="https://doi.org/10.3390/proceedings2060238">doi:10.3390/proceedings2060238</a>: drag and lift of 13 production balls. <span class="mark">Primary.</span></li>
+      <li>B. B. Lieberman, A. J. Smits, S. J. Quintavalla, F. W. Thomas and D. Winfield (United States Golf Association), <a href="https://patents.google.com/patent/US6186002B1/en">US patent 6,186,002 B1</a>, “Method for determining coefficients of lift and drag of a golf ball”, 2001: the USGA Indoor Test Range’s 42 example measurements and their fitted rise of drag with Re. <span class="mark">Primary.</span></li>
+      <li>Bridgestone Sports, US patents <a href="https://patents.google.com/patent/US7175542B2/en">7,175,542 B2</a> (2007), <a href="https://patents.google.com/patent/US7201671B2/en">7,201,671 B2</a> (2007), <a href="https://patents.google.com/patent/US7238121B2/en">7,238,121 B2</a> (2007) and <a href="https://patents.google.com/patent/US8021249B2/en">8,021,249 B2</a> (2011): lift and drag of launched balls at Re 7×10<sup>4</sup> and 1.8×10<sup>5</sup>, and the lift lost between Re 8×10<sup>4</sup> and 7×10<sup>4</sup>. <span class="mark">Primary.</span></li>
+      <li>P. W. Bearman and J. K. Harvey (1976), “Golf ball aerodynamics”, <i>Aeronautical Quarterly</i> 27, 112–122: wind-tunnel drag and lift of a 1970s ball up to <i>S</i> = 1.0, the shapes above the modern-ball fits. <span class="mark">Second hand.</span> The paper was not available. Its figures were read as reproduced in J. R. Kensrud (2010), <a href="https://rex.libraries.wsu.edu/esploro/outputs/graduate/Determining-aerodynamic-properties-of-sports-balls/99900525114301842">“Determining aerodynamic properties of sports balls in situ”</a>, MS thesis, Washington State University, Figs. 2.13–2.14, and in J. Crabill, F. Witherden and A. Jameson, <a href="https://arxiv.org/abs/1806.00378">“High-Order Computational Fluid Dynamics Simulations of a Spinning Golf Ball”</a>, arXiv:1806.00378, Fig. 6.</li>
     </ul>
 
     <h3>Atmosphere and units</h3>
@@ -376,12 +478,6 @@
       <li><a href="https://ntrs.nasa.gov/api/citations/19770009539/downloads/19770009539.pdf">U.S. Standard Atmosphere, 1976</a> (NOAA-S/T 76-1562, NASA-TM-X-74335; NASA NTRS 19770009539): the troposphere equations and constants. <span class="mark">Primary.</span></li>
       <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8">NIST Special Publication 811 (2008), Appendix B.8</a>: the conversion factors. <span class="mark">Primary.</span></li>
       <li><a href="https://forecast.weather.gov/glossary.php">National Weather Service glossary</a>: station pressure, sea-level pressure and altimeter setting. <span class="mark">Primary.</span></li>
-    </ul>
-
-    <h3>Limitations</h3>
-    <ul>
-      <li>B. Lyu, J. Kensrud, L. Smith and T. Tosaya (2018), “Aerodynamics of Golf Balls in Still Air”, <i>Proceedings</i> 2(6), 238, <a href="https://doi.org/10.3390/proceedings2060238">doi:10.3390/proceedings2060238</a>. <span class="mark">Primary.</span></li>
-      <li>J. Li, M. Tsubokura and M. Tsunoda (2017), “Numerical Investigation of the Flow Past a Rotating Golf Ball and Its Comparison with a Rotating Smooth Sphere”, <i>Flow, Turbulence and Combustion</i>, <a href="https://doi.org/10.1007/s10494-017-9859-1">doi:10.1007/s10494-017-9859-1</a>. <span class="mark">Primary.</span></li>
     </ul>
 
     <h3>Reference data</h3>

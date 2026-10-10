@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   MAX_ELEVATION_M,
   MIN_PRESSURE_PA,
+  MU0_PA_S,
   P0_PA,
   RHO0,
   T_REF_K,
@@ -67,6 +68,10 @@ test('density ratio is pressure over sea-level pressure', () => {
 
 test('sea-level air density at 25 degrees C is 1.18391 kg/m3', () => {
   near(RHO0, 1.18391, 1e-5);
+});
+
+test("air viscosity at 25 degrees C is Sutherland's 1.8371e-5 Pa s", () => {
+  near(MU0_PA_S, 1.83715e-5, 1e-10);
 });
 
 test('the minimum pressure is the pressure at the maximum elevation', () => {

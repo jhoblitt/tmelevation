@@ -376,13 +376,12 @@ test('methods.html states the assumptions, limitations and caveats', () => {
     'dry air',
     'barometer',
     'launch elevation',
-    'for driver shots',
+    'one 1976 ball',
     'about 1 yd',
     'indicative',
-    '−30 %',
-    '+25 %',
+    '3.5 % to 174 %',
     'contrast',
-    'Mehta & Pallis',
+    'Kensrud (2010)',
   ]) {
     assert.ok(content.includes(phrase), `missing "${phrase}"`);
   }
