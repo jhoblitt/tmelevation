@@ -1,7 +1,7 @@
 // End-to-end tests of the pages in headless Chrome: the Review Focus cases
-// RF-1…RF-5, the footer's links from the keyboard, a background tab,
-// back/forward with and without the back/forward cache, and the sticky
-// controls.
+// RF-1…RF-5, elevations typed past either end of the slider, the footer's
+// links from the keyboard, a background tab, back/forward with and without
+// the back/forward cache, and the sticky controls.
 //
 //   node test/browser/e2e.mjs [siteDir]      (default: site/)
 import assert from 'node:assert/strict';
@@ -9,11 +9,14 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import {
   commitElevation,
+  commitPressure,
   initialState,
   inputElevation,
+  inputPressure,
   inputSlider,
   setElevationUnit,
   setMode,
+  setPressureUnit,
   view,
 } from '../../site/js/controls.js';
 import { createModel } from '../../site/js/model.js';
@@ -132,10 +135,44 @@ function setSlider(value) {
   slider.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-function setUnit(value) {
-  const select = document.getElementById('elev-unit');
+function setUnit(value, id = 'elev-unit') {
+  const select = document.getElementById(id);
   select.value = value;
   select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+// Types into a box and commits it without moving the focus.
+function setBox(id, text) {
+  const box = document.getElementById(id);
+  box.value = text;
+  box.dispatchEvent(new Event('input', { bubbles: true }));
+  box.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+// What the slider tells assistive technology, and the tables' captions.
+function sliderNote() {
+  const slider = document.getElementById('slider');
+  return {
+    value: slider.valueAsNumber,
+    valueText: slider.getAttribute('aria-valuetext'),
+    captions: [...document.querySelectorAll('.caption')].map((caption) => caption.textContent),
+  };
+}
+
+// The readout's text against its neighbours in the pinned row. Text a hair
+// wider than the readout's fixed width spills into the row's gap, which is
+// harmless; reaching the slider or the Δ buttons is not.
+function readoutClear() {
+  const readout = document.getElementById('readout');
+  const range = document.createRange();
+  range.selectNodeContents(readout);
+  const text = range.getBoundingClientRect();
+  return {
+    text: readout.textContent,
+    clear:
+      text.left >= document.getElementById('slider').getBoundingClientRect().right &&
+      text.right <= document.querySelector('.mode').getBoundingClientRect().left,
+  };
 }
 
 // RF-1: every input in one task, so the last one surely lands while rows are
@@ -562,6 +599,87 @@ test('RF-3: keyboard only', () =>
     assert.deepEqual(seen.problems, []);
   }));
 
+test('beyond the slider: 20,000 ft typed pins the slider, and a drag brings it back', () =>
+  withPage({}, async ({ page, seen, url }) => {
+    await load(page, url('index.html'));
+    await type(page, 'elev', '20000');
+    await page.key('Enter');
+    await frames(page);
+    const high = commitElevation(inputElevation(SEA_LEVEL, '20000'));
+    const shown = expectedControls(high);
+    assert.equal(shown.elev, '20,000');
+    assert.equal(shown.readout, '20,000 ft · 13.76 inHg');
+    assert.equal(shown.slider, 15000);
+    assert.deepEqual(await page.eval(call(readControls)), shown);
+    assert.deepEqual(await page.eval(call(readCells)), expectedCells(high));
+    assert.deepEqual(await page.eval(call(sliderNote)), {
+      value: 15000,
+      valueText: '20,000 feet, beyond the slider',
+      captions: ['at 20,000 ft · 13.76 inHg', 'at 20,000 ft · 13.76 inHg'],
+    });
+
+    // Press the thumb at the slider's end and drag it towards the middle.
+    const { slider } = await page.eval(call(measure));
+    const y = slider.top + slider.height / 2;
+    const mouse = (type, x) =>
+      page.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 });
+    await mouse('mousePressed', slider.right - 4);
+    await mouse('mouseMoved', slider.left + slider.width * 0.75);
+    await mouse('mouseMoved', slider.left + slider.width * 0.6);
+    await mouse('mouseReleased', slider.left + slider.width * 0.6);
+    await frames(page);
+    const { value } = await page.eval(call(sliderNote));
+    assert.ok(value > 0 && value < 15000, `the drag left the slider at ${value}`);
+    const back = inputSlider(high, value);
+    assert.deepEqual(await page.eval(call(readControls)), expectedControls(back));
+    assert.deepEqual(await page.eval(call(readCells)), expectedCells(back));
+    assert.equal((await page.eval(call(sliderNote))).valueText, view(back).slider.valueText);
+    assert.doesNotMatch(view(back).slider.valueText, /slider/);
+    assert.deepEqual(seen.problems, []);
+  }));
+
+test('below the slider: a negative elevation and a high pressure type and read back', () =>
+  withPage({}, async ({ page, seen, url }) => {
+    await load(page, url('index.html'));
+    await type(page, 'elev', '-1000');
+    await page.key('Enter');
+    await frames(page);
+    const low = commitElevation(inputElevation(SEA_LEVEL, '-1000'));
+    const shown = expectedControls(low);
+    assert.equal(shown.elev, '−1,000');
+    assert.equal(shown.readout, '−1,000 ft · 31.02 inHg');
+    assert.deepEqual(await page.eval(call(readControls)), shown);
+    assert.deepEqual(await page.eval(call(readCells)), expectedCells(low));
+    assert.deepEqual(await page.eval(call(sliderNote)), {
+      value: 0,
+      valueText: '−1,000 feet, below the slider',
+      captions: ['at −1,000 ft · 31.02 inHg', 'at −1,000 ft · 31.02 inHg'],
+    });
+    // Below sea level the change lines and the land-angle note show.
+    assert.deepEqual(await page.eval(call(landNote)), landNoteAt(true));
+    for (const { hidden } of await page.eval(call(deltaLines))) {
+      assert.equal(hidden, false);
+    }
+
+    // The box's own text, with its typographic minus, types back.
+    await type(page, 'elev', shown.elev);
+    await frames(page);
+    assert.equal((await page.eval(call(readBox))).invalid, 'false');
+    await page.key('Enter');
+    await frames(page);
+    assert.deepEqual(await page.eval(call(readControls)), shown);
+
+    // A high-pressure day at a sea-level course.
+    await type(page, 'press', '30.23');
+    await page.key('Enter');
+    await frames(page);
+    const day = commitPressure(inputPressure(low, '30.23'));
+    assert.equal(view(day).readout, '−284 ft · 30.23 inHg');
+    assert.deepEqual(await page.eval(call(readControls)), expectedControls(day));
+    assert.deepEqual(await page.eval(call(readCells)), expectedCells(day));
+    assert.deepEqual(seen.problems, []);
+  }));
+
 for (const viewport of [NARROW, DESKTOP]) {
   test(`footer at ${viewport.width} px: Tab reaches the methods and GitHub links`, () =>
     withPage({ viewport }, async ({ page, seen, url }) => {
@@ -628,6 +746,32 @@ test('RF-4: 320 px phones and rotation', () =>
     );
     // The delta lines and wider values arrive after the observer's last write.
     assert.ok(atRightEdge(highest.scrollers), JSON.stringify(highest.scrollers));
+
+    // The longest readouts, at the ends of the boxes' range in mbar, keep
+    // clear of the slider and the Δ buttons.
+    await page.eval(call(setUnit, 'mbar', 'press-unit'));
+    for (const feet of [-3700, 36000]) {
+      await page.eval(call(setBox, 'elev', String(feet)));
+      await frames(page);
+      await settle(page);
+      const end = await page.eval(call(measure));
+      const expected = view(
+        setPressureUnit(commitElevation(inputElevation(SEA_LEVEL, String(feet))), 'mbar'),
+      ).readout;
+      assert.deepEqual(await page.eval(call(readoutClear)), { text: expected, clear: true });
+      assert.ok(
+        Math.abs(end.slider.width - first.slider.width) <= 1,
+        `slider ${first.slider.width} → ${end.slider.width} px at ${feet} ft`,
+      );
+      assert.ok(
+        end.scrollWidth <= end.clientWidth,
+        `page is ${end.scrollWidth} px wide at ${feet} ft`,
+      );
+    }
+    await page.eval(call(setSlider, 15000));
+    await page.eval(call(setUnit, 'inHg', 'press-unit'));
+    await frames(page);
+    await settle(page);
 
     await page.emulate(NARROW_LANDSCAPE);
     await frames(page);
@@ -707,12 +851,17 @@ for (const [width, height] of [
       { viewport: { width, height, mobile: true, deviceScaleFactor: 2 } },
       async ({ page, seen, url }) => {
         await load(page, url('index.html'));
-        // At sea level, then at the top of the range in percent, the widest deltas.
+        // At sea level, then at the slider's end and both ends of the boxes'
+        // range in percent, the widest deltas.
         for (const [feet, mode] of [
           [0, 'abs'],
           [15000, 'pct'],
+          [36000, 'pct'],
+          [-3700, 'pct'],
         ]) {
-          await page.eval(call(setSlider, feet));
+          await page.eval(
+            feet >= 0 && feet <= 15000 ? call(setSlider, feet) : call(setBox, 'elev', String(feet)),
+          );
           await page.eval(`document.getElementById('mode-${mode}').click()`);
           await frames(page);
           await settle(page);

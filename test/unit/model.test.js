@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { densityRatio, pressureAtElevation } from '../../site/js/atmosphere.js';
+import {
+  MAX_ELEVATION_M,
+  MAX_PRESSURE_PA,
+  MIN_PRESSURE_PA,
+  densityRatio,
+  pressureAtElevation,
+} from '../../site/js/atmosphere.js';
 import { TOURS } from '../../site/js/data.js';
 import { calibrateRow, createModel, rowDelta } from '../../site/js/model.js';
 import { M_PER_FT, M_PER_YD } from '../../site/js/units.js';
@@ -68,6 +74,63 @@ test('every row gains carry and loses max height and land angle, monotonically, 
     assert.ok(delta.maxHeightYd < 0, `${key}: max height ${delta.maxHeightYd}`);
     assert.ok(delta.landDeg < 0, `${key}: land ${delta.landDeg}`);
   }
+});
+
+test('below sea level every row loses carry and gains max height and land angle, monotonically', () => {
+  let previous = null;
+  for (let ft = -3700; ft <= 0; ft += 10) {
+    const deltas = CALIBRATED.deltasAt(densityRatio(pressureAtElevation(ft * M_PER_FT)));
+    for (const key of KEYS) {
+      const { delta } = deltas.get(key);
+      assert.equal(delta.ok, true, `${key} at ${ft} ft: ${delta.reason}`);
+      if (previous !== null) {
+        const before = previous.get(key).delta;
+        const at = `${key} at ${ft} ft`;
+        assert.ok(delta.carryYd >= before.carryYd, `${at}: carry ${delta.carryYd} < ${before.carryYd}`);
+        assert.ok(
+          delta.maxHeightYd <= before.maxHeightYd,
+          `${at}: max height ${delta.maxHeightYd} > ${before.maxHeightYd}`,
+        );
+        assert.ok(delta.landDeg <= before.landDeg, `${at}: land ${delta.landDeg} > ${before.landDeg}`);
+      }
+    }
+    previous = deltas;
+  }
+  const floor = CALIBRATED.deltasAt(densityRatio(MAX_PRESSURE_PA));
+  for (const key of KEYS) {
+    const { delta } = floor.get(key);
+    assert.ok(delta.carryYd < 0, `${key}: carry ${delta.carryYd}`);
+    assert.ok(delta.maxHeightYd > 0, `${key}: max height ${delta.maxHeightYd}`);
+    assert.ok(delta.landDeg > 0, `${key}: land ${delta.landDeg}`);
+  }
+});
+
+// The slider's 10 ft and 5 m steps, across the whole range the boxes accept.
+test('every row flies within the step budget from -3,700 to 36,000 ft, in feet and metres', () => {
+  const ratios = [densityRatio(MAX_PRESSURE_PA), densityRatio(MIN_PRESSURE_PA)];
+  for (let ft = -3700; ft <= 36000; ft += 10) {
+    ratios.push(densityRatio(pressureAtElevation(ft * M_PER_FT)));
+  }
+  for (let m = -1125; m <= MAX_ELEVATION_M; m += 5) {
+    ratios.push(densityRatio(pressureAtElevation(m)));
+  }
+  const failures = [];
+  for (const ratio of ratios) {
+    const deltas = CALIBRATED.deltasAt(ratio);
+    let steps = 0;
+    for (const key of KEYS) {
+      const { status, delta } = deltas.get(key);
+      if (status !== 'ready' || !delta.ok) {
+        failures.push(`${key} at density ratio ${ratio}: ${delta?.reason ?? status}`);
+        continue;
+      }
+      steps += delta.steps;
+    }
+    if (steps > 4000) {
+      failures.push(`${steps} steps at density ratio ${ratio}`);
+    }
+  }
+  assert.deepEqual(failures, []);
 });
 
 test('rows calibrate one at a time, PGA rows first, then LPGA rows', () => {

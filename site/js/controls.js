@@ -1,23 +1,42 @@
 import {
   MAX_ELEVATION_M,
+  MAX_PRESSURE_PA,
+  MIN_ELEVATION_M,
   MIN_PRESSURE_PA,
   P0_PA,
   densityRatio,
   elevationAtPressure,
   pressureAtElevation,
 } from './atmosphere.js';
+import { MINUS } from './present.js';
 import { M_PER, PA_PER } from './units.js';
 
+// The boxes take the whole range the model covers; the slider keeps to
+// 0–15,000 ft.
+const SLIDER_MAX_M = 15000 * M_PER.ft;
+
+function elevationUnit(unit, step, one, many) {
+  return {
+    min: MIN_ELEVATION_M / M_PER[unit],
+    max: MAX_ELEVATION_M / M_PER[unit],
+    sliderMax: SLIDER_MAX_M / M_PER[unit],
+    step,
+    one,
+    many,
+  };
+}
+
 const ELEVATION = {
-  ft: { max: 15000, step: 10, one: 'foot', many: 'feet' },
-  m: { max: MAX_ELEVATION_M, step: 5, one: 'metre', many: 'metres' },
+  ft: elevationUnit('ft', 10, 'foot', 'feet'),
+  m: elevationUnit('m', 5, 'metre', 'metres'),
 };
 const ELEVATION_HALF_STEP = 0.5;
 const PRESSURE_DECIMALS = { inHg: 2, kPa: 2, mbar: 1 };
 
 // Grouping by `,` (`1,234`), then a comma that is not a thousands separator
-// may stand for the decimal point (`84,3`).
-const NUMBER = /^\s*(-?)(\d+(?:,\d{3})*)(?:[.,](\d*))?\s*$/;
+// may stand for the decimal point (`84,3`). The page writes a minus as
+// U+2212, so that is accepted as well as `-`.
+const NUMBER = /^\s*([-−]?)(\d+(?:,\d{3})*)(?:[.,](\d*))?\s*$/;
 
 export function parseNumber(text) {
   const match = NUMBER.exec(text);
@@ -25,19 +44,19 @@ export function parseNumber(text) {
     return null;
   }
   const [, sign, whole, fraction] = match;
-  const value = Number(`${sign}${whole.replaceAll(',', '')}.${fraction || '0'}`);
+  const value = Number(`${sign && '-'}${whole.replaceAll(',', '')}.${fraction || '0'}`);
   return Number.isFinite(value) ? value : null;
 }
 
-// en-US grouping whatever the browser's locale.
+// en-US grouping whatever the browser's locale, with the page's minus sign.
 function grouped(x, decimals) {
   const [whole, fraction] = x.toFixed(decimals).split('.');
-  const digits = whole.replace(/\B(?=(\d{3})+$)/g, ',');
+  const digits = whole.replace(/\B(?=(\d{3})+$)/g, ',').replace('-', MINUS);
   return fraction === undefined ? digits : `${digits}.${fraction}`;
 }
 
 function clampPa(pa) {
-  return Math.min(Math.max(pa, MIN_PRESSURE_PA), P0_PA);
+  return Math.min(Math.max(pa, MIN_PRESSURE_PA), MAX_PRESSURE_PA);
 }
 
 // Both boxes decide range membership on the number as typed, in its own unit,
@@ -51,17 +70,17 @@ function pressurePa(value, unit) {
     pa: clampPa(value * PA_PER[unit]),
     inRange:
       value >= MIN_PRESSURE_PA / PA_PER[unit] - halfStep &&
-      value <= P0_PA / PA_PER[unit] + halfStep,
+      value <= MAX_PRESSURE_PA / PA_PER[unit] + halfStep,
   };
 }
 
 // The ends are taken before converting: pressureAtElevation is NaN for an
 // elevation far outside the range.
 function elevationPa(value, unit) {
-  const { max } = ELEVATION[unit];
-  const inRange = value >= -ELEVATION_HALF_STEP && value <= max + ELEVATION_HALF_STEP;
-  if (value <= 0) {
-    return { pa: P0_PA, inRange };
+  const { min, max } = ELEVATION[unit];
+  const inRange = value >= min - ELEVATION_HALF_STEP && value <= max + ELEVATION_HALF_STEP;
+  if (value <= min) {
+    return { pa: MAX_PRESSURE_PA, inRange };
   }
   if (value >= max) {
     return { pa: MIN_PRESSURE_PA, inRange };
@@ -112,7 +131,8 @@ export function commitPressure(state) {
 
 // The slider moves the state both boxes show, so neither keeps a pending edit.
 export function inputSlider(state, value) {
-  return { ...state, pa: elevationPa(value, state.elevUnit).pa, edit: null };
+  const { sliderMax } = ELEVATION[state.elevUnit];
+  return { ...state, pa: elevationPa(Math.min(value, sliderMax), state.elevUnit).pa, edit: null };
 }
 
 export function setElevationUnit(state, unit) {
@@ -135,6 +155,15 @@ export function view(state) {
   const pressText = grouped(pa / PA_PER[pressUnit], PRESSURE_DECIMALS[pressUnit]);
   const readout = `${elevText} ${elevUnit} · ${pressText} ${pressUnit}`;
   const atSeaLevel = shownElevation === 0;
+  // Past either end the slider stays at that end, and only its value text
+  // says where the state is.
+  let outside = '';
+  if (shownElevation < 0) {
+    outside = ', below the slider';
+  } else if (shownElevation > elevation.sliderMax) {
+    outside = ', beyond the slider';
+  }
+  const noun = Math.abs(shownElevation) === 1 ? elevation.one : elevation.many;
   return {
     elevText: edit?.field === 'elev' ? edit.text : elevText,
     pressText: edit?.field === 'press' ? edit.text : pressText,
@@ -142,10 +171,10 @@ export function view(state) {
     pressInvalid: edit?.field === 'press' && !edit.valid,
     slider: {
       min: 0,
-      max: elevation.max,
+      max: elevation.sliderMax,
       step: elevation.step,
-      value: shownElevation,
-      valueText: `${elevText} ${shownElevation === 1 ? elevation.one : elevation.many}`,
+      value: Math.min(Math.max(shownElevation, 0), elevation.sliderMax),
+      valueText: `${elevText} ${noun}${outside}`,
     },
     readout,
     atSeaLevel,

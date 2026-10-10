@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { MIN_PRESSURE_PA, P0_PA } from '../../site/js/atmosphere.js';
+import { MAX_PRESSURE_PA, MIN_PRESSURE_PA, P0_PA } from '../../site/js/atmosphere.js';
 import {
   commitElevation,
   commitPressure,
@@ -23,8 +23,17 @@ const textOf = { elev: 'elevText', press: 'pressText' };
 
 const PRESSURE_UNITS = ['inHg', 'kPa', 'mbar'];
 const SLIDER_FEET = [0, 1000, 5280, 10000, 15000];
+// Elevations only the boxes reach, out to both ends of their range.
+const BOX_FEET = [-3700, -1000, 20000, 30000, 36000];
 
 const atFeet = (ft) => inputSlider(initialState(), ft);
+const typedFeet = (ft) => commitElevation(inputElevation(initialState(), String(ft)));
+const AT_FLOOR = typedFeet(-3700);
+const AT_CEILING = typedFeet(36000);
+const EVERY_FEET = [
+  ...SLIDER_FEET.map((ft) => [ft, atFeet(ft)]),
+  ...BOX_FEET.map((ft) => [ft, typedFeet(ft)]),
+];
 
 function near(actual, expected, tolerance) {
   assert.ok(
@@ -44,6 +53,9 @@ test('parseNumber reads thousands separators and either decimal separator', () =
     ['5,2', 5.2],
     ['84.', 84],
     ['-5', -5],
+    ['−5', -5],
+    ['−3,700', -3700],
+    [' −1,128.26 ', -1128.26],
     ['1,000,000', 1000000],
     ['5,2803', 5.2803],
     ['1,234,5', 1234.5],
@@ -63,7 +75,10 @@ test('parseNumber rejects anything outside the grammar', () => {
     '1,2,3',
     '1e5',
     'Infinity',
-    '−5',
+    '–5',
+    '− 5',
+    '−-5',
+    '--5',
     '+5',
     '.5',
     '1.2.3',
@@ -136,13 +151,77 @@ test('the box being edited shows its text verbatim', () => {
 
 test('the slider value text names a single unit in the singular', () => {
   assert.equal(view(inputElevation(initialState(), '1')).slider.valueText, '1 foot');
+  assert.equal(
+    view(inputElevation(initialState(), '-1')).slider.valueText,
+    '−1 foot, below the slider',
+  );
   const metres = setElevationUnit(initialState(), 'm');
   assert.equal(view(inputElevation(metres, '1')).slider.valueText, '1 metre');
+  assert.equal(view(inputElevation(metres, '-1')).slider.valueText, '−1 metre, below the slider');
+});
+
+test('past either end of the slider it stays at that end, and its value text says so', () => {
+  const cases = [
+    ['20000', 'ft', 15000, '20,000 feet, beyond the slider'],
+    ['20000', 'm', 4572, '6,096 metres, beyond the slider'],
+    ['15010', 'm', 4572, '4,575 metres, beyond the slider'],
+    ['36000', 'ft', 15000, '36,000 feet, beyond the slider'],
+    ['-1000', 'ft', 0, '−1,000 feet, below the slider'],
+    ['-1000', 'm', 0, '−305 metres, below the slider'],
+    ['-3700', 'ft', 0, '−3,700 feet, below the slider'],
+  ];
+  for (const [feet, unit, value, valueText] of cases) {
+    const s = setElevationUnit(typedFeet(feet), unit);
+    const { slider, elevText, readout, captionText } = view(s);
+    assert.deepEqual(
+      slider,
+      { min: 0, max: unit === 'ft' ? 15000 : 4572, step: unit === 'ft' ? 10 : 5, value, valueText },
+      `${feet} ft in ${unit}`,
+    );
+    // Only the slider stays put: the box, readout and caption show the state.
+    assert.ok(valueText.startsWith(`${elevText} `), valueText);
+    assert.ok(readout.startsWith(`${elevText} ${unit} · `), readout);
+    assert.equal(captionText, `at ${readout}`);
+  }
+  // The slider's own end is not past it.
+  assert.equal(view(atFeet(15000)).slider.valueText, '15,000 feet');
+  assert.equal(view(setElevationUnit(atFeet(15000), 'm')).slider.valueText, '4,572 metres');
+});
+
+test('the slider moves a state past either end back into its range', () => {
+  for (const [from, to, text] of [
+    [AT_CEILING, 14990, '14,990'],
+    [typedFeet(20000), 15000, '15,000'],
+    [AT_FLOOR, 10, '10'],
+    [typedFeet(-1), 0, '0'],
+  ]) {
+    const moved = inputSlider(from, to);
+    assert.ok(Object.is(moved.pa, atFeet(to).pa), `${view(from).elevText} → ${to}`);
+    assert.equal(view(moved).elevText, text);
+    assert.doesNotMatch(view(moved).slider.valueText, /slider/);
+  }
+  // The metres slider's DOM range ends a step past 4,572 m (app.js).
+  const metres = setElevationUnit(AT_CEILING, 'm');
+  assert.ok(Object.is(inputSlider(metres, 4575).pa, atFeet(15000).pa));
+});
+
+test('sea level is a shown elevation of exactly 0, so just below it the changes show', () => {
+  for (const [box, text, atSeaLevel, elevText] of [
+    ['elev', '-0.4', true, '0'],
+    ['elev', '-0.6', false, '−1'],
+    ['elev', '−1', false, '−1'],
+    ['press', '29.93', false, '−8'],
+    ['press', '30.00', false, '−73'],
+  ]) {
+    const v = view(commit[box](input[box](initialState(), text)));
+    assert.equal(v.atSeaLevel, atSeaLevel, text);
+    assert.equal(v.elevText, elevText, text);
+    assert.equal(v.captionText, atSeaLevel ? '' : `at ${v.readout}`, text);
+  }
 });
 
 test('switching units in either box never changes the state', () => {
-  for (const ft of SLIDER_FEET) {
-    const s = atFeet(ft);
+  for (const [ft, s] of EVERY_FEET) {
     assert.equal(parseNumber(view(s).elevText), ft);
     let moved = s;
     for (const unit of ['m', 'ft', 'm']) {
@@ -157,9 +236,9 @@ test('switching units in either box never changes the state', () => {
 });
 
 test('typing the displayed pressure back moves the displayed elevation by at most 15 ft', () => {
-  for (const ft of SLIDER_FEET) {
+  for (const [ft, state] of EVERY_FEET) {
     for (const unit of PRESSURE_UNITS) {
-      const s = setPressureUnit(atFeet(ft), unit);
+      const s = setPressureUnit(state, unit);
       const after = commitPressure(inputPressure(s, view(s).pressText));
       const moved = Math.abs(parseNumber(view(after).elevText) - ft);
       assert.ok(moved <= 15, `${ft} ft, ${unit}: moved ${moved} ft`);
@@ -176,29 +255,40 @@ test('an elevation beyond the range is held while typing and clamps on commit', 
   const committed = commitElevation(typing);
   assert.ok(Object.is(committed.pa, MIN_PRESSURE_PA));
   assert.equal(committed.edit, null);
-  assert.equal(view(committed).elevText, '15,000');
+  assert.equal(view(committed).elevText, '36,000');
 
-  for (const text of ['-100', '-100,000,000']) {
-    const below = commitElevation(inputElevation(s, text));
-    assert.ok(Object.is(below.pa, P0_PA), `${text} → ${below.pa}`);
-    assert.equal(view(below).elevText, '0');
+  for (const text of ['-5000', '−5,000', '-100,000,000']) {
+    const typingBelow = inputElevation(s, text);
+    assert.ok(Object.is(typingBelow.pa, s.pa), text);
+    assert.equal(view(typingBelow).elevInvalid, true, text);
+    const below = commitElevation(typingBelow);
+    assert.ok(Object.is(below.pa, MAX_PRESSURE_PA), `${text} → ${below.pa}`);
+    assert.equal(view(below).elevText, '−3,700');
   }
 });
 
 test('a pressure beyond the range is held while typing and clamps on commit', () => {
   const s = atFeet(5280);
-  const typing = inputPressure(s, '30.10');
+  const typing = inputPressure(s, '35');
   assert.ok(Object.is(typing.pa, s.pa));
   assert.equal(view(typing).pressInvalid, true);
 
   const committed = commitPressure(typing);
-  assert.ok(Object.is(committed.pa, P0_PA));
-  assert.equal(view(committed).atSeaLevel, true);
-  assert.equal(view(committed).pressText, '29.92');
+  assert.ok(Object.is(committed.pa, MAX_PRESSURE_PA));
+  assert.equal(view(committed).pressText, '34.15');
+  assert.equal(view(committed).elevText, '−3,700');
 
-  const below = commitPressure(inputPressure(s, '10'));
+  const below = commitPressure(inputPressure(s, '5'));
   assert.ok(Object.is(below.pa, MIN_PRESSURE_PA));
-  assert.equal(view(below).elevText, '15,000');
+  assert.equal(view(below).pressText, '6.73');
+  assert.equal(view(below).elevText, '36,000');
+});
+
+test('a pressure above 101.325 kPa, as on a high-pressure day, is below sea level', () => {
+  const s = inputPressure(initialState(), '30.23');
+  assert.equal(view(s).pressInvalid, false);
+  assert.ok(s.pa > P0_PA);
+  assert.equal(view(commitPressure(s)).readout, '−284 ft · 30.23 inHg');
 });
 
 test('empty and garbage text is invalid, holds the state, and reverts on commit', () => {
@@ -221,8 +311,8 @@ test('empty and garbage text is invalid, holds the state, and reverts on commit'
 });
 
 test('committing a box that was not edited leaves the state bit-identical', () => {
-  for (const ft of SLIDER_FEET) {
-    const s = setElevationUnit(setPressureUnit(atFeet(ft), 'kPa'), 'm');
+  for (const [, state] of EVERY_FEET) {
+    const s = setElevationUnit(setPressureUnit(state, 'kPa'), 'm');
     assert.ok(Object.is(commitPressure(s).pa, s.pa));
     assert.ok(Object.is(commitElevation(s).pa, s.pa));
     assert.deepEqual(commitElevation(commitPressure(s)), s);
@@ -272,35 +362,39 @@ test('the metres slider works in metres', () => {
     value: 1610,
     valueText: '1,610 metres',
   });
-  assert.ok(Object.is(inputSlider(s, 4572).pa, MIN_PRESSURE_PA));
+  // 15,000 ft is 4,572 m exactly, so both units' slider ends are one state.
+  assert.ok(Object.is(inputSlider(s, 4572).pa, atFeet(15000).pa));
 });
 
 test('the boundary text each box shows is accepted while typing', () => {
   const mid = atFeet(5280);
-
-  const inHgTop = inputPressure(mid, '16.89');
-  assert.equal(view(inHgTop).pressInvalid, false);
-  assert.ok(Object.is(inHgTop.pa, MIN_PRESSURE_PA));
-
-  const inHgSea = inputPressure(mid, '29.92');
-  assert.equal(view(inHgSea).pressInvalid, false);
-  assert.equal(view(inHgSea).elevText, '1');
-  assert.equal(view(inHgSea).atSeaLevel, false);
-
-  const kPaSea = inputPressure(setPressureUnit(mid, 'kPa'), '101.33');
-  assert.equal(view(kPaSea).pressInvalid, false);
-  assert.ok(Object.is(kPaSea.pa, P0_PA));
-
-  const mbarSea = inputPressure(setPressureUnit(mid, 'mbar'), '1,013.3');
-  assert.equal(view(mbarSea).pressInvalid, false);
-  assert.ok(Object.is(mbarSea.pa, P0_PA));
-
-  const ftTop = inputElevation(mid, '15,000');
-  assert.equal(view(ftTop).elevInvalid, false);
-  assert.ok(Object.is(ftTop.pa, MIN_PRESSURE_PA));
+  const ends = [
+    ['press', 'inHg', '6.73', MIN_PRESSURE_PA],
+    ['press', 'inHg', '34.15', MAX_PRESSURE_PA],
+    ['press', 'kPa', '115.63', MAX_PRESSURE_PA],
+    ['press', 'mbar', '1,156.3', MAX_PRESSURE_PA],
+    ['elev', 'ft', '36,000', MIN_PRESSURE_PA],
+    ['elev', 'ft', '−3,700', MAX_PRESSURE_PA],
+    ['elev', 'm', '10,973', MIN_PRESSURE_PA],
+    ['elev', 'm', '−1,128', MAX_PRESSURE_PA],
+  ];
+  for (const [box, unit, text, limit] of ends) {
+    const typed = input[box](setUnit[box](mid, unit), text);
+    assert.equal(view(typed)[invalidFlag[box]], false, `${unit} ${text}`);
+    assert.ok(Object.is(typed.pa, limit), `${unit} ${text} → ${typed.pa}`);
+  }
+  // The top's kPa and mbar texts lie just inside the range.
+  for (const [unit, text] of [
+    ['kPa', '22.80'],
+    ['mbar', '228.0'],
+  ]) {
+    const typed = inputPressure(setPressureUnit(mid, unit), text);
+    assert.equal(view(typed).pressInvalid, false, `${unit} ${text}`);
+    assert.equal(view(typed).elevText, '35,997');
+  }
 
   // Whatever each box shows at either end of the range, typed back, is valid.
-  for (const end of [initialState(), atFeet(15000)]) {
+  for (const end of [AT_FLOOR, AT_CEILING]) {
     for (const unit of PRESSURE_UNITS) {
       const shown = view(setPressureUnit(end, unit)).pressText;
       const typed = inputPressure(setPressureUnit(mid, unit), shown);
@@ -310,22 +404,24 @@ test('the boundary text each box shows is accepted while typing', () => {
       const shown = view(setElevationUnit(end, unit)).elevText;
       const typed = inputElevation(setElevationUnit(mid, unit), shown);
       assert.equal(view(typed).elevInvalid, false, `${unit} ${shown}`);
+      assert.ok(Object.is(typed.pa, end.pa), `${unit} ${shown}`);
     }
   }
 });
 
 test('values within half a display step outside a limit are accepted and clamped', () => {
   const cases = [
-    ['elev', 'ft', '-0.5', '-0.5001', P0_PA],
-    ['elev', 'ft', '15,000.5', '15,000.5001', MIN_PRESSURE_PA],
-    ['elev', 'm', '-0.5', '-0.5001', P0_PA],
-    ['elev', 'm', '4,572.5', '4,572.5001', MIN_PRESSURE_PA],
-    ['press', 'inHg', '29.9262', '29.9263', P0_PA],
-    ['press', 'inHg', '16.8882', '16.8881', MIN_PRESSURE_PA],
-    ['press', 'kPa', '101.33', '101.3301', P0_PA],
-    ['press', 'kPa', '57.2019', '57.2018', MIN_PRESSURE_PA],
-    ['press', 'mbar', '1,013.3', '1,013.3001', P0_PA],
-    ['press', 'mbar', '572.019', '572.018', MIN_PRESSURE_PA],
+    ['elev', 'ft', '-3,700.5', '-3,700.5001', MAX_PRESSURE_PA],
+    ['elev', 'ft', '−3,700.5', '−3,700.5001', MAX_PRESSURE_PA],
+    ['elev', 'ft', '36,000.5', '36,000.5001', MIN_PRESSURE_PA],
+    ['elev', 'm', '-1,128.26', '-1,128.2601', MAX_PRESSURE_PA],
+    ['elev', 'm', '10,973.3', '10,973.3001', MIN_PRESSURE_PA],
+    ['press', 'inHg', '34.1503', '34.1504', MAX_PRESSURE_PA],
+    ['press', 'inHg', '6.7270', '6.7269', MIN_PRESSURE_PA],
+    ['press', 'kPa', '115.6345', '115.6346', MAX_PRESSURE_PA],
+    ['press', 'kPa', '22.7922', '22.7921', MIN_PRESSURE_PA],
+    ['press', 'mbar', '1,156.345', '1,156.346', MAX_PRESSURE_PA],
+    ['press', 'mbar', '227.922', '227.921', MIN_PRESSURE_PA],
   ];
   const mid = atFeet(5280);
   for (const [box, unit, accepted, rejected, limit] of cases) {
