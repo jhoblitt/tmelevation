@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   MAX_ELEVATION_M,
+  MAX_PRESSURE_PA,
+  MIN_ELEVATION_M,
   MIN_PRESSURE_PA,
   MU0_PA_S,
   P0_PA,
@@ -23,11 +25,21 @@ function near(actual, expected, tolerance) {
 test('sea-level constants', () => {
   assert.equal(P0_PA, 101325);
   assert.equal(T_REF_K, 298.15);
-  assert.equal(MAX_ELEVATION_M, 4572);
 });
 
-test('pressure at elevation matches the USSA 1976 table (truncated to 0.01 hPa)', () => {
+test('the elevation range runs from -3,700 ft to 36,000 ft', () => {
+  assert.equal(MIN_ELEVATION_M, -3700 * M_PER_FT);
+  assert.equal(MAX_ELEVATION_M, 36000 * M_PER_FT);
+  near(MIN_ELEVATION_M, -1127.76, 1e-9);
+  near(MAX_ELEVATION_M, 10972.8, 1e-9);
+  // The troposphere formula holds up to 11 km geopotential.
+  const geopotential = (6356766 * MAX_ELEVATION_M) / (6356766 + MAX_ELEVATION_M);
+  assert.ok(geopotential < 11000, `${geopotential} m'`);
+});
+
+test('pressure at elevation matches the USSA 1976 table (truncated to 5 figures)', () => {
   const table = [
+    [-500, 1074.7, 0.1],
     [0, 1013.25],
     [1000, 898.76],
     [1584.96, 836.82],
@@ -37,11 +49,11 @@ test('pressure at elevation matches the USSA 1976 table (truncated to 0.01 hPa)'
     [3000, 701.21],
     [4500, 577.52],
   ];
-  for (const [z, hpa] of table) {
+  for (const [z, hpa, digit = 0.01] of table) {
     const computed = pressureAtElevation(z) / 100;
     assert.ok(
-      hpa <= computed && computed < hpa + 0.01,
-      `Z = ${z} m: ${computed} hPa is not in [${hpa}, ${hpa + 0.01})`,
+      hpa <= computed && computed < hpa + digit,
+      `Z = ${z} m: ${computed} hPa is not in [${hpa}, ${hpa + digit})`,
     );
   }
 });
@@ -74,13 +86,18 @@ test("air viscosity at 25 degrees C is Sutherland's 1.8371e-5 Pa s", () => {
   near(MU0_PA_S, 1.83715e-5, 1e-10);
 });
 
-test('the minimum pressure is the pressure at the maximum elevation', () => {
-  near(MIN_PRESSURE_PA, 57206.8, 0.1);
+test('the pressure range is the pressures at the ends of the elevation range', () => {
+  near(MIN_PRESSURE_PA, 22797.1, 0.1);
   assert.equal(MIN_PRESSURE_PA, pressureAtElevation(MAX_ELEVATION_M));
+  near(densityRatio(MIN_PRESSURE_PA), 0.22499, 1e-5);
+  near(MAX_PRESSURE_PA, 115629.6, 0.1);
+  assert.equal(MAX_PRESSURE_PA, pressureAtElevation(MIN_ELEVATION_M));
+  near(densityRatio(MAX_PRESSURE_PA), 1.14118, 1e-5);
+  assert.equal(pressureAtElevation(0), P0_PA);
 });
 
 test('elevationAtPressure inverts pressureAtElevation', () => {
-  for (const z of [0, 1, 500, 1609.344, 3048, 4572]) {
+  for (const z of [-1127.76, -500, 0, 1, 500, 1609.344, 3048, 4572, 10972.8]) {
     near(elevationAtPressure(pressureAtElevation(z)), z, 1e-6);
   }
 });

@@ -81,7 +81,7 @@ reproduced with attribution, and are not covered by the repository's licence.
    treatment: "PGA TOUR AVERAGES" in white heavy condensed caps, "YARDS/METERS"
    in charcoal, "2023" right-aligned in a thin condensed face. On narrow
    screens the title wraps to two lines; the year stays right-aligned. When
-   elevation is above 0 a caption under the title names the conditions
+   the shown elevation is not 0 a caption under the title names the conditions
    (`at 5,280 ft · 24.64 inHg`).
 3. **Footer**: first, a `Method & sources` link to the methods page; "Data:
    TrackMan 2023 Tour Averages" linking to the blog post; a statement that
@@ -95,16 +95,32 @@ reproduced with attribution, and are not covered by the repository's licence.
   slider and both text boxes are views of it; none is ever the source of
   another, so linked updates cannot drift through rounding.
 - Elevation ↔ pressure uses the standard atmosphere (section 5.1).
-- Range: elevation 0 – 15,000 ft (0 – 4,572 m); pressure from 101.325 kPa down
-  to the 15,000 ft value. The slider starts at 0 and works in the selected
-  elevation unit (step 10 ft or 5 m), with an accessible value text such as
-  "5,280 feet" and a touch target at least 44 px tall.
+- Range, in the text boxes: elevation −3,700 – 36,000 ft (−1,127.76 –
+  10,972.8 m), defined once and converted to each unit; pressure
+  from the −3,700 ft value (115.63 kPa, 34.15 inHg, 1156.3 mbar; ρ/ρ₀ 1.1412)
+  down to the 36,000 ft value (22.80 kPa, 6.73 inHg, 228.0 mbar; ρ/ρ₀ 0.2250),
+  so a pressure above 101.325 kPa (a high-pressure day at a sea-level
+  course) is an elevation below sea level. 36,000 ft is just below the
+  tropopause (11 km geopotential), where the troposphere formula of section
+  5.1 stops holding. At −3,700 ft the fastest launch, the PGA Driver's,
+  reaches Re 2.4×10⁵, the top of the measured aerodynamic data; Smits &
+  Smith report a second fall in drag above Re 2×10⁵ that the model's linear
+  Re term does not follow. The lowest course, Furnace Creek, is at −214 ft.
+- The slider covers 0 – 15,000 ft (0 – 4,572 m), starts at 0 and works in the
+  selected elevation unit (step 10 ft or 5 m), with an accessible value text
+  such as "5,280 feet" and a touch target at least 44 px tall. Past either
+  end it stays at that end while the boxes, readout and caption show the
+  elevation, and its value text says so: "20,000 feet, beyond the slider",
+  "−1,000 feet, below the slider". Moving it brings the state back inside
+  its range.
 - Text boxes are `type="text"` with `inputmode="decimal"`,
   `autocomplete="off"` and a font size of at least 16 px (no iOS zoom).
 - Parsing, the same rule in every box: `.` is the decimal point; `,` followed
   by exactly three digits is a thousands separator (`5,280` → 5280); any other
-  single `,` is a decimal point (`84,3` → 84.3); surrounding spaces are
-  ignored. An empty box or any other text is invalid — never zero.
+  single `,` is a decimal point (`84,3` → 84.3); a leading `-` or `−`
+  (U+2212, the minus the page itself shows) makes a number negative;
+  surrounding spaces are ignored. An empty box or any other text is invalid —
+  never zero.
 - While typing, the state follows the box only when its text parses to a
   value inside the range; otherwise the state is left unchanged and the box is
   marked invalid (`aria-invalid`). So intermediate keystrokes (`8` on the way
@@ -115,8 +131,11 @@ reproduced with attribution, and are not covered by the repository's licence.
 - The box being typed in is not reformatted while it has focus.
 - Changing a unit dropdown re-expresses that box's value in the new unit and
   never changes the state.
-- Display precision: ft and m integers; inHg and kPa 2 decimals; mbar 1
-  decimal.
+- Display precision: ft and m integers, negative ones written with `−`;
+  inHg and kPa 2 decimals; mbar 1 decimal. Half a display step of tolerance
+  at each end of the range lets the text a box shows there be typed back.
+- "At sea level" (no delta lines, no caption) means a shown elevation of
+  exactly 0; below it the deltas show as they do above it.
 - When the page is restored from the browser's back/forward cache, every
   control is re-rendered from the state, so a box can never show a value the
   tables are not using.
@@ -267,7 +286,7 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
 - Integration: fixed-step RK4 with dt = 0.05 s; apex and landing located
   within the step by cubic-Hermite interpolation. Against dt = 0.001 s the
   error is ≤ 1×10⁻³ yd and ≤ 1.3×10⁻³° on every row at its calibrated factors
-  from 0 to 15,000 ft. The laws' corners (S 0.22, 0.30, 0.64; Re 10⁵) cost
+  from −3,700 to 36,000 ft. The laws' corners (S 0.22, 0.30, 0.64; Re 10⁵) cost
   RK4 its fourth order in the step that crosses one, so the error is larger
   than with smooth laws, but a displayed value differs from the reference only
   where it lies within that error of a rounding boundary.
@@ -295,7 +314,8 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
   the data (section 5.4) and yields between rows, so the page is interactive
   immediately. Budget, as a deterministic count a test can enforce: at most
   50,000 RK4 steps for all 23 rows, and at most 4,000 per recompute
-  (23 flights); the measured laws take 26,807 and 2,462 (at 15,000 ft).
+  (23 flights); the measured laws take 26,807 and 2,462 (at 15,000 ft), and
+  at most 2,891 anywhere from −3,700 to 36,000 ft (at −3,700 ft).
   Measured with the first release's laws (29,291 and 2,449 steps) at
   dt = 0.05 s in headless Chrome: 36 / 54 / 86 ms at 4× / 6× / 10× CPU
   throttling for calibration and 1.7 / 2.6 / 4.8 ms per recompute.
@@ -360,13 +380,24 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
    An alternative, launch-anchored mapping (equally exact at sea level) would
    show larger land-angle changes for woods, hybrids and long irons, by up to
    3.2° at 10,000 ft; no source discriminates between the two.
-3. **Low-spin clubs plateau at extreme altitude.** As density falls, carry
-   tends to its vacuum value, and for low-spin, low-launch shots that is
-   shorter than at moderate density: the PGA Hybrid, 3 and 4 Iron and the
-   LPGA Driver, 3-wood, 5-wood and 4 Iron peak at 13,350–14,930 ft and lose
-   at most 0.3 yd by 15,000 ft. Two displayed values show it: PGA Hybrid
-   carry 266 → 265 yd near 14,910 ft (soft oracle 9b warns) and LPGA 4 Iron
-   178 → 177 m near 14,960 ft.
+3. **Carry turns over at extreme altitude.** As density falls, carry tends
+   to its vacuum value, which for every row is shorter than its longest
+   carry, so carry peaks and then falls; low-spin, low-launch shots peak
+   first. On a 10 ft grid, 22 of the 23 rows peak below 36,000 ft (only the
+   PGA PW still gains there). The PGA Hybrid, 3 and 4 Iron and the LPGA
+   Driver, 3-wood, 5-wood and 4 Iron peak inside the slider's range, at
+   13,350–14,930 ft, and lose at most 0.3 yd by 15,000 ft; two displayed
+   values show it there: PGA Hybrid carry 266 → 265 yd near 14,910 ft (soft
+   oracle 9b warns) and LPGA 4 Iron 178 → 177 m near 14,960 ft. The other
+   rows peak higher, up to 32,460 ft (LPGA 9 Iron). By 36,000 ft carry has
+   fallen from its peak by 0.2 yd (LPGA 9 Iron, PW) to 46 yd (PGA 3-wood),
+   and those seven rows and the PGA 3-wood carry less than at sea level, by
+   up to 9 yd (PGA Hybrid). In air this thin the low-speed lift loss of
+   item 1 would act over more of every flight: above about 25,900 ft even
+   the PGA Driver launches below Re 7.5×10⁴, and at 36,000 ft every row
+   launches below Re 4.8×10⁴, under every current-ball measurement. Oracle
+   9b stays at 10,000–15,000 ft, inside the slider's range: above it a
+   turnover is the model's prediction, not a fault.
 4. Launch conditions are held fixed at altitude; real players may change
    clubs, trajectory or swing.
 5. No wind, temperature, humidity, ball-model or roll effects.
@@ -484,7 +515,8 @@ checks the list matches the import graph); fonts preloaded.
   USSA 1976 table values (the tables truncate, so assert
   `table ≤ computed < table + 1` in the last printed digit); inverse
   round-trips; ρ/ρ₀ at 5,000 / 10,000 / 15,000 ft = 0.832085 / 0.687832 /
-  0.564587; ρ₀ = 1.1839 kg/m³; μ = 1.8371×10⁻⁵ Pa·s.
+  0.564587; ρ₀ = 1.1839 kg/m³; μ = 1.8371×10⁻⁵ Pa·s; the range ends are
+  −3,700 and 36,000 ft, the pressure range the pressures there.
 - **flight:** with C_D = C_L = 0 the model reproduces the analytic vacuum
   range and apex; halving dt changes outputs by less than 0.001 yd; the drag
   and lift laws at a few S and Re points, continuous at S 0.22, 0.30 and 0.64
@@ -511,10 +543,13 @@ checks the list matches the import graph); fonts preloaded.
   temperature, dropping or mis-scaling spin decay, or mis-computing S or Re
   all move them by more than the tolerance.
 - **model:** density ratio 1 gives Δ = 0 exactly; for every row carry rises
-  and max height and land angle fall, monotonically, from 0 to 10,000 ft;
+  and max height and land angle fall, monotonically, from 0 to 10,000 ft,
+  and from −3,700 ft up to 0 on a 10 ft grid (denser air brings no
+  turnover); every row flies, with no cap or non-finite failure, on the
+  slider's 10 ft and 5 m grids across the whole range, −3,700 to 36,000 ft;
   a failed row does not affect the others.
 - **budget:** calibrating all rows takes at most 50,000 RK4 steps; one
-  recompute at most 4,000.
+  recompute at most 4,000, at every elevation of those grids.
 - **present:** at sea level every cell equals the published text in both
   units (including `209/192`); a PGA 8 Iron carry Δ of +7.6 yd shows `172/157`
   over `+8/+7`; `±0` when the rounded change is zero; `±0.0%` and never
@@ -522,9 +557,13 @@ checks the list matches the import graph); fonts preloaded.
   row.
 - **controls:** inHg / kPa / mbar / ft / m views of one state agree; unit
   switches leave the state unchanged; `5,280` → 5280, `84,3` → 84.3, empty and
-  garbage are invalid; out-of-range text leaves the state unchanged while
-  typing and clamps on commit; leaving an unedited box does not move the
-  state; `150000` ft never reaches the model.
+  garbage are invalid, `-5` and `−5` are −5; out-of-range text leaves the
+  state unchanged while typing and clamps on commit, to −3,700 or 36,000 ft
+  and their pressures, in every unit; the text each box shows at either end
+  types back to that end; past either end of the slider it stays at that
+  end and its value text says so, and moving it returns inside its range;
+  a shown elevation of exactly 0 is sea level, −1 ft is not; leaving an
+  unedited box does not move the state; `150000` ft never reaches the model.
 - **fonts / preload:** every font file matches its recorded SHA-256; each
   page's `modulepreload` list equals its module import graph.
 

@@ -1,3 +1,5 @@
+import { M_PER_FT } from './units.js';
+
 const G0 = 9.80665;
 const MOLAR_MASS = 28.9644;
 const GAS_CONSTANT = 8314.32;
@@ -7,7 +9,11 @@ const EARTH_RADIUS_M = 6356766;
 
 export const P0_PA = 101325;
 export const T_REF_K = 298.15;
-export const MAX_ELEVATION_M = 4572;
+// -3,700 ft is where the fastest launch in the tables reaches Re 2.4e5, the
+// top of the measured drag and lift; 36,000 ft is just below the tropopause
+// (11 km geopotential), where the troposphere formula below stops holding.
+export const MIN_ELEVATION_M = -3700 * M_PER_FT;
+export const MAX_ELEVATION_M = 36000 * M_PER_FT;
 
 // The exponent and lapse factor are derived once and used in both directions;
 // the rounded figures printed in the spec would break the round trip.
@@ -42,6 +48,7 @@ export function elevationAtPressure(pa) {
 }
 
 export const MIN_PRESSURE_PA = pressureAtElevation(MAX_ELEVATION_M);
+export const MAX_PRESSURE_PA = pressureAtElevation(MIN_ELEVATION_M);
 
 export function densityRatio(pa) {
   return pa / P0_PA;

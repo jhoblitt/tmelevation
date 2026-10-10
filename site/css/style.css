@@ -180,7 +180,9 @@ input[type='range'] {
   accent-color: var(--ink);
 }
 
-/* A fixed width, so the slider does not change length while dragging. */
+/* A fixed width, so the slider does not change length while dragging. The
+   longest text, below sea level in mbar, is under a pixel wider on a phone
+   and spills into the row's gap. */
 .readout {
   flex: none;
   width: 18ch;
