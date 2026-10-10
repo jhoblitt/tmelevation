@@ -237,3 +237,49 @@ labelled "TrackMan-consistent, physics unconfirmed" — unlike the low-Re band,
 a phase-based term does not move with air density, so it need not cost iron
 gains at altitude. Sources to obtain by hand are in `literature.md` §8
 (Smits & Smith 1994; Naruo & Mizota 2014; Aoki et al. 2010).
+
+### Round 3b — retrieval (2026-10-10)
+
+With the user's permission to search and download, every hand-only source
+was retried by legitimate routes (`literature.md` §10). None of the named
+paywalled or bot-blocked sources came back in full; open papers found on
+the way did (Aoki, Muto & Okanaga 2011 on J-STAGE; Aoki 2004; Miller's 2009
+thesis; Naruo & Mizota 2009; a Wayback copy of USGA TPX3006). What they add:
+
+- **The shipped high-spin laws check out against a 2011 measurement.** A
+  golf-size dimpled sphere measured to S 2.0 at Re 0.4–1.3e5 (Aoki 2011)
+  follows one lift curve within ±0.03 from S ≈ 0.4 up, levelling at
+  0.45–0.50 for S ≥ 1 — consistent with the shipped 0.45 cap and against an
+  S-peaked shape. Where the shipped laws borrow the 1976 ball's shape
+  (S 0.36–1.0), its supercritical points (Re ≥ 7.5e4, the regime the
+  shipped laws model) put drag within −0.023 to +0.014 of the shipped law —
+  inside the ±0.02 reading uncertainty — and lift 0.010–0.045 lower, about
+  the 0.03 the sphere also sits below tour balls at S 0.3: a level
+  difference the per-row lift factor absorbs, not a shape difference. Its
+  drag does keep rising above S 1.0 (0.57–0.65 at S 1.3–2.0), but only in
+  runs at Re ≤ 5e4, inside the low-speed regime the shipped laws leave
+  out. Caveat: a PVC sphere, not a commercial ball — at low spin it has
+  0.007–0.065 more drag than tour balls.
+- **The low-Re lift loss fades by S ≈ 0.4** on that sphere, strengthening
+  round 3's finding 1.
+- **The late lift fall in TrackMan data stays unresolved,** with new
+  evidence on both sides (radar descent is the least accurate part of a
+  track; other trajectory studies report the same fall).
+- **Erratum:** the Bearman & Harvey DOI used since round 1 resolved to the
+  journal issue's front matter; the paper is doi:10.1017/S0001925900007617.
+  Corrected in `literature.md` and `docs/research/aero-model.md`.
+
+Still to obtain by hand: Smits & Smith 1994 and Tavares et al. 1999
+(Science and Golf II and III), the 2025 USGA ITR protocol, and the two
+Procedia Engineering papers (captcha); exact citations in `literature.md`
+§10.3.
+
+**Refitting the drag to the sphere was tried and not adopted** (coordinator,
+2026-10-10; `harness/highs-drag-impact.mjs`, `harness/aoki-agreement.py`). A
+piecewise-linear S > 0.22 branch through the sphere's supercritical means,
+with its Re-4e4 rise above S 1.0, under the app's per-row calibration: land
+RMS 3.965° → 3.998°, no carry falls up to 10,000 ft, at most 0.7 yd of carry
+and 0.6° of land change at 10,000 ft (irons and wedges), and 210 of 2,139
+displayed cells over 0–15,000 ft moved by one unit (189 with the branch held
+flat above S 1.0). The change sits inside the data's own uncertainty, so the
+shipped law stays and the methods page records the check.

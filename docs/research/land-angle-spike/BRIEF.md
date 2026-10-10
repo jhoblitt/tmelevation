@@ -272,3 +272,17 @@ spin decays** through a flight. Deliverable: `literature.md` with its
 `aero-data.csv`, plus `quantity` for values that are not C_D/C_L pairs, such
 as ballistic coefficients or spin-decay rates). `aero-data.md` §2 lists what
 round 1 already found; extend beyond it rather than repeat it.
+
+## Round 3b — retrieving the sources the search could not get (dispatched 2026-10-10)
+
+The user gave permission to search the web and download documents. Retry
+every source in `literature.md` §8 and the gaps of `aero-data.md` §9 by
+legitimate routes only: publisher open-access pages, OpenAlex or Semantic
+Scholar open-access links, institutional repositories, author pages,
+preprint servers, and Wayback Machine snapshots. No piracy sites (Sci-Hub,
+LibGen, Anna's Archive and the like), no getting around paywalls, logins
+or captchas, and never the user's name or email in a request — an API that
+requires an email address is skipped. Downloads stay under `$TMPDIR`;
+copyrighted documents never enter the repo, only the numbers extracted
+from them with their source. Deliverable: a new §10 "Obtained documents" in
+`literature.md`, new rows in `literature-data.csv`, and notes as before.

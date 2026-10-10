@@ -58,3 +58,4 @@ Brief: docs/research/land-angle-spike/BRIEF.md, "Round 2". Same agent as model-f
 | model-fits (R2b-2) | re-rank with altitude soft; raw radar driver test | docs/research/land-angle-spike/round2b.md | docs/research/land-angle-spike/round2b.md.notes.md | complete 2026-10-09 |
 | model-fits (R2c) | laws vs measured PGA TOUR driver altitude gains | docs/research/land-angle-spike/round2c.md | docs/research/land-angle-spike/round2c.md.notes.md | complete 2026-10-09 |
 | literature (R3) | published ball-flight research: ballistic coefficients, lift as spin decays | docs/research/land-angle-spike/literature.md | docs/research/land-angle-spike/literature.md.notes.md | complete 2026-10-09 |
+| literature (R3b) | retrieve §8 sources by legitimate routes; extract their data | docs/research/land-angle-spike/literature.md §10 | docs/research/land-angle-spike/literature.md.notes.md | complete 2026-10-10 |
