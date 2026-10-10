@@ -194,3 +194,46 @@ coordinator.
    the nearest lead).
 3. **Whether the altitude events' launch shifts are real**, from per-shot
    rather than averaged radar data.
+
+---
+
+## Round 3 — literature (2026-10-09)
+
+A second, broader search of published ball-flight research, aimed at
+ballistic coefficients and at lift as spin decays (`literature.md`, its
+notes, `literature-data.csv`). It changes the picture in four places.
+
+1. **The low-speed lift loss fades with spin in every data set that shows
+   it,** gone by S 0.24–0.5; none shows a deficit above S ≈ 0.4. That backs a
+   band that fades with spin ratio (round 2's R2 fades by S 0.6, the slow end
+   of that range). Negative Magnus is ball-specific and seen only at S ≲ 0.2.
+2. **Coefficients derived from real flights fall through the descent.**
+   TrackMan radar fits along robot driver flights (Aero-X's patent US
+   8,202,178) put the lift peak at 62–72 % of flight time and lift 18–24 %
+   lower by landing; TrackMan's output for two shots (Watanabe et al. 2016)
+   falls 38–52 % in lift and 25–63 % in drag through the descent. Drag falling
+   late is something no C_D(Re, S) law produces. Whether that is physics — a
+   dependence on the flight's history — or an artefact of TrackMan completing
+   and smoothing the track is unresolved; nobody publishes raw in-flight
+   deceleration.
+3. **High-spin lift peaks and falls.** An S-only lift law fitted to FlightScope
+   carry and apex of 1,040 Pro V1 shots (Ferguson, McNally & McPhee 2022)
+   peaks at S 0.52 and falls to 0.31 by S 0.75 — the same "less lift late"
+   signature, absorbed into S. R0's high-S branch, from a 1976 ball, keeps
+   rising to 0.45; that branch matters for wedges.
+4. **Ballistic coefficient** (BC = m / (C_D·A); no golf source publishes one,
+   so `literature.md` §3 converts C_D): about 145–150 kg/m² at launch, falling
+   30–40 % to the slowest point as spin ratio grows, about half at wedge
+   spin ratios, and ball-specific in the drag crisis.
+
+Spin decay stays where it was: radar flights (Pro V1x driver, 5- and 8-iron)
+and the FlightScope fit sit at or below Smits & Smith; one tunnel torque
+measurement (Naruo 2004) is 1.6–5.4× faster at S 0.5–1.0, and the two
+conflict.
+
+**Candidate next experiments** (none run): an S-peaked high-spin lift branch
+in the Ferguson shape; a switchable descent-phase reduction of lift and drag,
+labelled "TrackMan-consistent, physics unconfirmed" — unlike the low-Re band,
+a phase-based term does not move with air density, so it need not cost iron
+gains at altitude. Sources to obtain by hand are in `literature.md` §8
+(Smits & Smith 1994; Naruo & Mizota 2014; Aoki et al. 2010).
