@@ -303,11 +303,17 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
 2. **Land-angle offset.** After calibration the model lands shallower than
    TrackMan's table — about 1–9° for the PGA rows and LPGA woods to 7 Iron
    (worst for hybrids and long irons), within 0.7° for LPGA 8 Iron to PW.
-   Against TrackMan's own fully specified model shots the gap is only 1.1–1.8°:
-   at the same launch, the 2023 table rows are longer, lower and steeper than
-   TrackMan's model trajectory, which no single trajectory can be, so most of
-   the gap reflects averaging in the table. The one physical mechanism found
-   that closes the rest is a low-Re drag rise — the same effect item 1 omits.
+   The gap follows spin combined with low launch, not carry or flight time.
+   Against TrackMan's own fully specified model shots it is only 1.1–1.8°, and
+   at the same launch the 2023 table rows are longer, lower and steeper than
+   TrackMan's model trajectory. The cause is unresolved. Ruled out: the spread
+   of launch conditions within a row (−0.45°, the wrong sign), faster spin
+   decay, and different air on the two tours' schedules (0.2 % apart).
+   Measured tour-ball data show lift collapsing and drag rising below
+   Re ≈ 7.5×10⁴, the late-flight steepening this model lacks; at the strength
+   the table asks for it closes most of the gap but cuts iron carry gains at
+   altitude, which no published iron measurement confirms or refutes
+   (`docs/research/land-angle-spike/SYNTHESIS.md`).
    The land-angle column is labelled indicative; its delta carries about ±2°
    of structural uncertainty at 10,000 ft. An alternative, launch-anchored
    mapping (equally exact at sea level) would show larger land-angle changes
@@ -643,8 +649,9 @@ commitlint; `ci.yml`, `release.yml`, `deploy.yml`, `.releaserc.yml`,
 1. **Reynolds-number physics** (section 5.5 item 1) is the largest modelling
    uncertainty — about −30 % to +25 % on iron and wedge gains — and the
    evidence for the Re-free choice is mostly TrackMan's own model.
-2. **Land-angle offset** (section 5.5 item 2): mostly table averaging, the
-   remainder coupled to risk 1; the column is labelled indicative.
+2. **Land-angle offset** (section 5.5 item 2): cause unresolved; the one
+   measured mechanism that closes it is the low-Re behaviour risk 1 omits;
+   the column is labelled indicative.
 3. **Coefficient-shape source** rests on a patent's reproduction of review
    text; calibration makes its constants immaterial, but the S^0.4 shape and
    its driver-only fitting range are unverified against the chapter.
