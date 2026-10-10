@@ -201,6 +201,10 @@ reproduced with attribution, and are not covered by the repository's licence.
   ρ₀ = P₀M/(R*T₀) = 1.1839 kg/m³ (M = 28.9644 kg/kmol, R* = 8314.32 J/(kmol·K),
   T₀ = 298.15 K). Humidity is neglected: holding 50 % RH instead changes the
   density ratio by 0.1–0.5 % and carry by at most 0.18 yd.
+- The air viscosity, for the drag's Reynolds number (section 5.2), follows
+  Sutherland's law (1.716×10⁻⁵ Pa·s at 273.15 K, Sutherland constant
+  110.4 K) at T₀: μ = 1.8371×10⁻⁵ Pa·s, the same at every elevation, since
+  viscosity depends on temperature alone.
 - Letting temperature follow the ISA lapse rate instead would make the air
   about 3.5 % denser at 5,000 ft and understate the effect for warm-season
   golf; the methods page states the choice.
@@ -218,18 +222,40 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
     dv_y/dt = −k U (C_D u_y − C_L uₓ) − g
     dω/dt  = −λ₀ (ρ/ρ₀) U ω / r
 
-- Spin parameter S = rω/U (ω in rad/s).
-- C_D = k_D · (0.24 + 0.18 S), C_L = k_L · 0.54 · S^0.4: the Smits & Smith
-  (1994) shapes without their Reynolds-number term. The only surviving text of
-  that model states it was fitted "for driver shots" (70,000 < Re < 210,000,
-  0.08 < S < 0.2). S rises as the ball slows, and at sea level with the
-  calibrated factors only the two Driver rows stay below 0.2 for the whole
-  flight (launch S = 0.074 PGA, 0.088 LPGA; peak ≈ 0.17). The other woods, the
-  hybrids, the PGA 3–5 Iron and the LPGA 4 Iron launch inside the range
-  (S ≈ 0.096–0.195) but peak at ≈ 0.21–0.51; the PGA 6 Iron to PW and the
-  LPGA 5 Iron to PW launch above it (S ≈ 0.22–0.48) and peak at
-  ≈ 0.47–1.17. Those rows are an extrapolation, absorbed in part by per-row
-  calibration and stated on the methods page.
+- Spin parameter S = rω/U (ω in rad/s); Reynolds number Re = ρUD/μ
+  (section 5.1 for μ).
+- C_D = k_D · [C_D0(S) + 1.35×10⁻⁷ · (max(Re, 10⁵) − 1.5×10⁵)] and
+  C_L = k_L · C_L0(S), with
+
+      C_D0(S) = 0.22 − 0.27 S + 3.0 S²                    S ≤ 0.22
+              = C_D0(0.22) + 0.38 (min(S, 0.64) − 0.22)   S > 0.22
+      C_L0(S) = 2.475 S                                   S < 0.04
+              = 0.065 + 0.85 S                            0.04 ≤ S ≤ 0.30
+              = min(0.45, 0.32 + 0.25 (S − 0.30))         S > 0.30
+
+  the supercritical (Re ≥ 7.5×10⁴) drag and lift of current tour balls. Up
+  to S 0.22 (drag) and 0.30 (lift) they are least-squares fits (rms 0.020,
+  0.024) to Lyu, Kensrud & Smith (2020), Lyu et al. (2018), the USGA Indoor
+  Test Range patent's example data (US 6,186,002 B1) and Bridgestone's
+  patents (US 7,175,542 B2, 7,201,671 B2, 7,238,121 B2, 8,021,249 B2). The
+  data start at S 0.04; below it lift runs linearly to zero, since a ball
+  without spin has none (no tour flight goes below S 0.074). No
+  modern ball is measured above S ≈ 0.36; above the fitted ranges the shapes
+  follow Bearman & Harvey's (1976) ball (lift to its 0.45 at S 1.0; drag slope
+  0.38, measured to S 0.46, continued to S 0.64 and held flat). The Re term is
+  the drag rise measured above Re 10⁵ (between B&H's +0.011 and the USGA
+  example ball's +0.0165 per 10⁵), frozen below it. The measured low-speed
+  lift loss and drag rise below Re ≈ 7.5×10⁴ are left out (section 5.5
+  item 1). The laws, their measured basis and the band variants are in
+  `docs/research/land-angle-spike/` (law R0 in `harness/laws2.mjs`).
+- At sea level with the calibrated factors S rises from 0.074–0.48 at launch
+  to 0.17–1.15 on the descent, and Re falls from 1.1–2.1×10⁵ to
+  4.2–7.4×10⁴. Only the Drivers and 3-woods stay within the lift fit
+  (S ≤ 0.30) for the whole flight; the other woods, the hybrids, the PGA 3–5
+  Iron and the LPGA 4–5 Iron peak at S ≈ 0.37–0.52, and the 6 Iron to PW of
+  both tours at ≈ 0.58–1.15, where the shapes rest on the 1976 ball and,
+  above S 0.46, on extrapolation; per-row calibration absorbs part of that,
+  and the methods page states it.
 - Spin decay λ₀ = 2.0×10⁻⁵ (Smits & Smith, as given in Penner 2001 eq. 16),
   scaled by ρ/ρ₀ because the decay torque scales with dynamic pressure.
 - Ball m = 45.93 g, D = 42.67 mm (Equipment Rules, Part 4 limits);
@@ -239,9 +265,12 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
   (x where the descent crosses y = 0), max height (apex y), land angle
   (atan2(−v_y, vₓ) at landing).
 - Integration: fixed-step RK4 with dt = 0.05 s; apex and landing located
-  within the step by cubic-Hermite interpolation. Two independent
-  implementations measured the error against dt = 0.001 s at ≤ 1×10⁻⁶ yd and
-  ≤ 1.1×10⁻³°; no displayed cell changes anywhere in the range.
+  within the step by cubic-Hermite interpolation. Against dt = 0.001 s the
+  error is ≤ 1×10⁻³ yd and ≤ 1.3×10⁻³° on every row at its calibrated factors
+  from 0 to 15,000 ft. The laws' corners (S 0.22, 0.30, 0.64; Re 10⁵) cost
+  RK4 its fourth order in the step that crosses one, so the error is larger
+  than with smooth laws, but a displayed value differs from the reference only
+  where it lies within that error of a rounding boundary.
 - A flight is capped at 60 s of simulated time; reaching the cap, or any
   non-finite state, is a model failure (section 5.6).
 
@@ -249,12 +278,13 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
 
 - For every table row, fit k_D and k_L so that the sea-level model reproduces
   the published carry and max height in yards, with a damped 2×2 Newton
-  iteration and a finite-difference Jacobian. Two independent implementations
-  converge in 3 iterations (about 10 flights) on every row, with Jacobian
-  condition numbers 3–9.
+  iteration and a finite-difference Jacobian. It converges in 2–4 iterations
+  (7–13 flights) on every row, with Jacobian condition numbers 4–9; the
+  land-angle spike's harness, an independent implementation, fits the same
+  factors to 10⁻¹³.
 - Expressed as density-independent products, the fitted values lie near
-  ρ₀k_D ≈ 1.08–1.50 and ρ₀k_L ≈ 0.96–1.32 kg/m³ (k_D ≈ 0.92–1.27,
-  k_L ≈ 0.81–1.12 at ρ₀ = 1.1839). A row that fails to converge within 20
+  ρ₀k_D ≈ 1.03–1.56 and ρ₀k_L ≈ 1.08–1.75 kg/m³ (k_D ≈ 0.87–1.32,
+  k_L ≈ 0.92–1.48 at ρ₀ = 1.1839). A row that fails to converge within 20
   iterations is a model failure (section 5.6).
 - Calibration targets the published yards. The metres column could narrow the
   rounding intervals slightly, but the gain is below the other uncertainties;
@@ -265,9 +295,10 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
   the data (section 5.4) and yields between rows, so the page is interactive
   immediately. Budget, as a deterministic count a test can enforce: at most
   50,000 RK4 steps for all 23 rows, and at most 4,000 per recompute
-  (23 flights). Measured with the spec's model at dt = 0.05 s in headless
-  Chrome: 36 / 54 / 86 ms at 4× / 6× / 10× CPU throttling for calibration and
-  1.7 / 2.6 / 4.8 ms per recompute.
+  (23 flights); the measured laws take 26,807 and 2,462 (at 15,000 ft).
+  Measured with the first release's laws (29,291 and 2,449 steps) at
+  dt = 0.05 s in headless Chrome: 36 / 54 / 86 ms at 4× / 6× / 10× CPU
+  throttling for calibration and 1.7 / 2.6 / 4.8 ms per recompute.
 - The fitted values are a pure function of the table and the model, so they
   are never stored.
 
@@ -287,42 +318,55 @@ only by tests; 0 in the app), U = |u|, k = ρA/(2m), A = πD²/4:
 
 ### 5.5 Limitations, stated on the methods page
 
-1. **No Reynolds-number dependence.** The dimpled-ball drag crisis lies at
-   Re ≈ 5×10⁴–10⁵ on current tour balls (Lyu et al. 2018, spinning or not, up
-   to S ≈ 0.3), which overlaps the slow end of every flight; spin moves the
-   crisis to lower Re (Li et al. 2017), and no open data cover S 0.3–1.2.
-   Lower density lowers Re, so a Re term would change the altitude delta, not
-   just the sea-level level calibration absorbs. The Re-free model is chosen
-   because it is the closest match to TrackMan's own model: TrackMan's 2014
-   model trajectories (oracle 10 and the wind cases) and TrackMan-derived
-   altitude figures. That evidence is largely TrackMan's model and players'
-   TrackMan-derived planning numbers, so it cannot rule out Re effects; drag-
-   crisis variants that let spin move the crisis also pass every hard oracle.
-   Across physically plausible variants, iron and wedge carry gains are
-   uncertain by about −30 % to +25 % of the shown gain.
+1. **Only a weak Reynolds-number dependence.** The model's one Re term is
+   the small supercritical drag rise above Re 10⁵. Measured tour balls also
+   lose most of their lift (some briefly reversing it) and gain drag below
+   Re ≈ 7.5×10⁴, about 27 m/s at sea level (Lyu, Kensrud & Smith 2020;
+   Bridgestone's patents for the onset), and no modern ball is measured there
+   above S ≈ 0.36, where iron and wedge descents end. Thin air lowers Re at a
+   given speed, so that band would arrive earlier and cut iron and wedge
+   altitude gains. It is left out because no measurement confirms or refutes
+   the cut: the only measured altitude carries are PGA TOUR drivers
+   (≤ 7,746 ft). The nearest iron evidence is players' planned +12–14 % at
+   6,400 ft (oracle 6), plans rather than measurements; this model comes
+   close (+11.7 %) and the banded laws do not (+6.0 to +8.7 %)
+   (`docs/research/land-angle-spike/SYNTHESIS.md`, Round 2). Uncertainty, by
+   this method: the spread of iron and wedge carry gains at 10,000 ft between
+   this model (R0) and the spike's three band variants R1–R3 (band persisting
+   at every S, fading by S 0.6, fading by S 1.0), each with its band shape
+   fitted to land angle under this calibration (the spike's mode A\*), all
+   under per-row calibration. Their gains are 3.5 % to 174 % smaller than
+   shown (beyond 100 %, for the LPGA 4–7 Iron, carry falls with elevation);
+   none is larger. With the band at its nominal measured values instead, the
+   range is 3.1 % to 133 % smaller.
 2. **Land-angle offset.** After calibration the model lands shallower than
-   TrackMan's table — about 1–9° for the PGA rows and LPGA woods to 7 Iron
-   (worst for hybrids and long irons), within 0.7° for LPGA 8 Iron to PW.
+   TrackMan's table — about 2–8° for the PGA 3-wood to PW and the LPGA
+   5-wood to 7 Iron (worst for the PGA 5-wood, hybrid and long irons), within
+   0.9° for both Drivers, the LPGA 3-wood and the LPGA 8 Iron to PW (land RMS
+   3.96° over the 23 rows).
    The gap follows spin combined with low launch, not carry or flight time.
-   Against TrackMan's own fully specified model shots it is only 1.1–1.8°, and
+   Against TrackMan's own fully specified model shots it is only 0.3–0.6°, and
    at the same launch the 2023 table rows are longer, lower and steeper than
    TrackMan's model trajectory. The cause is unresolved. Ruled out: the spread
    of launch conditions within a row (−0.45°, the wrong sign), faster spin
    decay, and different air on the two tours' schedules (0.2 % apart).
-   Measured tour-ball data show lift collapsing and drag rising below
-   Re ≈ 7.5×10⁴, the late-flight steepening this model lacks; at the strength
-   the table asks for it closes most of the gap but cuts iron carry gains at
+   The low-speed band of item 1 is the late-flight steepening this model
+   leaves out; at the strength the table asks for it closes most of the gap
+   (land RMS 1.6–2.3° under per-row calibration) but cuts iron carry gains at
    altitude, which no published iron measurement confirms or refutes
    (`docs/research/land-angle-spike/SYNTHESIS.md`).
-   The land-angle column is labelled indicative; its delta carries about ±2°
-   of structural uncertainty at 10,000 ft. An alternative, launch-anchored
-   mapping (equally exact at sea level) would show larger land-angle changes
-   for woods, hybrids and long irons, by up to 3.4° at 10,000 ft; no source
-   discriminates between the two.
+   The land-angle column is labelled indicative; at 10,000 ft its delta
+   differs by up to 8° between this model and the band variants of item 1.
+   An alternative, launch-anchored mapping (equally exact at sea level) would
+   show larger land-angle changes for woods, hybrids and long irons, by up to
+   3.2° at 10,000 ft; no source discriminates between the two.
 3. **Low-spin clubs plateau at extreme altitude.** As density falls, carry
    tends to its vacuum value, and for low-spin, low-launch shots that is
-   shorter than at moderate density: the LPGA 3-wood and 4 Iron peak near
-   14,500 ft (by 0.03 yd, invisible in the displayed integers).
+   shorter than at moderate density: the PGA Hybrid, 3 and 4 Iron and the
+   LPGA Driver, 3-wood, 5-wood and 4 Iron peak at 13,350–14,930 ft and lose
+   at most 0.3 yd by 15,000 ft. Two displayed values show it: PGA Hybrid
+   carry 266 → 265 yd near 14,910 ft (soft oracle 9b warns) and LPGA 4 Iron
+   178 → 177 m near 14,960 ft.
 4. Launch conditions are held fixed at altitude; real players may change
    clubs, trajectory or swing.
 5. No wind, temperature, humidity, ball-model or roll effects.
@@ -361,11 +405,18 @@ containers on phones. Sections:
 8. Sources, each marked as read at the primary source or seen only second
    hand. Equations: Penner (2001), *Am. J. Phys.* 69:563,
    doi:10.1119/1.1344164 (equations of motion and spin decay; open author
-   copy) and Smits & Smith (1994), *Science and Golf II* pp. 340–347
-   (coefficient shapes; the chapter was not available — its text was read as
-   reproduced in US patent 11,230,375 B1, apparently from Mehta & Pallis
-   (2001), which the page states). Atmosphere: U.S. Standard Atmosphere 1976
-   (NASA NTRS). Units: NIST SP 811. Reference data: as listed per oracle.
+   copy) and Smits & Smith (1994), *Science and Golf II* pp. 340–347 (the
+   spin-decay constant; the chapter was not available — the constant was read
+   in Penner eq. 16, and US 6,186,002 B1 uses the same value). Drag and lift:
+   Lyu, Kensrud & Smith (2020), *Sports Eng.* 23:3,
+   doi:10.1007/s12283-020-0318-1; Lyu, Kensrud, Smith & Tosaya (2018),
+   *Proceedings* 2:238, doi:10.3390/proceedings2060238; the USGA Indoor Test
+   Range patent US 6,186,002 B1; Bridgestone's US 7,175,542 B2, 7,201,671 B2,
+   7,238,121 B2 and 8,021,249 B2; Bearman & Harvey (1976), *Aeronautical
+   Quarterly* 27:112–122 (second hand, through the reproductions in Kensrud's
+   2010 WSU thesis and Crabill, Witherden & Jameson, arXiv:1806.00378).
+   Atmosphere: U.S. Standard Atmosphere 1976 (NASA NTRS). Units: NIST SP 811.
+   Reference data: as listed per oracle.
 
 Equations use native MathML, restricted to the MathML Core subset Chromium
 implements (no script dependency). The live tables are computed by the same
@@ -431,30 +482,32 @@ checks the list matches the import graph); fonts preloaded.
   USSA 1976 table values (the tables truncate, so assert
   `table ≤ computed < table + 1` in the last printed digit); inverse
   round-trips; ρ/ρ₀ at 5,000 / 10,000 / 15,000 ft = 0.832085 / 0.687832 /
-  0.564587; ρ₀ = 1.1839 kg/m³.
+  0.564587; ρ₀ = 1.1839 kg/m³; μ = 1.8371×10⁻⁵ Pa·s.
 - **flight:** with C_D = C_L = 0 the model reproduces the analytic vacuum
-  range and apex; halving dt changes outputs by less than 0.001 yd; zero spin
-  gives zero lift; launch S for the PGA Driver = 0.0744; spin decay: landing
-  spin of the calibrated PGA Driver ≈ 77.7 % of launch spin, and decay scales
-  with ρ/ρ₀; the step cap and non-finite states return a failure.
+  range and apex; halving dt changes outputs by less than 0.001 yd; the drag
+  and lift laws at a few S and Re points, continuous at S 0.22, 0.30 and 0.64
+  and frozen below Re 10⁵; launch S for the PGA Driver = 0.0744; spin decay:
+  landing spin of the calibrated PGA Driver ≈ 77.7 % of launch spin, and decay
+  scales with ρ/ρ₀; the step cap and non-finite states return a failure.
 - **calibration:** every row reproduces published carry and max height within
   0.01 yd at sea level; converges within 20 iterations; ρ₀k_D, ρ₀k_L inside
-  the section 5.3 envelope with a 10 % margin; PGA Driver ρ₀k_D = 1.0893 and
-  ρ₀k_L = 0.9912 kg/m³ (±0.002).
-- **golden regression values** (from an independent implementation; deltas
-  are ρ₀-independent), tolerance 0.05 yd / 0.05°:
+  the section 5.3 envelope with a 10 % margin; PGA Driver ρ₀k_D = 1.2771 and
+  ρ₀k_L = 1.4435 kg/m³ (±0.002).
+- **golden regression values** (from the land-angle spike's harness, an
+  independent implementation, law R0; deltas are ρ₀-independent), tolerance
+  0.05 yd / 0.05°:
 
   | Row | 5,000 ft ΔC / ΔH / ΔL | 10,000 ft ΔC / ΔH / ΔL |
   |---|---|---|
-  | PGA Driver | +17.28 yd / −3.44 yd / −5.07° | +29.58 / −7.05 / −10.12 |
-  | PGA 7 Iron | +15.88 / −2.17 / −4.10 | +29.24 / −4.74 / −8.72 |
-  | PGA PW | +12.02 / −1.09 / −3.35 | +22.48 / −2.41 / −6.90 |
-  | LPGA Driver | +9.62 / −2.34 / −4.48 | +15.52 / −4.62 / −8.59 |
-  | LPGA 3-wood | +10.26 / −2.60 / −4.97 | +16.55 / −5.22 / −9.78 |
+  | PGA Driver | +20.29 yd / −3.30 yd / −5.44° | +34.35 / −6.90 / −10.76 |
+  | PGA 7 Iron | +16.27 / −1.92 / −3.91 | +30.79 / −4.36 / −8.86 |
+  | PGA PW | +11.73 / −0.99 / −2.87 | +22.00 / −2.28 / −6.01 |
+  | LPGA Driver | +11.46 / −2.30 / −4.93 | +18.12 / −4.60 / −9.32 |
+  | LPGA 3-wood | +12.56 / −2.64 / −5.87 | +19.62 / −5.34 / −11.25 |
 
   These pin the deliberate choices that no oracle catches: reversing constant
-  temperature, dropping or mis-scaling spin decay, or mis-computing S all move
-  them by more than the tolerance.
+  temperature, dropping or mis-scaling spin decay, or mis-computing S or Re
+  all move them by more than the tolerance.
 - **model:** density ratio 1 gives Δ = 0 exactly; for every row carry rises
   and max height and land angle fall, monotonically, from 0 to 10,000 ft;
   a failed row does not affect the others.
@@ -507,9 +560,9 @@ stated elevation.
 | 7 | at 6,400 ft: gain(7 Iron) ≥ gain(Driver) and gain(PW) ≤ gain(7 Iron) | club-pattern ordering (five sources) | ordering | soft |
 | 8 | at 4,920 ft: PGA 7 Iron; PGA Driver carry | +7.5 %; +5 % (Penge at Crans-Montana; the source ties the numbers to temperature) | +4 … +10 %; +3 … +7.5 % | soft |
 | 9 | every row, 0 → 10,000 ft; 10,000 → 15,000 ft | carry ↑, max height ↓, land angle ↓, monotone; above 10,000 ft, displayed carry never decreases between adjacent slider steps | sign | hard; soft above 10,000 ft |
-| 10 | TrackMan 2014 model 6 Iron shots ("Calm"; PGA 130 mph / 14.7° / 6088 rpm → 184 yd / 33.8 yd / 48.0°; LPGA 110 / 18.6° / 5950 → 152 / 27.7 / 45.6°), calibrated to each shot's carry and max height | land angle (measured gap 1.8° PGA, 1.1° LPGA) | ±3° | hard |
+| 10 | TrackMan 2014 model 6 Iron shots ("Calm"; PGA 130 mph / 14.7° / 6088 rpm → 184 yd / 33.8 yd / 48.0°; LPGA 110 / 18.6° / 5950 → 152 / 27.7 / 45.6°), calibrated to each shot's carry and max height | land angle (measured gap 0.6° PGA, 0.3° LPGA) | ±3° | hard |
 | 11 | LPGA Driver gain at 5,280 ft | ≤ PGA Driver gain + 1 point | ordering | soft |
-| 12 | the same TrackMan 2014 shots in constant 10 / 20 mph head- and tailwind (eight cases, wind via section 5.2's test-only w) — PGA: HW10 166 / 38.1 / 58.1, HW20 143 / 42.8 / 69.5, TW10 198 / 29.7 / 39.5, TW20 207 / 26.1 / 32.7; LPGA: HW10 139 / 31.3 / 55.6, HW20 121 / 35.3 / 67.4, TW10 161 / 24.5 / 37.7, TW20 167 / 21.7 / 31.7 | carry, land angle (measured worst: 3.6 yd, 2.0°) | carry ±5 yd, land ±3° | soft |
+| 12 | the same TrackMan 2014 shots in constant 10 / 20 mph head- and tailwind (eight cases, wind via section 5.2's test-only w) — PGA: HW10 166 / 38.1 / 58.1, HW20 143 / 42.8 / 69.5, TW10 198 / 29.7 / 39.5, TW20 207 / 26.1 / 32.7; LPGA: HW10 139 / 31.3 / 55.6, HW20 121 / 35.3 / 67.4, TW10 161 / 24.5 / 37.7, TW20 167 / 21.7 / 31.7 | carry, land angle (measured worst: 1.4 yd, 0.8°) | carry ±5 yd, land ±3° | soft |
 
 Oracles 10 and 12 are the only checks against TrackMan's own model with fully
 specified inputs (read from the images of TrackMan's "Normalization feature
@@ -647,13 +700,17 @@ commitlint; `ci.yml`, `release.yml`, `deploy.yml`, `.releaserc.yml`,
 ## 11. Risks
 
 1. **Reynolds-number physics** (section 5.5 item 1) is the largest modelling
-   uncertainty — about −30 % to +25 % on iron and wedge gains — and the
-   evidence for the Re-free choice is mostly TrackMan's own model.
+   uncertainty: the measured low-speed lift loss and drag rise, left out, would
+   make iron and wedge gains at 10,000 ft 3.5 % to 174 % smaller. Leaving it
+   out rests on players' planning numbers and the absence of any iron
+   altitude measurement, not on a measurement that excludes it.
 2. **Land-angle offset** (section 5.5 item 2): cause unresolved; the one
    measured mechanism that closes it is the low-Re behaviour risk 1 omits;
    the column is labelled indicative.
-3. **Coefficient-shape source** rests on a patent's reproduction of review
-   text; calibration makes its constants immaterial, but the S^0.4 shape and
-   its driver-only fitting range are unverified against the chapter.
+3. **Coefficient shapes at high spin** rest on one 1976 ball (Bearman &
+   Harvey), read second hand from reproduced figures, above the modern-ball
+   data (S ≈ 0.36); the drag beyond S 0.46 is an extrapolation. Every row but
+   the Drivers and 3-woods leaves the lift fit, and the 6 Iron to PW reach
+   S 0.58–1.15; calibration absorbs the level but not the shape.
 4. **Pages environment policy and merge settings** are repository settings
    outside the tree; verified during setup (section 10).

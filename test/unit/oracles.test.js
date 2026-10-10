@@ -411,7 +411,10 @@ test('9a names the row, quantity and elevation that reverses; a flat stretch pas
 
 test('the sweeps default to a 250 ft grid for 9a and a 10 ft grid for 9b', () => {
   assert.equal(resultOf('9a').display, 'monotone on a 250 ft grid');
-  assert.equal(resultOf('9b').display, 'never decreases on a 10 ft grid');
+  // The model's PGA Hybrid display drops 1 yd near 15,000 ft (methods page,
+  // Limitations), so 9b's default grid is read off a model that never drops.
+  const rising = createOracleContext(stubModel([{ delta: (thin) => ({ carryYd: 40 * thin }) }]));
+  assert.equal(oracleById('9b').evaluate(rising).display, 'never decreases on a 10 ft grid');
 });
 
 test('9b fails on a drop in displayed carry, not on one rounding hides', () => {

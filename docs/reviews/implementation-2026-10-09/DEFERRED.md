@@ -34,7 +34,9 @@ listed. Files are named rather than line numbers, which drift.
 7. `test/unit/calibrate.test.js` — all 23 rows are calibrated three times
    across separate tests; computing them once at module scope removes the
    repetition.
-8. `test/unit/calibrate.test.js` — the factor envelope (0.981–1.65,
+8. **Resolved** by the change to the measured drag and lift laws, which
+   writes the test's envelope as spec §5.3's ranges times 0.9 and 1.1.
+   `test/unit/calibrate.test.js` — the factor envelope (0.981–1.65,
    0.864–1.463) derives from the pre-amendment spec; spec §5.3's amended
    envelope with the stated 10 % margin is 0.972–1.65 and 0.864–1.452. The
    test still passes.

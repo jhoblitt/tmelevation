@@ -55,19 +55,20 @@ test('every row reproduces its published carry and max height within 0.01 yd', (
 });
 
 test('every fitted factor lies inside the spec envelope with a 10 % margin', () => {
+  // Spec section 5.3: rho0 kD 1.03-1.56 and rho0 kL 1.08-1.75 kg/m3.
   for (const { name, row } of ROWS) {
     const cal = calibrate(launchOf(row), targetOf(row));
     assert.equal(cal.ok, true, `${name}: ${cal.reason}`);
-    inRange(RHO0 * cal.kD, 0.981, 1.65, `${name} rho0 kD`);
-    inRange(RHO0 * cal.kL, 0.864, 1.463, `${name} rho0 kL`);
+    inRange(RHO0 * cal.kD, 0.9 * 1.03, 1.1 * 1.56, `${name} rho0 kD`);
+    inRange(RHO0 * cal.kL, 0.9 * 1.08, 1.1 * 1.75, `${name} rho0 kL`);
   }
 });
 
 test('the PGA Driver calibrates to the spec factors and spin decay', () => {
   const cal = calibrate(PGA_DRIVER, targetOf(PGA_DRIVER_ROW));
   assert.equal(cal.ok, true);
-  near(RHO0 * cal.kD, 1.0893, 0.002, 'rho0 kD: ');
-  near(RHO0 * cal.kL, 0.9912, 0.002, 'rho0 kL: ');
+  near(RHO0 * cal.kD, 1.2771, 0.002, 'rho0 kD: ');
+  near(RHO0 * cal.kL, 1.4435, 0.002, 'rho0 kL: ');
   near(cal.sea.landSpinRadS / PGA_DRIVER.spinRadS, 0.777, 0.005, 'landing spin ratio: ');
 });
 
