@@ -1,0 +1,51 @@
+Raw driver 172.85 mph / 10.49 deg / 2571 rpm at density 0.992. Measured: carry 283.8, apex 34, hang 6.4 s, apex at 186 yd (65.5 %).
+| Law, variant | carry yd | apex yd | hang s (vs 6.4) | apex % carry (vs 65.5) | apex distance yd | kD, kL |
+|---|---|---|---|---|---|---|
+| F0 (a1) nominal, unfitted | 284.5 | 43.3 | 7.67 (+1.27) | 66.4 (+0.9) | 189.0 | — |
+| F0 (a2) mode-G global fit | 259.4 | 37.3 | 7.04 (+0.64) | 66.6 (+1.1) | 172.7 | — |
+| F0 (bG) calibrated, G shape | 283.8 | 34.0 | 6.80 (+0.40) | 65.0 (-0.5) | 184.6 | 0.808, 0.813 |
+| F0 (bA) calibrated, A* shape | 283.8 | 34.0 | 6.80 (+0.40) | 65.0 (-0.5) | 184.6 | 0.808, 0.813 |
+| R0 (a1) nominal, unfitted | 281.4 | 29.2 | 6.38 (-0.02) | 64.1 (-1.4) | 180.3 | — |
+| R0 (a2) mode-G global fit | 282.5 | 32.8 | 6.81 (+0.41) | 65.2 (-0.3) | 184.2 | — |
+| R0 (bG) calibrated, G shape | 283.8 | 34.0 | 6.95 (+0.55) | 65.5 (-0.0) | 185.8 | 1.009, 1.031 |
+| R0 (bA) calibrated, A* shape | 283.8 | 34.0 | 6.95 (+0.55) | 65.5 (-0.0) | 185.8 | 1.009, 1.031 |
+| R1 (a1) nominal, unfitted | 281.4 | 29.2 | 6.38 (-0.02) | 64.1 (-1.4) | 180.3 | — |
+| R1 (a2) mode-G global fit | 290.3 | 32.8 | 6.82 (+0.42) | 64.8 (-0.7) | 188.1 | — |
+| R1 (bG) calibrated, G shape | 283.8 | 34.0 | 6.92 (+0.52) | 65.6 (+0.1) | 186.2 | 1.061, 1.062 |
+| R1 (bA) calibrated, A* shape | 283.8 | 34.0 | 6.95 (+0.55) | 65.7 (+0.2) | 186.6 | 1.056, 1.059 |
+| R2 (a1) nominal, unfitted | 281.4 | 29.2 | 6.38 (-0.02) | 64.1 (-1.4) | 180.3 | — |
+| R2 (a2) mode-G global fit | 289.0 | 32.5 | 6.79 (+0.39) | 64.9 (-0.6) | 187.5 | — |
+| R2 (bG) calibrated, G shape | 283.8 | 34.0 | 6.93 (+0.53) | 65.9 (+0.4) | 186.9 | 1.051, 1.062 |
+| R2 (bA) calibrated, A* shape | 283.8 | 34.0 | 6.90 (+0.50) | 65.9 (+0.4) | 186.9 | 1.051, 1.062 |
+| R3 (a1) nominal, unfitted | 281.4 | 29.2 | 6.38 (-0.02) | 64.1 (-1.4) | 180.3 | — |
+| R3 (a2) mode-G global fit | 289.4 | 32.7 | 6.82 (+0.42) | 64.9 (-0.6) | 187.7 | — |
+| R3 (bG) calibrated, G shape | 283.8 | 34.0 | 6.93 (+0.53) | 65.7 (+0.2) | 186.3 | 1.054, 1.059 |
+| R3 (bA) calibrated, A* shape | 283.8 | 34.0 | 6.90 (+0.50) | 65.9 (+0.4) | 186.9 | 1.045, 1.054 |
+
+Average-of-shots minus shot-of-averages (calibrated, A* shape): mean over the spread minus the value at the mean launch; apex % is the ratio of means (mean apex distance / mean carry), as PGA TOUR publishes it.
+| Law | spread (SD mph / deg / rpm) | carry yd | apex yd | hang s | apex % (ratio of means) |
+|---|---|---|---|---|---|
+| F0 | moderate (6 / 2 / 500) | -2.31 | -0.06 | -0.06 | -0.05 |
+| F0 | wide (10 / 3 / 800) | -5.99 | -0.17 | -0.14 | -0.14 |
+| R0 | moderate (6 / 2 / 500) | -4.17 | +0.07 | -0.06 | +0.06 |
+| R0 | wide (10 / 3 / 800) | -9.47 | +0.15 | -0.14 | +0.02 |
+| R1 | moderate (6 / 2 / 500) | -6.27 | +0.07 | -0.12 | +0.52 |
+| R1 | wide (10 / 3 / 800) | -12.65 | +0.13 | -0.24 | +0.65 |
+| R2 | moderate (6 / 2 / 500) | -7.35 | +0.06 | -0.18 | +0.74 |
+| R2 | wide (10 / 3 / 800) | -14.52 | +0.10 | -0.34 | +0.96 |
+| R3 | moderate (6 / 2 / 500) | -7.24 | +0.06 | -0.17 | +0.72 |
+| R3 | wide (10 / 3 / 800) | -14.26 | +0.10 | -0.33 | +0.90 |
+
+Spread-calibrated (A* shape): kD, kL set so the MEAN carry and apex over the spread equal 283.8 / 34.0 yd; then mean hang and ratio-of-means apex position.
+| Law | spread | kD, kL | mean carry / apex yd | mean hang s (vs 6.4) | apex % ratio of means (vs 65.5) |
+|---|---|---|---|---|---|
+| F0 | moderate | 0.795, 0.807 | 283.8 / 34.0 | 6.76 (+0.36) | 64.9 (-0.6) |
+| F0 | wide | 0.774, 0.795 | 283.8 / 34.0 | 6.69 (+0.29) | 64.7 (-0.8) |
+| R0 | moderate | 0.978, 1.011 | 283.8 / 34.0 | 6.89 (+0.49) | 65.3 (-0.2) |
+| R0 | wide | 0.939, 0.984 | 283.8 / 34.0 | 6.80 (+0.40) | 65.0 (-0.5) |
+| R1 | moderate | 1.015, 1.033 | 283.8 / 34.0 | 6.85 (+0.45) | 65.8 (+0.3) |
+| R1 | wide | 0.970, 1.004 | 283.8 / 34.0 | 6.75 (+0.35) | 65.5 (-0.0) |
+| R2 | moderate | 1.007, 1.035 | 283.8 / 34.0 | 6.78 (+0.38) | 66.0 (+0.5) |
+| R2 | wide | 0.960, 1.004 | 283.8 / 34.0 | 6.66 (+0.26) | 65.7 (+0.2) |
+| R3 | moderate | 1.003, 1.027 | 283.8 / 34.0 | 6.78 (+0.38) | 66.0 (+0.5) |
+| R3 | wide | 0.956, 0.997 | 283.8 / 34.0 | 6.66 (+0.26) | 65.7 (+0.2) |

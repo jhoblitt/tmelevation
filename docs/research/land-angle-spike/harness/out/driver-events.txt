@@ -1,0 +1,243 @@
+Predicted driver carry gain (yd) vs measured; (a) season launch, (b) event launch shift applied. Pass band for the hard check: |pred(b) - measured| <= 2 SE + 3.3 yd (control bias).
+
+### F0 G (kD 1.000, kL 1.000; season carry 259.4 yd, apex 37.3 yd, hang 7.04 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +26.6 | +36.6 | +14.7 | ±5.2 | no | +23.8 / -11.5 / +24.8 | -1.5 / +0.6 |
+| Mexico 2018 | +21.5 ± 1.24 | +27.6 | +38.0 | +16.5 | ±5.8 | no | +15.1 / -12.0 / +24.2 | -1.2 / +0.6 |
+| Mexico 2019 | +19.0 ± 1.78 | +27.5 | +36.4 | +17.3 | ±6.9 | no | +7.5 / -11.9 / +5.9 | -0.1 / +0.2 |
+| Mexico 2020 | +16.2 ± 2.75 | +27.0 | +36.4 | +20.2 | ±8.8 | no | +2.4 / -11.7 / +6.3 | -0.7 / +0.2 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +23.9 | +30.0 | +2.4 | ±5.2 | yes | -11.1 / -10.1 / +3.1 | — / +0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +22.9 | +31.0 | +8.0 | ±5.8 | no | -5.9 / -9.6 / +10.3 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.3 | +3.0 | ±4.2 | yes | +0.5 / +0.1 / -0.3 | — / +0.0 |
+model low-altitude slope 1.24 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +26.5 yd vs model +27.1 yd -> model's own Chapultepec shortfall -0.6 yd (measured 10-15 yd vs the measured line)
+
+### F0 Aapp (kD 0.816, kL 0.857; season carry 286.9 yd, apex 36.3 yd, hang 7.04 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +22.4 | +38.2 | +16.4 | ±5.2 | no | +23.8 / -13.5 / +24.8 | -1.5 / +0.5 |
+| Mexico 2018 | +21.5 ± 1.24 | +23.2 | +39.6 | +18.0 | ±5.8 | no | +15.1 / -14.1 / +24.0 | -1.2 / +0.5 |
+| Mexico 2019 | +19.0 ± 1.78 | +23.1 | +35.8 | +16.7 | ±6.9 | no | +7.5 / -14.1 / +4.2 | -0.1 / +0.1 |
+| Mexico 2020 | +16.2 ± 2.75 | +22.7 | +35.8 | +19.6 | ±8.8 | no | +2.4 / -13.8 / +5.0 | -0.7 / +0.1 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +20.3 | +28.8 | +1.3 | ±5.2 | yes | -11.1 / -12.0 / +2.1 | — / -0.0 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +19.5 | +31.0 | +8.0 | ±5.8 | no | -5.9 / -11.4 / +9.9 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.1 | +3.2 | ±4.2 | yes | +0.5 / +0.1 / -0.4 | — / +0.0 |
+model low-altitude slope 1.11 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +23.7 yd vs model +22.8 yd -> model's own Chapultepec shortfall 0.9 yd (measured 10-15 yd vs the measured line)
+
+### F0 Araw (kD 0.808, kL 0.813; season carry 283.8 yd, apex 34.0 yd, hang 6.80 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +20.6 | +38.1 | +16.3 | ±5.2 | no | +23.8 / -12.6 / +24.7 | -1.5 / +0.6 |
+| Mexico 2018 | +21.5 ± 1.24 | +21.3 | +39.4 | +17.9 | ±5.8 | no | +15.1 / -13.2 / +23.9 | -1.2 / +0.5 |
+| Mexico 2019 | +19.0 ± 1.78 | +21.2 | +34.5 | +15.5 | ±6.9 | no | +7.5 / -13.1 / +4.3 | -0.1 / +0.1 |
+| Mexico 2020 | +16.2 ± 2.75 | +20.8 | +34.7 | +18.5 | ±8.8 | no | +2.4 / -12.8 / +5.3 | -0.7 / +0.1 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +18.7 | +27.8 | +0.3 | ±5.2 | yes | -11.1 / -11.2 / +2.6 | — / +0.0 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +18.0 | +30.4 | +7.4 | ±5.8 | no | -5.9 / -10.6 / +10.3 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.2 | +3.1 | ±4.2 | yes | +0.5 / +0.1 / -0.5 | — / +0.0 |
+model low-altitude slope 1.03 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +22.0 yd vs model +20.9 yd -> model's own Chapultepec shortfall 1.0 yd (measured 10-15 yd vs the measured line)
+
+### R0 G (kD 1.000, kL 1.000; season carry 282.5 yd, apex 32.8 yd, hang 6.81 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +22.9 | +40.6 | +18.7 | ±5.2 | no | +23.8 / -11.6 / +28.3 | -1.5 / +0.7 |
+| Mexico 2018 | +21.5 ± 1.24 | +23.7 | +41.9 | +20.4 | ±5.8 | no | +15.1 / -12.2 / +27.7 | -1.2 / +0.7 |
+| Mexico 2019 | +19.0 ± 1.78 | +23.6 | +37.6 | +18.5 | ±6.9 | no | +7.5 / -12.1 / +7.2 | -0.1 / +0.2 |
+| Mexico 2020 | +16.2 ± 2.75 | +23.2 | +37.6 | +21.4 | ±8.8 | no | +2.4 / -11.8 / +6.9 | -0.7 / +0.1 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +20.9 | +30.2 | +2.7 | ±5.2 | yes | -11.1 / -10.3 / +3.3 | — / -0.0 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +20.1 | +32.9 | +9.9 | ±5.8 | no | -5.9 / -9.8 / +10.9 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.3 | +3.0 | ±4.2 | yes | +0.5 / +0.1 / -0.0 | — / +0.0 |
+model low-altitude slope 1.17 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +24.9 yd vs model +23.3 yd -> model's own Chapultepec shortfall 1.5 yd (measured 10-15 yd vs the measured line)
+
+### R0 Aapp (kD 1.018, kL 1.085; season carry 286.8 yd, apex 36.3 yd, hang 7.20 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +26.3 | +40.3 | +18.4 | ±5.2 | no | +23.8 / -13.1 / +28.9 | -1.5 / +0.7 |
+| Mexico 2018 | +21.5 ± 1.24 | +27.2 | +41.7 | +20.2 | ±5.8 | no | +15.1 / -13.7 / +28.3 | -1.2 / +0.7 |
+| Mexico 2019 | +19.0 ± 1.78 | +27.0 | +39.3 | +20.2 | ±6.9 | no | +7.5 / -13.6 / +7.5 | -0.1 / +0.3 |
+| Mexico 2020 | +16.2 ± 2.75 | +26.6 | +39.5 | +23.3 | ±8.8 | no | +2.4 / -13.3 / +6.6 | -0.7 / +0.1 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +23.8 | +32.0 | +4.5 | ±5.2 | yes | -11.1 / -11.5 / +2.5 | — / -0.0 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +22.9 | +34.0 | +11.0 | ±5.8 | no | -5.9 / -11.0 / +10.4 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.3 | -0.4 | +2.9 | ±4.2 | yes | +0.5 / +0.1 / +0.2 | — / +0.0 |
+model low-altitude slope 1.32 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +28.0 yd vs model +26.7 yd -> model's own Chapultepec shortfall 1.3 yd (measured 10-15 yd vs the measured line)
+
+### R0 Araw (kD 1.009, kL 1.031; season carry 283.8 yd, apex 34.0 yd, hang 6.95 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +24.1 | +40.5 | +18.6 | ±5.2 | no | +23.8 / -12.1 / +28.5 | -1.5 / +0.7 |
+| Mexico 2018 | +21.5 ± 1.24 | +24.9 | +41.8 | +20.3 | ±5.8 | no | +15.1 / -12.7 / +27.9 | -1.2 / +0.7 |
+| Mexico 2019 | +19.0 ± 1.78 | +24.8 | +38.2 | +19.1 | ±6.9 | no | +7.5 / -12.6 / +7.4 | -0.1 / +0.2 |
+| Mexico 2020 | +16.2 ± 2.75 | +24.4 | +38.3 | +22.1 | ±8.8 | no | +2.4 / -12.3 / +6.8 | -0.7 / +0.1 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +21.9 | +30.8 | +3.3 | ±5.2 | yes | -11.1 / -10.7 / +3.0 | — / -0.0 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +21.1 | +33.3 | +10.2 | ±5.8 | no | -5.9 / -10.2 / +10.8 | — / +0.2 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.4 | +2.9 | ±4.2 | yes | +0.5 / +0.1 / +0.1 | — / +0.0 |
+model low-altitude slope 1.22 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +26.0 yd vs model +24.5 yd -> model's own Chapultepec shortfall 1.5 yd (measured 10-15 yd vs the measured line)
+
+### R1 G (kD 1.000, kL 1.000; season carry 290.3 yd, apex 32.8 yd, hang 6.82 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +20.2 | +34.0 | +12.1 | ±5.2 | no | +23.8 / -12.1 / +28.3 | -1.5 / +0.5 |
+| Mexico 2018 | +21.5 ± 1.24 | +20.8 | +34.8 | +13.3 | ±5.8 | no | +15.1 / -12.7 / +27.7 | -1.2 / +0.4 |
+| Mexico 2019 | +19.0 ± 1.78 | +20.7 | +32.7 | +13.6 | ±6.9 | no | +7.5 / -12.6 / +6.9 | -0.1 / +0.1 |
+| Mexico 2020 | +16.2 ± 2.75 | +20.5 | +34.0 | +17.8 | ±8.8 | no | +2.4 / -12.3 / +6.6 | -0.7 / +0.0 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +18.6 | +27.9 | +0.4 | ±5.2 | yes | -11.1 / -10.8 / +3.0 | — / -0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +18.0 | +30.6 | +7.5 | ±5.8 | no | -5.9 / -10.2 / +10.8 | — / +0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.2 | +3.1 | ±4.2 | yes | +0.5 / +0.1 / -0.1 | — / +0.0 |
+model low-altitude slope 1.11 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +23.4 yd vs model +20.5 yd -> model's own Chapultepec shortfall 2.9 yd (measured 10-15 yd vs the measured line)
+
+### R1 Aapp (kD 1.059, kL 1.110; season carry 286.2 yd, apex 36.3 yd, hang 7.18 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +21.2 | +25.4 | +3.5 | ±5.2 | yes | +23.8 / -13.3 / +28.7 | -1.5 / +0.4 |
+| Mexico 2018 | +21.5 ± 1.24 | +21.9 | +26.4 | +4.8 | ±5.8 | yes | +15.1 / -13.9 / +28.1 | -1.2 / +0.4 |
+| Mexico 2019 | +19.0 ± 1.78 | +21.8 | +27.6 | +8.5 | ±6.9 | no | +7.5 / -13.8 / +7.4 | -0.1 / +0.0 |
+| Mexico 2020 | +16.2 ± 2.75 | +21.5 | +29.8 | +13.6 | ±8.8 | no | +2.4 / -13.5 / +6.5 | -0.7 / -0.0 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +19.5 | +25.5 | -2.1 | ±5.2 | yes | -11.1 / -11.7 / +2.4 | — / -0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +18.8 | +26.4 | +3.3 | ±5.8 | yes | -5.9 / -11.1 / +10.3 | — / +0.0 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -1.2 | +2.1 | ±4.2 | yes | +0.5 / +0.1 / +0.2 | — / +0.0 |
+model low-altitude slope 1.14 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +24.2 yd vs model +21.6 yd -> model's own Chapultepec shortfall 2.6 yd (measured 10-15 yd vs the measured line)
+
+### R1 Araw (kD 1.056, kL 1.059; season carry 283.8 yd, apex 34.0 yd, hang 6.95 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +20.1 | +26.2 | +4.4 | ±5.2 | yes | +23.8 / -12.2 / +28.4 | -1.5 / +0.4 |
+| Mexico 2018 | +21.5 ± 1.24 | +20.6 | +27.1 | +5.6 | ±5.8 | yes | +15.1 / -12.8 / +27.8 | -1.2 / +0.4 |
+| Mexico 2019 | +19.0 ± 1.78 | +20.6 | +27.5 | +8.5 | ±6.9 | no | +7.5 / -12.7 / +7.3 | -0.1 / +0.0 |
+| Mexico 2020 | +16.2 ± 2.75 | +20.3 | +29.7 | +13.5 | ±8.8 | no | +2.4 / -12.4 / +6.7 | -0.7 / -0.0 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +18.5 | +25.3 | -2.2 | ±5.2 | yes | -11.1 / -10.8 / +2.9 | — / -0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +17.8 | +26.7 | +3.7 | ±5.8 | yes | -5.9 / -10.3 / +10.7 | — / +0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.8 | +2.5 | ±4.2 | yes | +0.5 / +0.1 / +0.1 | — / +0.0 |
+model low-altitude slope 1.11 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +23.3 yd vs model +20.4 yd -> model's own Chapultepec shortfall 3.0 yd (measured 10-15 yd vs the measured line)
+
+### R2 G (kD 1.000, kL 1.000; season carry 289.0 yd, apex 32.5 yd, hang 6.79 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +18.9 | +29.3 | +7.4 | ±5.2 | no | +23.8 / -12.0 / +28.3 | -1.5 / +0.5 |
+| Mexico 2018 | +21.5 ± 1.24 | +19.4 | +30.1 | +8.5 | ±5.8 | no | +15.1 / -12.5 / +27.6 | -1.2 / +0.4 |
+| Mexico 2019 | +19.0 ± 1.78 | +19.4 | +29.3 | +10.3 | ±6.9 | no | +7.5 / -12.5 / +6.9 | -0.1 / +0.1 |
+| Mexico 2020 | +16.2 ± 2.75 | +19.1 | +31.3 | +15.1 | ±8.8 | no | +2.4 / -12.2 / +6.7 | -0.7 / +0.0 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +17.5 | +26.1 | -1.4 | ±5.2 | yes | -11.1 / -10.6 / +3.1 | — / -0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +16.9 | +28.4 | +5.4 | ±5.8 | yes | -5.9 / -10.1 / +10.9 | — / +0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.4 | +2.9 | ±4.2 | yes | +0.5 / +0.1 / -0.1 | — / +0.0 |
+model low-altitude slope 1.07 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +22.5 yd vs model +19.2 yd -> model's own Chapultepec shortfall 3.3 yd (measured 10-15 yd vs the measured line)
+
+### R2 Aapp (kD 1.051, kL 1.112; season carry 285.9 yd, apex 36.3 yd, hang 7.09 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +18.2 | +15.4 | -6.5 | ±5.2 | no | +23.8 / -13.3 / +28.4 | -1.5 / -0.1 |
+| Mexico 2018 | +21.5 ± 1.24 | +18.6 | +15.8 | -5.8 | ±5.8 | yes | +15.1 / -13.9 / +27.8 | -1.2 / -0.1 |
+| Mexico 2019 | +19.0 ± 1.78 | +18.6 | +19.9 | +0.9 | ±6.9 | yes | +7.5 / -13.9 / +7.3 | -0.1 / -0.3 |
+| Mexico 2020 | +16.2 ± 2.75 | +18.3 | +24.2 | +8.0 | ±8.8 | yes | +2.4 / -13.6 / +6.4 | -0.7 / -0.3 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +16.8 | +22.1 | -5.5 | ±5.2 | no | -11.1 / -11.8 / +2.3 | — / -0.3 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +16.3 | +22.6 | -0.4 | ±5.8 | yes | -5.9 / -11.2 / +10.3 | — / -0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -1.5 | +1.8 | ±4.2 | yes | +0.5 / +0.1 / +0.2 | — / +0.0 |
+model low-altitude slope 1.05 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +22.0 yd vs model +18.4 yd -> model's own Chapultepec shortfall 3.6 yd (measured 10-15 yd vs the measured line)
+
+### R2 Araw (kD 1.051, kL 1.062; season carry 283.8 yd, apex 34.0 yd, hang 6.90 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +17.5 | +17.4 | -4.5 | ±5.2 | yes | +23.8 / -12.3 / +28.3 | -1.5 / +0.0 |
+| Mexico 2018 | +21.5 ± 1.24 | +17.9 | +17.7 | -3.8 | ±5.8 | yes | +15.1 / -12.8 / +27.7 | -1.2 / -0.0 |
+| Mexico 2019 | +19.0 ± 1.78 | +17.8 | +21.0 | +2.0 | ±6.9 | yes | +7.5 / -12.8 / +7.2 | -0.1 / -0.2 |
+| Mexico 2020 | +16.2 ± 2.75 | +17.6 | +25.0 | +8.8 | ±8.8 | yes | +2.4 / -12.5 / +6.7 | -0.7 / -0.2 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +16.2 | +22.4 | -5.2 | ±5.2 | yes | -11.1 / -10.9 / +2.9 | — / -0.2 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +15.7 | +23.4 | +0.4 | ±5.8 | yes | -5.9 / -10.3 / +10.7 | — / -0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -1.1 | +2.2 | ±4.2 | yes | +0.5 / +0.1 / +0.0 | — / +0.0 |
+model low-altitude slope 1.02 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +21.5 yd vs model +17.7 yd -> model's own Chapultepec shortfall 3.8 yd (measured 10-15 yd vs the measured line)
+
+### R3 G (kD 1.000, kL 1.000; season carry 289.4 yd, apex 32.7 yd, hang 6.82 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +20.0 | +32.5 | +10.7 | ±5.2 | no | +23.8 / -12.1 / +28.3 | -1.5 / +0.5 |
+| Mexico 2018 | +21.5 ± 1.24 | +20.5 | +33.3 | +11.8 | ±5.8 | no | +15.1 / -12.6 / +27.7 | -1.2 / +0.4 |
+| Mexico 2019 | +19.0 ± 1.78 | +20.5 | +31.7 | +12.7 | ±6.9 | no | +7.5 / -12.5 / +6.9 | -0.1 / +0.1 |
+| Mexico 2020 | +16.2 ± 2.75 | +20.2 | +33.2 | +17.0 | ±8.8 | no | +2.4 / -12.3 / +6.6 | -0.7 / +0.0 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +18.4 | +27.4 | -0.1 | ±5.2 | yes | -11.1 / -10.7 / +3.1 | — / -0.1 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +17.7 | +29.9 | +6.9 | ±5.8 | no | -5.9 / -10.2 / +10.9 | — / +0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -0.3 | +3.0 | ±4.2 | yes | +0.5 / +0.1 / -0.1 | — / +0.0 |
+model low-altitude slope 1.10 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +23.2 yd vs model +20.2 yd -> model's own Chapultepec shortfall 3.0 yd (measured 10-15 yd vs the measured line)
+
+### R3 Aapp (kD 1.046, kL 1.103; season carry 285.9 yd, apex 36.3 yd, hang 7.09 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +18.2 | +16.8 | -5.1 | ±5.2 | yes | +23.8 / -13.3 / +28.4 | -1.5 / -0.0 |
+| Mexico 2018 | +21.5 ± 1.24 | +18.7 | +17.3 | -4.2 | ±5.8 | yes | +15.1 / -13.9 / +27.8 | -1.2 / -0.1 |
+| Mexico 2019 | +19.0 ± 1.78 | +18.7 | +20.6 | +1.6 | ±6.9 | yes | +7.5 / -13.9 / +7.3 | -0.1 / -0.3 |
+| Mexico 2020 | +16.2 ± 2.75 | +18.4 | +24.6 | +8.4 | ±8.8 | yes | +2.4 / -13.6 / +6.4 | -0.7 / -0.3 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +16.9 | +22.2 | -5.3 | ±5.2 | no | -11.1 / -11.8 / +2.3 | — / -0.3 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +16.3 | +22.8 | -0.2 | ±5.8 | yes | -5.9 / -11.2 / +10.3 | — / -0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -1.5 | +1.8 | ±4.2 | yes | +0.5 / +0.1 / +0.2 | — / +0.0 |
+model low-altitude slope 1.04 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +22.0 yd vs model +18.5 yd -> model's own Chapultepec shortfall 3.5 yd (measured 10-15 yd vs the measured line)
+
+### R3 Araw (kD 1.045, kL 1.054; season carry 283.8 yd, apex 34.0 yd, hang 6.90 s)
+| Event | measured | pred (a) | pred (b) | (b) − meas | band | within | apex ft meas / (a) / (b) | hang s meas / (b) |
+|---|---|---|---|---|---|---|---|---|
+| Mexico 2017 | +21.9 ± 0.96 | +17.4 | +18.3 | -3.6 | ±5.2 | yes | +23.8 / -12.3 / +28.3 | -1.5 / +0.0 |
+| Mexico 2018 | +21.5 ± 1.24 | +17.9 | +18.8 | -2.8 | ±5.8 | yes | +15.1 / -12.8 / +27.7 | -1.2 / +0.0 |
+| Mexico 2019 | +19.0 ± 1.78 | +17.8 | +21.4 | +2.4 | ±6.9 | yes | +7.5 / -12.8 / +7.2 | -0.1 / -0.2 |
+| Mexico 2020 | +16.2 ± 2.75 | +17.6 | +25.1 | +9.0 | ±8.8 | no | +2.4 / -12.5 / +6.7 | -0.7 / -0.2 |
+| Castle Pines 2024 | +27.5 ± 0.94 | +16.2 | +22.4 | -5.2 | ±5.2 | yes | -11.1 / -10.9 / +2.9 | — / -0.2 |
+| Old Greenwood 2024 | +23.0 ± 1.25 | +15.7 | +23.5 | +0.4 | ±5.8 | yes | -5.9 / -10.3 / +10.7 | — / -0.1 |
+| Control Vidanta 2024 | -3.3 ± 0.43 | -0.2 | -1.1 | +2.2 | ±4.2 | yes | +0.5 / +0.1 / +0.0 | — / +0.0 |
+model low-altitude slope 1.02 yd per 0.01 rho (measured 1.50); linear extrapolation to rho 0.779: +21.4 yd vs model +17.7 yd -> model's own Chapultepec shortfall 3.7 yd (measured 10-15 yd vs the measured line)
+
+## Summary: hard events (2024) and Chapultepec
+| Law, variant | Castle Pines (a) / (b) vs +27.5 | Old Greenwood (a) / (b) vs +23.0 | Mexico 2017–2020 (b) vs +21.9 / +21.5 / +19.0 / +16.2 | hard check (2024, b) | own Chapultepec shortfall (yd) |
+|---|---|---|---|---|---|
+| F0 G | +23.9 / +30.0 | +22.9 / +31.0 | +36.6 / +38.0 / +36.4 / +36.4 | fail | -0.6 |
+| F0 Aapp | +20.3 / +28.8 | +19.5 / +31.0 | +38.2 / +39.6 / +35.8 / +35.8 | fail | 0.9 |
+| F0 Araw | +18.7 / +27.8 | +18.0 / +30.4 | +38.1 / +39.4 / +34.5 / +34.7 | fail | 1.0 |
+| R0 G | +20.9 / +30.2 | +20.1 / +32.9 | +40.6 / +41.9 / +37.6 / +37.6 | fail | 1.5 |
+| R0 Aapp | +23.8 / +32.0 | +22.9 / +34.0 | +40.3 / +41.7 / +39.3 / +39.5 | fail | 1.3 |
+| R0 Araw | +21.9 / +30.8 | +21.1 / +33.3 | +40.5 / +41.8 / +38.2 / +38.3 | fail | 1.5 |
+| R1 G | +18.6 / +27.9 | +18.0 / +30.6 | +34.0 / +34.8 / +32.7 / +34.0 | fail | 2.9 |
+| R1 Aapp | +19.5 / +25.5 | +18.8 / +26.4 | +25.4 / +26.4 / +27.6 / +29.8 | pass | 2.6 |
+| R1 Araw | +18.5 / +25.3 | +17.8 / +26.7 | +26.2 / +27.1 / +27.5 / +29.7 | pass | 3.0 |
+| R2 G | +17.5 / +26.1 | +16.9 / +28.4 | +29.3 / +30.1 / +29.3 / +31.3 | pass | 3.3 |
+| R2 Aapp | +16.8 / +22.1 | +16.3 / +22.6 | +15.4 / +15.8 / +19.9 / +24.2 | fail | 3.6 |
+| R2 Araw | +16.2 / +22.4 | +15.7 / +23.4 | +17.4 / +17.7 / +21.0 / +25.0 | pass | 3.8 |
+| R3 G | +18.4 / +27.4 | +17.7 / +29.9 | +32.5 / +33.3 / +31.7 / +33.2 | fail | 3.0 |
+| R3 Aapp | +16.9 / +22.2 | +16.3 / +22.8 | +16.8 / +17.3 / +20.6 / +24.6 | fail | 3.5 |
+| R3 Araw | +16.2 / +22.4 | +15.7 / +23.5 | +18.3 / +18.8 / +21.4 / +25.1 | pass | 3.7 |
+
+## Terrain implied by the measured hang-time change at Chapultepec (Araw variants)
+| Law | Event | model Δhang (b), flat | measured Δhang | landing height needed (ft above tee) | carry effect of that terrain (yd) |
+|---|---|---|---|---|---|
+| F0 Araw | Mexico 2017 | +0.6 | -1.5 | +100.8 | -61.7 |
+| F0 Araw | Mexico 2018 | +0.5 | -1.2 | +89.5 | -52.0 |
+| F0 Araw | Mexico 2019 | +0.1 | -0.1 | +12.4 | -6.4 |
+| F0 Araw | Mexico 2020 | +0.1 | -0.7 | +43.5 | -24.6 |
+| R0 Araw | Mexico 2017 | +0.7 | -1.5 | +105.3 | -62.1 |
+| R0 Araw | Mexico 2018 | +0.7 | -1.2 | +95.0 | -53.1 |
+| R0 Araw | Mexico 2019 | +0.2 | -0.1 | +18.8 | -9.4 |
+| R0 Araw | Mexico 2020 | +0.1 | -0.7 | +45.0 | -25.0 |
+| R1 Araw | Mexico 2017 | +0.4 | -1.5 | +100.5 | -48.7 |
+| R1 Araw | Mexico 2018 | +0.4 | -1.2 | +88.0 | -40.0 |
+| R1 Araw | Mexico 2019 | +0.0 | -0.1 | +6.9 | -2.8 |
+| R1 Araw | Mexico 2020 | -0.0 | -0.7 | +39.1 | -18.3 |
+| R2 Araw | Mexico 2017 | +0.0 | -1.5 | +93.8 | -40.0 |
+| R2 Araw | Mexico 2018 | -0.0 | -1.2 | +77.3 | -30.4 |
+| R2 Araw | Mexico 2019 | -0.2 | -0.1 | -12.1 | +4.4 |
+| R2 Araw | Mexico 2020 | -0.2 | -0.7 | +31.1 | -13.4 |
+| R3 Araw | Mexico 2017 | +0.0 | -1.5 | +94.2 | -40.8 |
+| R3 Araw | Mexico 2018 | +0.0 | -1.2 | +78.1 | -31.4 |
+| R3 Araw | Mexico 2019 | -0.2 | -0.1 | -11.3 | +4.1 |
+| R3 Araw | Mexico 2020 | -0.2 | -0.7 | +31.3 | -13.5 |
+
+## Pass matrix (within 2 SE + 3.3 yd): (a) season launch | (b) event launch shift
+| Law, variant | (a) Castle Pines / Old Greenwood / M2017 / M2018 / M2019 / M2020 / Control Vidanta | (b) same | 2024 pair (a) / (b) | all six (a) / (b) |
+|---|---|---|---|---|
+| F0 G | y y y n n n y | y n n n n n y | pass / fail | fail / fail |
+| F0 Aapp | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| F0 Araw | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| R0 G | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| R0 Aapp | y y y y n n y | y n n n n n y | pass / fail | fail / fail |
+| R0 Araw | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| R1 G | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| R1 Aapp | n y y y y y y | y y y y n n y | fail / pass | fail / fail |
+| R1 Araw | n y y y y y y | y y y y n n y | fail / pass | fail / fail |
+| R2 G | n n y y y y y | y y n n n n y | fail / pass | fail / fail |
+| R2 Aapp | n n y y y y y | n y n y y y y | fail / fail | fail / fail |
+| R2 Araw | n n y y y y y | y y y y y y y | fail / pass | fail / pass |
+| R3 G | n y y y y y y | y n n n n n y | fail / fail | fail / fail |
+| R3 Aapp | n n y y y y y | n y y y y y y | fail / fail | fail / fail |
+| R3 Araw | n n y y y y y | y y y y y n y | fail / pass | fail / fail |
