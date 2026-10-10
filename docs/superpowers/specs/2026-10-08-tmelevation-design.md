@@ -414,7 +414,9 @@ containers on phones. Sections:
    Range patent US 6,186,002 B1; Bridgestone's US 7,175,542 B2, 7,201,671 B2,
    7,238,121 B2 and 8,021,249 B2; Bearman & Harvey (1976), *Aeronautical
    Quarterly* 27:112–122 (second hand, through the reproductions in Kensrud's
-   2010 WSU thesis and Crabill, Witherden & Jameson, arXiv:1806.00378).
+   2010 WSU thesis and Crabill, Witherden & Jameson, arXiv:1806.00378);
+   checked against Aoki, Muto & Okanaga (2011), *Trans. JSME B* 77:793–802,
+   doi:10.1299/kikaib.77.793.
    Atmosphere: U.S. Standard Atmosphere 1976 (NASA NTRS). Units: NIST SP 811.
    Reference data: as listed per oracle.
 
@@ -711,6 +713,14 @@ commitlint; `ci.yml`, `release.yml`, `deploy.yml`, `.releaserc.yml`,
    Harvey), read second hand from reproduced figures, above the modern-ball
    data (S ≈ 0.36); the drag beyond S 0.46 is an extrapolation. Every row but
    the Drivers and 3-woods leaves the lift fit, and the 6 Iron to PW reach
-   S 0.58–1.15; calibration absorbs the level but not the shape.
+   S 0.58–1.15; calibration absorbs the level but not the shape. Checked
+   against Aoki, Muto & Okanaga (2011), a golf-size dimpled sphere spun to
+   S 2.0: at supercritical Re (8×10⁴, 1.3×10⁵) and S 0.36–1.0 its drag is
+   within −0.023 to +0.014 of this model's (reading uncertainty ±0.02) and
+   its lift 0.010–0.045 lower, near its 0.03 offset from tour balls at
+   S 0.3 — level, not shape. Above S 1.0 (only the PW rows, at sea level)
+   it was measured only at Re ≤ 5×10⁴. Refitting the drag to it moves no
+   displayed value by more than one unit
+   (`docs/research/land-angle-spike/SYNTHESIS.md`, round 3b).
 4. **Pages environment policy and merge settings** are repository settings
    outside the tree; verified during setup (section 10).
